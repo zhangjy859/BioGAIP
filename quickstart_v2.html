@@ -1,0 +1,803 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Quickstart · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.1.6">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-alerts/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/honkit-plugin-blockquote-callout/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html">
+            
+                    
+                    Quickstart
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#before-you-begin">
+            
+                    
+                    Before You Begin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#system-prerequisites">
+            
+                    
+                    Prerequisites
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#quick-start-with-recommended-system-configuration">
+            
+                    
+                    Quick Start
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#qa">
+            
+                    
+                    Q&A
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Advanced
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="configure.html">
+            
+                <a href="configure.html">
+            
+                    
+                    Configure
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="start.md">
+            
+                <span>
+            
+                    
+                    Run bioGAIP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="singularity.md">
+            
+                <span>
+            
+                    
+                    Use Singularity
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="Prompt.html">
+            
+                <a href="Prompt.html">
+            
+                    
+                    Prompt Tips
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Quickstart</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="quickstart">Quickstart</h1>
+<h2 id="before-you-begin">Before You Begin</h2>
+<p>BioGAIP consists of three main components: <strong>BioAG</strong> , <strong>BioWorker</strong> and a graphic deploy tool (<strong>BioLauncher</strong>).</p>
+<ul>
+<li><strong>BioAG</strong> is the cross-platform Agents platform for the agent workflows. It runs on Windows, Linux, and macOS (macOS support is functional but not exhaustively tested).</li>
+<li><strong>BioWorker</strong> is a security-first execution agent that communicates with BioAG over a Web API, forming a client-server architecture. Full functionality is available only on Linux; advanced users may run it on macOS or Windows (via WSL) with some limitations.</li>
+</ul>
+<p>Both components are container-based by default, providing the highest levels of isolation and performance. For users who prefer a simpler setup, non-containerized execution is supported experimentally.</p>
+<p>BioGAIP is deliberately designed to require minimal configuration and no programming knowledge. The graphical configuration wizard <strong>BioLauncher</strong> guides users through all initial setup steps.</p>
+<div class="markdown-alert markdown-alert-warning">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>
+        <span>Warning</span>
+      </p>
+      <p>BioLauncher support multiple platforms. However, at present, we only provide <strong>pre-compiled binary versions</strong> for the Windows 10/11. 
+We are currently attempting to expand the support for binary versions.</p>
+
+    </div>
+<h2 id="deployment-mode">Deployment Mode</h2>
+<p>BioGAIP's core components are highly decoupled, offering maximum flexibility in how you spin up your environment. Here are the three primary deployment topologies:</p>
+<h3 id="1-classic-deployment-clientserver-🌟-recommended">1. Classic Deployment (Client/Server) 🌟 <em>Recommended</em></h3>
+<p>In this architecture, <strong>BioWorker</strong> runs on dedicated compute resources (e.g., a remote server or HPC cluster) and exposes its services via an API. Meanwhile, <strong>BioAG</strong> is installed on the user's local machine, acting as a lightweight agents client.</p>
+<p><strong>Why we recommend it:</strong></p>
+<ul>
+<li><strong>Controllable:</strong> Enforces strict file access controls on BioWorker (with CPU/memory quotas planned for future releases).</li>
+<li><strong>Convenient:</strong> A single BioWorker backend supports multi-sessions, meaning one server can power BioAG clients for an entire lab.</li>
+<li><strong>Highly Flexible:</strong> End-users retain full control over their local BioAG client, allowing for deep, personalized customization.</li>
+<li><strong>Secure by Design:</strong> Minimizes the attack surface. The BioWorker API is a standard HTTP service, meaning you can easily lock it down using reverse proxies, SSL/TLS, and standard firewalls.</li>
+<li><strong>Frictionless Setup:</strong> As our primary supported mode, the graphical deployment wizard will get you up and running in roughly 20 minutes.</li>
+</ul>
+<h3 id="2-saas-deployment-web-service-mode">2. SaaS Deployment (Web Service Mode)</h3>
+<p>Both BioAG and BioWorker are hosted on a central server (also can be deployed separately). BioAG leverages its built-in authentication and session manager to act as a web-based Software-as-a-Service (SaaS), allowing users to log in via a browser.</p>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li><strong>Zero Client Configure:</strong> Admins handle the heavy lifting; end-users only need a web browser.</li>
+<li><strong>Centralized Management:</strong> Unified configuration and seamless updates.</li>
+</ul>
+<p><strong>Trade-offs &amp; Risks:</strong></p>
+<ul>
+<li><strong>Security Implications:</strong> BioAG was engineered assuming a trusted local execution environment, it is <em>not</em> a hardened public web server. Exposing it directly to the web significantly increases your attack surface. While containerization offers some mitigation, comprehensive web-facing security is currently out of scope for this project.</li>
+<li><strong>Limited Multi-sessions (users) Manager:</strong> Multi-user isolation in BioAG is currently "best-effort." Achieving strict, production-grade user isolation requires complex custom scripts which we do not currently open-source.</li>
+</ul>
+<h3 id="3-local-deployment-standalone-mode">3. Local Deployment (Standalone Mode)</h3>
+<p>A localized variation where both BioAG and BioWorker run simultaneously on the user's local machine (laptop or workstation). While it eliminates the need for external servers, it demands substantial local hardware resources.</p>
+<div class="markdown-alert markdown-alert-caution">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>
+        <span>Caution</span>
+      </p>
+      <p>To ensure the best experience, our <strong>Quickstart</strong> guide focuses exclusively on the <strong>Classic Deployment (Client/Server)</strong> method.</p>
+
+    </div>
+<p><br></br></p>
+<div class="markdown-alert markdown-alert-important">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>
+        <span>Important</span>
+      </p>
+      <p>If the system configuration meets the requirements, BioLauncher can guide users through the configuration process automatically in a graphical manner.</p>
+    </div>
+<h2 id="system-prerequisites">System prerequisites</h2>
+<p>The default architecture allows <strong>BioAG</strong> and <strong>BioWorker</strong> to run on separate machines:</p>
+<ul>
+<li><strong>BioAG</strong> (client) typically runs on the user’s local workstation or laptop.</li>
+<li><strong>BioWorker</strong> (server) runs on dedicated compute resources such as a remote server, cloud instance, or HPC cluster.</li>
+</ul>
+<p>This separation provides the best combination of usability, performance, and security.</p>
+<p>While it is technically possible to run both components on the same machine, this configuration is <strong>not recommended</strong> for production use due to reduced isolation and resource contention.</p>
+<p>The quick-start guide and <strong>biolauncher</strong> wizard assume the standard client–server deployment described above and will guide you through that setup by default. Custom (e.g., single-machine) configurations are supported but require manual adjustments after the initial setup.</p>
+<h3 id="recommended-system-configuration">Recommended System Configuration</h3>
+<h4 id="bioag-local-machine">BioAG (Local Machine)</h4>
+<hr></hr>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Recommended</th>
+<th>Minimum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Operating System</td>
+<td>Windows 10/11</td>
+<td>Windows 10 / macOS / Linux</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>32 GB</td>
+<td>16 GB¹</td>
+</tr>
+<tr>
+<td>Free system disk space</td>
+<td>&gt;50 GB</td>
+<td>&gt;20 GB</td>
+</tr>
+<tr>
+<td>Architecture</td>
+<td>x86/64</td>
+<td>x86/64</td>
+</tr>
+<tr>
+<td>Internet access²</td>
+<td>Required</td>
+<td>Required</td>
+</tr>
+<tr>
+<td>WSL2³</td>
+<td>Required</td>
+<td>Not required</td>
+</tr>
+<tr>
+<td>Virtualization</td>
+<td>Required (WSL2)</td>
+<td>Not required</td>
+</tr>
+<tr>
+<td>Docker (containerization)</td>
+<td>Required (in WSL2)</td>
+<td>Not required</td>
+</tr>
+</tbody>
+</table>
+<p>¹ &lt;16 GB is possible but not fully tested and may be heavily limited.<br></br>² Must reliably reach: github.com, huggingface.co, hub.docker.com.<br></br>³ On Windows we strongly recommend WSL2.</p>
+<h3 id="🛠️-windows-system-checker">🛠️ Windows System Checker</h3>
+<p>To ensure a frictionless setup on Windows 10/11, we've built a lightweight pre-flight utility to instantly verify your system environment.</p>
+<p>📥 <strong><a href="http://nondisk.136138189.xyz:2086/s/9LIA/e40c6x3x" target="_blank">Download the System Checker</a></strong></p>
+<p><strong>How to use it:</strong></p>
+<ol>
+<li>Simply download and double-click the executable.</li>
+<li>The tool will run an automated diagnostic scan of your hardware and software configurations. </li>
+<li>If your system hits all the targets, every metric will display an <strong>Optimal</strong> status, looking something like this:</li>
+</ol>
+<p><img src="img/optimal_configure.png" alt="optimal_configure.png" style="zoom:300%;"></img></p>
+<p>If your environment falls short of the requirements, the tool will flag the exact issues and provide <strong>Suggestion</strong>, alongside direct links to helpful documentation to get you up to speed.</p>
+<p><img src="img/nonoptimal_configure.png" alt="nonoptimal_configure.png" style="zoom:300%;"></img></p>
+<div class="markdown-alert markdown-alert-tip">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>
+        <span>Tip</span>
+      </p>
+      <p><strong>Pro Tip:</strong> We highly recommend resolving all warnings until your system reads <strong>Optimal</strong> across the board, with the possible exception of RAM. While boosting RAM requires a physical hardware upgrade, software misconfigurations (like missing WSL2, Docker issues, or low disk space) are quick fixes that will drastically improve your BioGAIP experience and stability.</p>
+    </div>
+<hr></hr>
+<h4 id="bioworker-remote-server-–-ubuntu-example">BioWorker (Remote Server – Ubuntu Example)</h4>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Recommended</th>
+<th>Minimum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Operating System</td>
+<td>Ubuntu 18.04 / CentOS 7 or newer (kernel &gt;3.4)</td>
+<td>Any Linux</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>Task-dependent</td>
+<td>Task-dependent</td>
+</tr>
+<tr>
+<td>Free system disk space</td>
+<td>&gt;20 GB</td>
+<td>&gt;10 GB</td>
+</tr>
+<tr>
+<td>Architecture</td>
+<td>x86/64</td>
+<td>x86/64 or others (experimental)</td>
+</tr>
+<tr>
+<td>Internet access¹</td>
+<td>Required</td>
+<td>Required</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>Required</td>
+<td>Recommended</td>
+</tr>
+<tr>
+<td>Sandbox support</td>
+<td>—</td>
+<td>Recommended</td>
+</tr>
+</tbody>
+</table>
+<p>¹ Server must reach hub.docker.com and other sites (please refer to <a href="#network-requirements">Network Requirements</a>).</p>
+<p>Under the <strong>recommended</strong> server configuration, BioGAIP automatically completes all server-side setup. Minimum configuration may require manual advanced steps.</p>
+<ul>
+<li><strong>Docker Engine</strong>, rootless Docker, or Singularity/Apptainer installed <a href="https://docs.docker.com/engine/security/rootless/" target="_blank">(Without packages rootless docker</a> is also accpectable)</li>
+<li><strong>SSH access credentials</strong> for a non-root user (IP/hostname, port, username, password or key)</li>
+<li>All the files required for the analysis task (if have) must be uploaded to the <strong>Remote server</strong> in advance. 
+This guide below assumes that all the files are uploaded to <code>/mnt/data1/BioGAIP_test</code>, and all the outputs are written to <code>/mnt/data1/BioGAIP_test</code> for example</li>
+</ul>
+<div class="markdown-alert markdown-alert-tip">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>
+        <span>Tip</span>
+      </p>
+      <p>BioGAIP does not yet include built-in file upload or download functionality for end users. In client-server (C/S) deployments, this means you'll need to manually transfer files to the server side.</p>
+<p>The good news? Popular tools like <a href="https://filezilla-project.org/" target="_blank">FileZilla</a> and <a href="https://winscp.net/" target="_blank">WinSCP</a> make the process quick and painless.</p>
+<p>We're actively exploring more seamless, user-friendly solutions for future releases.</p>
+<p>Need more help uploading files? Check out these third-party tutorial videos:</p>
+<ul>
+<li><strong><a href="https://www.youtube.com/watch?v=tHJ0ISOspRc" target="_blank">FileZilla Tutorial: How To Connect To Server And Upload Files</a></strong> (YouTube)  </li>
+<li><strong><a href="https://www.bilibili.com/video/BV1C5411o7h6?p=6&amp;spm_id_from=333.788.videopod.episodes" target="_blank">WinSCP 使用教程（Linux远程上传文件）</a></strong> (Bilibili – see section 2.4)</li>
+</ul>
+
+    </div>
+<p><strong>Note for Docker users</strong>: </p>
+<p>The SSH user must be able to run docker commands without sudo. The simplest approach is to add the user to the docker group (<code>sudo usermod -aG docker $USER</code>). This requirement does <strong>not</strong> need to rootless Docker or Singuality.</p>
+<h4 id="network-requirements">Network Requirements</h4>
+<p>   A stable, unrestricted internet connection is required. The following domains must be reachable without intermittent failures or excessive latency:</p>
+<ol>
+<li>github.com and raw.githubusercontent.com</li>
+<li>docker.io / registry-1.docker.io</li>
+<li>*.huggingface.co</li>
+<li>*.anaconda.com and repo.anaconda.com</li>
+<li>micro.mamba.pm</li>
+<li><p>The API endpoints of any LLM providers you intend to use (e.g., api.openai.com, api.anthropic.com, etc.)</p>
+<p>If access to any of these services is unreliable or blocked, BioGAIP may still start, but image/model downloads and package installation will be extremely slow or fail in unpredictable ways, making troubleshooting difficult.</p>
+</li>
+</ol>
+<p><strong>Mitigation options</strong> (available in BioLauncher):</p>
+<ul>
+<li>HTTP/HTTPS proxies can be configured for BioAG traffic</li>
+<li><p>Conda/mamba mirrors can be set for package downloads</p>
+<p>These workarounds apply <strong>only</strong> to BioAG; BioWorker runs inside and cannot use the host’s proxy settings automatically.</p>
+</li>
+</ul>
+<h3 id="minimum-system-configuration">Minimum System Configuration</h3>
+<div class="markdown-alert markdown-alert-warning">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>
+        <span>Warning</span>
+      </p>
+      <p>Warning: Minimum system configurations are highly experimental and may be unstable or fail entirely. Starting with BioGAIP 1.2.9, minimum mode replaces full containerization with lightweight sandboxing technology, dramatically reducing both hardware requirements and setup complexity.</p>
+
+    </div>
+<h4 id="bioag-local-machine-–-windows-example">BioAG (Local Machine – Windows Example)</h4>
+<ul>
+<li>Windows 10 or later</li>
+<li>≥ 8 GB RAM and ≥ 20 GB free disk space</li>
+</ul>
+<h4 id="bioworker-remote-server-–-ubuntu-example">BioWorker (Remote Server – Ubuntu Example)</h4>
+<pre><code>- SSH access credentials for a non-root user (IP/hostname, port, username, password or key)
+- All the files required for the analysis task must be uploaded to the Remote server in advance. This guide below assumes that all the files are uploaded to ~/BioGAIP/data/input, and all the outputs are written to ~/BioGAIP/data/output for acceptance
+</code></pre><h4 id="network-requirements">Network Requirements</h4>
+<p>   A stable, unrestricted internet connection is required. The following domains must be reachable without intermittent failures or excessive latency:</p>
+<ol>
+<li>github.com and raw.githubusercontent.com</li>
+<li>docker.io / registry-1.docker.io</li>
+<li>*.huggingface.co</li>
+<li>*.anaconda.com and repo.anaconda.com</li>
+<li>micro.mamba.pm</li>
+<li>The API endpoints of any LLM providers you intend to use (e.g., api.openai.com, api.anthropic.com, etc.)</li>
+</ol>
+<h3 id="quick-start-with-recommended-system-configuration">Quick Start with Recommended System Configuration</h3>
+<p><strong>Note:</strong> This wizard only works when your system meets the recommended configuration requirements. If you prefer to begin with the minimal system configuration, please read the next section first.</p>
+<h4 id="🎥-video-guide">🎥 Video Guide</h4>
+<p>We’ve created a clear, step-by-step demo video that shows exactly how to deploy BioGAIP quickly using BioLauncher. Watch it directly on this page (embedded and fully playable):</p>
+<video controls="" style="width: 100%; max-width: 100%; display: block; margin: 1rem auto;">
+  <source src="./src/Supplement%20video%201.mp4" type="video/mp4"></source>
+  Your browser does not support the video tag.
+</video>
+
+
+<h4 id="detail-steps">Detail Steps</h4>
+<ol>
+<li><p><strong>Download and launch BioLanucher</strong><br></br>Biolanucher is a fully integrated, one-stop configuration wizard. Download the latest version <a href="http://nondisk.136138189.xyz:2086/s/WvUQ/6s8ys8st" target="_blank">here</a>. After downloading, extract the archive to any convenient location. Inside you’ll find <code>biolanucher.exe</code> — simply double-click it to start (the first launch may take up to 30 seconds).</p>
+</li>
+<li><p><strong>Software License Agreement</strong><br></br>To proceed, you must accept the software license agreement.</p>
+</li>
+<li><p><strong>System Configuration Check</strong><br></br>biolanucher automatically verifies that your system meets the recommended requirements. When everything checks out, you’ll see the screen below. Click <strong>Start</strong> to continue.</p>
+</li>
+<li><p><strong>LLMs Parameter Configuration</strong><br></br>This screen lets you configure the LLMs APIs you’ll use. We strongly recommend uploading a configuration file (the fastest and safest method). A ready-to-use template is available <a href="src/configure.yaml">here</a>.</p>
+<p><img src="img/image-20251117165115654.png" alt="LLMs Configuration Interface"></img></p>
+<p><strong>Note:</strong> The preset file includes multiple model clients to demonstrate mixing different LLMs providers. If you’re using a single API, simply enter the same values across all entries.</p>
+<p><strong>Tips:</strong> Many affordable commercial LLMs APIs are now available, including:</p>
+<ul>
+<li><a href="https://platform.openai.com/settings/organization/api-keys" target="_blank">OpenAI</a></li>
+<li><a href="https://api-docs.deepseek.com/" target="_blank">DeepSeek</a></li>
+<li><a href="https://x.ai/api" target="_blank">Grok</a></li>
+<li><a href="https://ai.google.dev/gemini-api/docs/api-key" target="_blank">Gemini</a></li>
+<li><a href="https://help.aliyun.com/zh/model-studio/get-api-key" target="_blank">Qwen</a></li>
+</ul>
+<p>To configure any provider correctly, you’ll need three pieces of information:</p>
+<ul>
+<li><strong>Endpoint URL / Base URL</strong> — e.g. <code>https://api.openai.com/v1/</code> for OpenAI</li>
+<li><strong>API Key</strong> — your secret key</li>
+<li><strong>Model Name</strong> — the exact model identifier you want to use</li>
+</ul>
+<p><strong>⚠️ Important:</strong> Always keep your API keys private. BioGAIP handles them locally and never sends them anywhere. Leaking a key — especially with post-paid services like Gemini — can result in serious charges.</p>
+<p><strong>Advanced users:</strong> You can also run locally deployed LLMs on your own hardware. BioGAIP maintains broad compatibility with the majority of local and remote LLM APIs.</p>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-tip">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>
+        <span>Tip</span>
+      </p>
+      <p><strong>Recommended API Providers</strong><br></br>We don’t endorse any single provider. The best choice always depends on your specific tasks — we encourage quick testing to find the perfect fit.<br></br>In our own benchmarks, <strong>Qwen</strong> and <strong>Grok</strong> are the two we use most often.</p>
+    </div>
+<ol>
+<li><p><strong>BioAG Runtime Configuration</strong></p>
+<p>BioAG Runtime Settings</p>
+<p><img src="img/image-20251117170727928.png" alt="image-20251117170727928" style="zoom:33%;"></img></p>
+<p>Important options:  </p>
+<ul>
+<li><strong>Conda Meta DB</strong> (optional) – chromadb folder containing conda/package metadata  </li>
+<li><strong>Workflow DB</strong> (optional) – chromadb folder containing Nextflow/other pipeline knowledge  </li>
+<li><strong>User Ext DB</strong> (optional) – folder containing .txt, .md, .html, .pdf files; these are automatically ingested as RAG sources on startup  </li>
+<li><strong>Cache Dir</strong> (optional but recommended) – persistent cache location; significantly speeds up subsequent launches  </li>
+<li><strong>HTTP Proxy</strong> (optional)  </li>
+<li><strong>Username / Password</strong> – default <code>admin</code>/<code>admin</code>  </li>
+<li><strong>Advanced Options</strong><br></br>• Gemini Compatible mode – deprecated, leave unchecked<br></br>• Frontend Port – useful when running multiple BioAG instances</li>
+</ul>
+</li>
+<li><p><strong>Review &amp; Launch BioAG</strong></p>
+<p>Review and Launch Panel</p>
+<p><img src="img/image-20251117171859890.png" alt="image-20251117171859890" style="zoom:33%;"></img></p>
+<p>Click <strong>Run</strong>. When BioAG is ready, biolauncher will display a local URL (usually <code>http://127.0.0.1:8501</code>). Open it in your browser — you will be redirected to the BioWorker setup page.</p>
+<p>BioWorker Entry (bypass mode example)</p>
+<p><img src="img/image-20251117172130408.png" alt="image-20251117172130408" style="zoom:33%;"></img></p>
+</li>
+</ol>
+<ol>
+<li><p><strong>BioWorker Configuration</strong></p>
+<p>Log in with the username and password you set in step 5.</p>
+<p>BioWorker Login</p>
+<p><img src="img/image-20251117172338297.png" alt="image-20251117172338297" style="zoom:33%;"></img></p>
+<p>Choose your preferred setup method. </p>
+</li>
+</ol>
+<p><strong>Manual Setup</strong> Choose this if BioWorker is <strong>already deployed and running</strong> on the remote server and you have its credentials. You only need to provide:</p>
+<ul>
+<li>BioWorker API URL (e.g. http://<server_ip>:38000)</server_ip></li>
+<li>BioWorker API Key</li>
+</ul>
+<p>BioAG will immediately test and establish the connection. If you do <strong>not</strong> yet have a running BioWorker instance or do not know these values, use <strong>SSH Setup</strong> instead — it will deploy and configure everything automatically.</p>
+<p><strong>SSH Setup (recommended for most users)</strong> Fully automated deployment. biolauncher connects to your server via SSH, installs/pulls the required containers, configures permissions, generates a strong API key, and brings BioWorker online without further manual steps. (Detailed field descriptions are in the previous section.)</p>
+<p><strong>Pair Code Setup</strong> <strong>Deprecated</strong> — no longer maintained and should not be used.</p>
+<p>   SSH Configuration</p>
+<p><img src="img/image-20251117173044394.png" alt="image-20251117173044394" style="zoom:33%;"></img></p>
+<p>   Key fields:  </p>
+<ul>
+<li>Server IP / Username / Port / SSH Password </li>
+<li><strong>Read-only directories</strong> – remote paths BioWorker may read (semicolon-separated)  </li>
+<li><strong>Read-write directories</strong> – remote paths BioWorker may write to (semicolon-separated)  </li>
+<li><strong>Working Directory</strong> – where temporary files and logs are stored (BioWorker will have full r/w access)  </li>
+<li><p><strong>BioWorker API Key</strong> – set a strong, random key and store it securely  </p>
+<p><strong>Tip</strong>: By default BioWorker listens on port 38000, so its API endpoint will be <code>http://&lt;server_ip&gt;:38000</code>. Custom ports might be added in the future</p>
+<p>Click <strong>Initiate with SSH</strong>. biolauncher will connect, deploy/configure BioWorker automatically, and finally open the main session interface.</p>
+<p>Session Ready</p>
+</li>
+</ul>
+<p><img src="img/image-20251117173830372.png" alt="image-20251117173830372" style="zoom:33%;"></img></p>
+<p>You are now ready to run BioGAIP agents.</p>
+<h3 id="quick-start-minimum-configuration">Quick Start (Minimum Configuration)</h3>
+<p>The procedure is almost identical to the recommended-configuration quick start, but with the following differences:</p>
+<ol>
+<li><p><strong>Step 3: System Check</strong> – Advanced Options → enable <strong>Bypass Mode</strong></p>
+<p><img src="img/image-20251117175127593.png" alt="image-20251117175127593" style="zoom:33%;"></img></p>
+<p>The wizard will immediately check for required Python dependencies. If any are missing, click <strong>Install with micromamba</strong> and wait for the process to finish.</p>
+<p><img src="img/image-20251117175229406.png" alt="image-20251117175229406" style="zoom:33%;"></img></p>
+<p><strong>Known bug (temporary workaround)</strong>: After the “installation complete” message appears, <strong>completely close</strong> biolauncher, reopen it, and re-enable Bypass Mode. You will then be able to click <strong>Next</strong> and continue.</p>
+<p><img src="img/image-20251117181215202.png" alt="image-20251117181215202" style="zoom:33%;"></img></p>
+<p><img src="img/image-20251117181304176.png" alt="image-20251117181304176" style="zoom:33%;"></img></p>
+<p>Bypass Mode removes the container runtime requirement on only the local machine.</p>
+</li>
+</ol>
+<p>If there is no containerization technical support in the Remote Server, </p>
+<ol>
+<li><p><strong>Step 5: BioAG Runtime Configuration</strong> – expand Advanced Options and enable <strong>Sandbox Mode</strong>. Select one of the two available sandbox backends:</p>
+<ul>
+<li><strong>bubblewrap</strong> – lightweight userspace sandbox with fine-grained filesystem controls</li>
+<li><strong>landlock</strong> – Linux kernel Landlock LSM sandbox (requires kernel ≥ 5.13)</li>
+</ul>
+<p><img src="img/image-20251117182208196.png" alt="image-20251117182208196" style="zoom:33%;"></img></p>
+<p><img src="img/image-20251117182226472.png" alt="image-20251117182226472" style="zoom:33%;"></img></p>
+</li>
+</ol>
+<p>All remaining steps (LLM configuration, BioAG launch, BioWorker setup) are identical to the recommended path. In Bypass/Minimum mode, BioWorker on the remote server will automatically fall back to the same lightweight sandboxing mechanism when no Docker/Singularity runtime is present.</p>
+<h2 id="qa">Q&amp;A</h2>
+<h3 id="how-to-configure-a-windows-pc-for-optimal-bioag-performance">How to Configure a Windows PC for Optimal BioAG Performance</h3>
+<p>BioAG runs effortlessly on any modern Windows 10 or 11 machine — it only needs enough RAM, disk space, and WSL (or any containerization technology). Getting your system ready takes just a few simple steps.</p>
+<ol>
+<li><p><strong>Enable Virtualization and WSL 2</strong><br></br>Follow Microsoft’s official guide:<br></br><a href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank">Install WSL</a></p>
+</li>
+<li><p><strong>Install Docker inside WSL 2</strong><br></br>Follow the official tutorial:<br></br><a href="https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers" target="_blank">Get started with Docker remote containers on WSL 2</a></p>
+</li>
+</ol>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Introduction">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Quickstart","level":"1.2","depth":1,"next":{"title":"Advanced","level":"1.3","depth":1,"ref":"","articles":[{"title":"Configure","level":"1.3.1","depth":2,"path":"configure.md","ref":"configure.md","articles":[]},{"title":"Run bioGAIP","level":"1.3.2","depth":2,"path":"start.md","ref":"start.md","articles":[]},{"title":"Use Singularity","level":"1.3.3","depth":2,"path":"singularity.md","ref":"singularity.md","articles":[]}]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"articles":[{"title":"Before You Begin","level":"1.2.1","depth":2,"anchor":"#before-you-begin","path":"quickstart_v2.md","ref":"quickstart_v2.md#before-you-begin","articles":[]},{"title":"Prerequisites","level":"1.2.2","depth":2,"anchor":"#system-prerequisites","path":"quickstart_v2.md","ref":"quickstart_v2.md#system-prerequisites","articles":[]},{"title":"Quick Start","level":"1.2.3","depth":2,"anchor":"#quick-start-with-recommended-system-configuration","path":"quickstart_v2.md","ref":"quickstart_v2.md#quick-start-with-recommended-system-configuration","articles":[]},{"title":"Q&A","level":"1.2.4","depth":2,"anchor":"#qa","path":"quickstart_v2.md","ref":"quickstart_v2.md#qa","articles":[]}],"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"quickstart_v2.md","mtime":"2026-03-16T07:41:05.663Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-16T07:41:22.340Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-alerts/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

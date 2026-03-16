@@ -1,0 +1,506 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Configure · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.1.6">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-alerts/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/honkit-plugin-blockquote-callout/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="start.md" />
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html">
+            
+                    
+                    Quickstart
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#before-you-begin">
+            
+                    
+                    Before You Begin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#system-prerequisites">
+            
+                    
+                    Prerequisites
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#quick-start-with-recommended-system-configuration">
+            
+                    
+                    Quick Start
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#qa">
+            
+                    
+                    Q&A
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Advanced
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.3.1" data-path="configure.html">
+            
+                <a href="configure.html">
+            
+                    
+                    Configure
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="start.md">
+            
+                <span>
+            
+                    
+                    Run bioGAIP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="singularity.md">
+            
+                <span>
+            
+                    
+                    Use Singularity
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="Prompt.html">
+            
+                <a href="Prompt.html">
+            
+                    
+                    Prompt Tips
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Configure</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="configure">Configure</h1>
+<p>bioGen is designed to minimize redundant configurations as much as possible. bioAG requires a predefined configuration folder, which contains two subfolders:</p>
+<ul>
+<li><code>config/system.yaml</code>: configuration fil agents system settings, such as <code>LLM API URL</code>, <code>API key</code> and <code>agents</code> role</li>
+<li><code>config/.envs</code>: some globel environment variables, such as <code>bioWorker</code> server address and <code>bioWorker</code> server port</li>
+</ul>
+<blockquote>
+<p><strong>[info] info</strong></p>
+<p>The configure template files are located in the <code>bioGen/config</code>, a zip file also can be download from <a href="xxx">xxx</a></p>
+</blockquote>
+<h2 id="step-1-configure-systemyaml">Step 1: Configure system.yaml</h2>
+<p>The default system.yaml template contains the agents role definitions required by bioAG. 
+To make it work properly, users need to modify the model clients definition at the top of the file, 
+which looks like this:</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">model_clients:</span>
+  <span class="hljs-attr">model_client1:</span>
+    <span class="hljs-attr">class:</span> <span class="hljs-string">OpenAIChatCompletionClient</span>
+    <span class="hljs-attr">kwargs:</span>
+      <span class="hljs-attr">model:</span> <span class="hljs-string">grok-3-mini-fast</span>
+      <span class="hljs-attr">base_url:</span> <span class="hljs-string">API_BASE_URL</span>
+      <span class="hljs-attr">api_key:</span> <span class="hljs-string">API_KEY</span>
+      <span class="hljs-attr">max_tokens:</span> <span class="hljs-number">131072</span>
+      <span class="hljs-attr">model_info:</span>
+        <span class="hljs-attr">vision:</span> <span class="hljs-literal">False</span>
+        <span class="hljs-attr">function_calling:</span> <span class="hljs-literal">True</span>
+        <span class="hljs-attr">json_output:</span> <span class="hljs-literal">False</span>
+        <span class="hljs-attr">family:</span> <span class="hljs-string">gpt-4o</span>
+        <span class="hljs-attr">structured_output:</span> <span class="hljs-literal">True</span>
+        <span class="hljs-attr">multiple_system_messages:</span> <span class="hljs-literal">True</span>
+  <span class="hljs-attr">model_client2:</span>
+    <span class="hljs-attr">class:</span> <span class="hljs-string">OpenAIChatCompletionClient</span>
+    <span class="hljs-attr">kwargs:</span>
+      <span class="hljs-attr">model:</span> <span class="hljs-string">grok-4-0709</span>
+      <span class="hljs-attr">base_url:</span> <span class="hljs-string">API_BASE_URL</span>
+      <span class="hljs-attr">api_key:</span> <span class="hljs-string">API_KEY</span>
+      <span class="hljs-attr">max_tokens:</span> <span class="hljs-number">131072</span>
+      <span class="hljs-attr">model_info:</span>
+        <span class="hljs-attr">vision:</span> <span class="hljs-literal">False</span>
+        <span class="hljs-attr">function_calling:</span> <span class="hljs-literal">True</span>
+        <span class="hljs-attr">json_output:</span> <span class="hljs-literal">False</span>
+        <span class="hljs-attr">family:</span> <span class="hljs-string">gpt-4o</span>
+        <span class="hljs-attr">structured_output:</span> <span class="hljs-literal">True</span>
+        <span class="hljs-attr">multiple_system_messages:</span> <span class="hljs-literal">True</span>
+  <span class="hljs-attr">model_client3:</span>
+    <span class="hljs-attr">class:</span> <span class="hljs-string">OpenAIChatCompletionClient</span>
+    <span class="hljs-attr">kwargs:</span>
+      <span class="hljs-attr">model:</span> <span class="hljs-string">grok-code-fast</span>
+      <span class="hljs-attr">base_url:</span> <span class="hljs-string">API_BASE_URL</span>
+      <span class="hljs-attr">api_key:</span> <span class="hljs-string">API_KEY</span>
+      <span class="hljs-attr">max_tokens:</span> <span class="hljs-number">131072</span>
+      <span class="hljs-attr">model_info:</span>
+        <span class="hljs-attr">vision:</span> <span class="hljs-literal">False</span>
+        <span class="hljs-attr">function_calling:</span> <span class="hljs-literal">True</span>
+        <span class="hljs-attr">json_output:</span> <span class="hljs-literal">False</span>
+        <span class="hljs-attr">family:</span> <span class="hljs-string">gpt-4o</span>
+        <span class="hljs-attr">structured_output:</span> <span class="hljs-literal">True</span>
+        <span class="hljs-attr">multiple_system_messages:</span> <span class="hljs-literal">True</span>
+</code></pre>
+<p><code>bioGen</code> allow users to define multiple model clients, and assign them to different agents. 
+By defaults, three model clients are defined in the template file: <code>model_client1</code>, <code>model_client2</code> and <code>model_client3</code>. You can modify the <code>class</code> and <code>kwargs</code> fields to match your LLM provider's API.
+if you only have one LLM model client, you can change all the model clients configure for same.</p>
+<p><code>bioGen</code> Support OpenAI API compatible models, such as <code>OpenAI</code>, <code>Grok</code>, <code>Anthropic</code>, <code>Cohere</code> and <code>HuggingFace</code>. But also support other API Endpoints, 
+such as AzureOpenAIChatCompletionClient (Microsoft Azure OpenAI Service), GeminiChatCompletionClient(Google Gemini).</p>
+<p>D</p>
+<p>Under normal circumstances, there are three items that must be modified: </p>
+<ul>
+<li>model: the model name you want to use</li>
+<li>base_url: the API base URL of your LLM provider</li>
+<li>api_key: the API key for accessing the LLM provider</li>
+</ul>
+<p>This information can usually be found in your LLM provider. for example: </p>
+<ul>
+<li>OpenAI: <a href="https://openai.com/" target="_blank">https://openai.com/</a></li>
+<li>Grok: <a href="https://console.x.ai/" target="_blank">https://console.x.ai/</a></li>
+<li>Gemini: <a href="https://aistudio.google.com/" target="_blank">https://aistudio.google.com/</a></li>
+<li>DeepSeek: <a href="https://api-docs.deepseek.com/" target="_blank">https://api-docs.deepseek.com/</a></li>
+<li>...</li>
+</ul>
+<h2 id="configyaml">config.yaml</h2>
+<blockquote>
+<p><strong>[warning] warning</strong></p>
+<p>If you use containerization technology (docker or Singularity) to run <code>bioGen</code>, you do not need to configure this section.</p>
+</blockquote>
+<p>This is user prefernece configuration file, you can modify the agents definition,
+    which looks like this:</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">bioAG:</span>
+  <span class="hljs-comment">## all paths should be absolute paths in local computer</span>
+  <span class="hljs-attr">CONDA_META_DATABASE:</span> <span class="hljs-string">''</span>
+  <span class="hljs-attr">WORKFLOW_DATABASE:</span> <span class="hljs-string">''</span>
+  <span class="hljs-attr">USER_EXT_DATABASE:</span> <span class="hljs-string">''</span>
+  <span class="hljs-attr">API_URL:</span> <span class="hljs-string">''</span>
+  <span class="hljs-attr">API_KEY:</span> <span class="hljs-string">''</span>
+  <span class="hljs-comment">## deprecated Settings, dont use</span>
+  <span class="hljs-attr">ASK_EXEC:</span> <span class="hljs-string">'False'</span>
+  <span class="hljs-attr">MARKDOWN_RENDERER:</span> <span class="hljs-string">'TRUE'</span>
+  <span class="hljs-comment">## deprecated Settings end</span>
+<span class="hljs-attr">bioWorker:</span>
+    <span class="hljs-comment">## all paths should be absolute paths in remote computer</span>
+    <span class="hljs-attr">WORK_DIR:</span> <span class="hljs-string">'/data/work_dir'</span>
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+                <a href="start.md" class="navigation navigation-next navigation-unique" aria-label="Next page: Run bioGAIP">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Configure","level":"1.3.1","depth":2,"next":{"title":"Run bioGAIP","level":"1.3.2","depth":2,"path":"start.md","ref":"start.md","articles":[]},"previous":{"title":"Advanced","level":"1.3","depth":1,"ref":"","articles":[{"title":"Configure","level":"1.3.1","depth":2,"path":"configure.md","ref":"configure.md","articles":[]},{"title":"Run bioGAIP","level":"1.3.2","depth":2,"path":"start.md","ref":"start.md","articles":[]},{"title":"Use Singularity","level":"1.3.3","depth":2,"path":"singularity.md","ref":"singularity.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"configure.md","mtime":"2026-03-16T07:41:05.656Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-16T07:41:22.340Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-alerts/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
