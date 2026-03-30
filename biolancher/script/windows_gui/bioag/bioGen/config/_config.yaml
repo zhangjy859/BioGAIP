@@ -1,0 +1,14 @@
+bioAG:
+  ## all paths should be absolute paths in local computer
+  CONDA_META_DATABASE: ''
+  WORKFLOW_DATABASE: ''
+  USER_EXT_DATABASE: ''
+  API_URL: ''
+  API_KEY: ''
+  ## deprecated Settings, dont use
+  ASK_EXEC: 'False'
+  MARKDOWN_RENDERER: 'TRUE'
+  ## deprecated Settings end
+bioWorker:
+    ## all paths should be absolute paths in remote computer
+    WORK_DIR: '/data/work_dir'

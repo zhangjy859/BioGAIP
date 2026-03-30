@@ -1,0 +1,15 @@
+biolancher/script/windows_gui/out
+biolancher/script/windows_gui/python
+nf_pipeline_meta/*
+conda_pkg_meta/*
+bioGen/document/_book/*
+biolancher/script/windows_gui/node_modules/*
+biolancher/script/windows_gui/python/*
+biolancher/script/windows_gui/info/*
+bioag_latest.tar.gz
+bioworker_latest.tar.gz
+bioag_latest_1.0.3.10.tar.gz
+bioGen/docker/bioWorker/bioworker.sif
+bak/*
+bioGen/document/node_modules/*
+bioGen/docker/bio_ag/onnx.tar.gz

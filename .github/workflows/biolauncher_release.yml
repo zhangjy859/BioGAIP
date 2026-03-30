@@ -1,0 +1,129 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    
+    # Only enforce success on Windows; ignore failures on Linux/macOS
+    continue-on-error: ${{ matrix.os != 'windows-latest' }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    defaults:
+      run:
+        working-directory: ./biolancher/script/windows_gui/
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './biolancher/script/windows_gui/package-lock.json'
+
+      - name: Download Python (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          curl -L -o python-build.tar.gz "https://github.com/astral-sh/python-build-standalone/releases/download/20250828/cpython-3.12.11+20250828-x86_64-pc-windows-msvc-install_only.tar.gz"
+          tar -xzf python-build.tar.gz
+
+      - name: Download Python (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          curl -L -o python-build.tar.gz "https://github.com/astral-sh/python-build-standalone/releases/download/20250828/cpython-3.11.13+20250828-x86_64-unknown-linux-gnu-install_only.tar.gz"
+          tar -xzf python-build.tar.gz
+
+      - name: Download Python (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          curl -L -o python-build.tar.gz "https://github.com/astral-sh/python-build-standalone/releases/download/20250828/cpython-3.11.13+20250828-x86_64-apple-darwin-install_only.tar.gz"
+          tar -xzf python-build.tar.gz
+
+      - name: Install Python Deps (Windows)
+        if: runner.os == 'Windows'
+        run: python\python.exe -m pip install streamlit pyyaml psutil
+
+      - name: Install Python Deps (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          if [ -f "python/python" ]; then
+            python/python -m pip install streamlit pyyaml psutil
+          else
+            python/bin/python3 -m pip install streamlit pyyaml psutil
+          fi
+
+      - name: Build Application
+        run: |
+          npm install
+          npm run make
+
+      - name: Create Windows ZIP
+        if: runner.os == 'Windows'
+        run: |
+          Get-ChildItem -Path out -Filter *-win32-x64 -Directory | ForEach-Object { Compress-Archive -Path "$($_.FullName)\*" -DestinationPath "out\make\$($_.Name).zip" -Force }
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-builds-${{ matrix.os }}
+          path: |
+            biolancher/script/windows_gui/out/make/**/*.exe
+            biolancher/script/windows_gui/out/make/**/*.zip
+            biolancher/script/windows_gui/out/make/**/*.dmg
+            biolancher/script/windows_gui/out/make/**/*.deb
+            biolancher/script/windows_gui/out/make/**/*.rpm
+          retention-days: 1
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Download all Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: app-builds-*
+          path: release-artifacts
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name == 'main' && 'Dev Build' || format('Release {0}', github.ref_name) }}
+          tag_name: ${{ github.ref_name == 'main' && 'dev-latest' || github.ref_name }}
+          draft: ${{ github.event_name == 'workflow_dispatch' }}
+          generate_release_notes: true 
+          body: |
+            Automated build via GitHub Actions.
+            
+            ### 📥 Download Recommendations
+            * **Windows Users:** `.zip` package is highly recommended.
+            * **macOS & Linux Users:** ⚠️ **WARNING:** Support is "best-effort". Stability is not guaranteed.
+
+            ### Included Assets:
+            * **Windows:** `.zip` (`*-win32-x64.zip`, Portable, Recommended) / `.exe` (`*Setup.exe`, Installer)
+            * **macOS:** `.dmg` (`bioag_launcher.dmg`) / `.zip` (`-darwin-arm64-1.0.0.zip`, Portable, Recommended)
+            * **Linux:** `.deb` / `.rpm` / `.zip` (Not Included at current time)
+            
+            *(Standalone Python bundled automatically)*
+          
+          files: |
+            release-artifacts/**/*.exe
+            release-artifacts/**/*.zip
+            release-artifacts/**/*.dmg
+            release-artifacts/**/*.deb
+            release-artifacts/**/*.rpm

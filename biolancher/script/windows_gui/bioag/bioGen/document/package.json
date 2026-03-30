@@ -1,0 +1,7 @@
+{
+  "devDependencies": {
+    "gitbook-plugin-alerts": "^0.2.0",
+    "honkit": "^6.1.6",
+    "honkit-plugin-blockquote-callout": "^1.0.0"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "name": "bioag-launcher",
+  "version": "1.0.0",
+  "description": "BioAG Container Launcher",
+  "author": "BioAG Team <bioag@example.com>",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-dmg": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-vite": "^7.4.0",
+    "electron": "^25.0.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "extraResource": [
+          "python",
+          "app.py",
+          ".streamlit",
+          "assets"
+        ],
+        "icon": "assets/logo"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "bioag_launcher"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
+          "platforms": [
+            "darwin"
+          ],
+          "config": {
+            "name": "bioag_launcher",
+            "format": "UDZO"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "options": {
+              "maintainer": "BioAG Team",
+              "homepage": "https://github.com/zhangjy859/BioGAIP"
+            }
+          }
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {
+            "options": {
+              "license": "UNLICENSED"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

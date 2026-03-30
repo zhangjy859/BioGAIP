@@ -1,0 +1,68 @@
+model_clients:
+# If you only use one LLM API, you can modify Models 1-4 to the same configuration.
+  model_client1:
+    class: OpenAIChatCompletionClient
+    kwargs:
+      model: qwen-plus    # Your Model name
+      base_url: https://dashscope-intl.aliyuncs.com/compatible-mode/v1/   # Your API URL
+      api_key: sk-8aa...    # Your API_KEY
+      max_tokens: 8192
+      model_info:
+        vision: False
+        function_calling: True
+        json_output: True
+        family: unknown
+        structured_output: True
+        multiple_system_messages: True
+  model_client2:
+    class: OpenAIChatCompletionClient
+    kwargs:
+      model: qwen-plus    # Your Model name
+      base_url: https://dashscope-intl.aliyuncs.com/compatible-mode/v1/   # Your API URL
+      api_key: sk-8aa...    # Your API_KEY
+      max_tokens: 8192
+      model_info:
+        vision: False
+        function_calling: True
+        json_output: True
+        family: unknown
+        structured_output: True
+        multiple_system_messages: True
+  model_client3:
+    class: OpenAIChatCompletionClient
+    kwargs:
+      model: qwen-plus    # Your Model name
+      base_url: https://dashscope-intl.aliyuncs.com/compatible-mode/v1/   # Your API URL
+      api_key: sk-8aa...    # Your API_KEY
+      max_tokens: 8192
+      model_info:
+        vision: False
+        function_calling: True
+        json_output: True
+        family: unknown
+        structured_output: True
+        multiple_system_messages: True
+  model_client4:
+    class: OpenAIChatCompletionClient
+    kwargs:
+      model: qwen-plus    # Your Model name
+      base_url: https://dashscope-intl.aliyuncs.com/compatible-mode/v1/   # Your API URL
+      api_key: sk-8aa...    # Your API_KEY
+      max_tokens: 8192
+      model_info:
+        vision: False
+        function_calling: True
+        json_output: False
+        family: unknown
+        structured_output: True
+        multiple_system_messages: True
+        thinking: True
+  # NOT USE
+  anthropic_client:
+    class: AnthropicChatCompletionClient
+    kwargs:
+      model: claude-3-opus-20240229
+      api_key: ANTHROPIC_API_KEY
+
+max_content: 100
+content_summary_model: model_client4

@@ -1,0 +1,503 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Prerequisites · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.1.6">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-alerts/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/honkit-plugin-blockquote-callout/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="configure.html" />
+    
+    
+    <link rel="prev" href="quickstart_v2.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html">
+            
+                    
+                    Quickstart
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="quickstart.html">
+            
+                <a href="quickstart.html#system-prerequisites">
+            
+                    
+                    Prerequisites
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="configure.html">
+            
+                <a href="configure.html">
+            
+                    
+                    Configure
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="start.html">
+            
+                <a href="start.html">
+            
+                    
+                    Run bioGen
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="singularity.md">
+            
+                <span>
+            
+                    
+                    Use Singularity
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Prerequisites</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="quickstart">Quickstart</h1>
+<p><strong>BioGAIP</strong> is designed for quick and secure installation using containerization technologies such as <code>Docker</code> or <code>Singularity</code>, 
+though it can also be run directly (see the advanced installation page for details). 
+Although developed and tested on Linux, BioGAIP should work across a wide range of platforms, including Linux, Windows, and macOS, 
+as well as portable devices like Android tablets, if follow the guidance in this section.</p>
+<div class="markdown-alert markdown-alert-warning">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>
+        <span>Warning</span>
+      </p>
+      <p>We strongly recommend that users employ containerization technology to control file permissions and 
+avoid potential security risks.</p>
+
+    </div>
+<h2 id="system-prerequisites">System prerequisites</h2>
+<h3 id="linux">Linux</h3>
+<p>Whether you want to run BioAG or BioWorker, for most Linux distributions, we only require Docker to be installed.</p>
+<p>If you don't have Docker installed, please refer to the <a href="https://docs.docker.com/engine/install/" target="_blank">official Docker installation guide</a>.</p>
+<p>Following is a quick guide for <code>Ubuntu</code> users:</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">sudo</span> apt-get update
+<span class="hljs-built_in">sudo</span> apt-get install ca-certificates curl
+<span class="hljs-built_in">sudo</span> install -m 0755 -d /etc/apt/keyrings
+<span class="hljs-built_in">sudo</span> curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+<span class="hljs-built_in">sudo</span> <span class="hljs-built_in">chmod</span> a+r /etc/apt/keyrings/docker.asc
+
+<span class="hljs-comment"># Add the repository to Apt sources:</span>
+<span class="hljs-built_in">echo</span> \
+  <span class="hljs-string">"deb [arch=<span class="hljs-subst">$(dpkg --print-architecture)</span> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  <span class="hljs-subst">$(. /etc/os-release &amp;&amp; echo <span class="hljs-string">"<span class="hljs-variable">${UBUNTU_CODENAME:-<span class="hljs-variable">$VERSION_CODENAME</span>}</span>"</span>)</span> stable"</span> | \
+  <span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /etc/apt/sources.list.d/docker.list &gt; /dev/null
+<span class="hljs-built_in">sudo</span> apt-get update
+
+<span class="hljs-built_in">sudo</span> apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+<span class="hljs-built_in">sudo</span> systemctl status docker
+<span class="hljs-built_in">sudo</span> systemctl start docker
+
+<span class="hljs-built_in">sudo</span> docker run hello-world
+</code></pre>
+<blockquote>
+<p>c</p>
+<p>For most situations, we dont recommend run docker with superuser or <code>sudo</code>, you can add your user to the docker group, so you can run docker commands directly.:</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">sudo</span> usermod -aG docker <span class="hljs-variable">$USER</span>
+</code></pre>
+</blockquote>
+<p>.</p>
+<div class="markdown-alert markdown-alert-note">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>
+        <span>Note</span>
+      </p>
+      <p>In some situations, install docker with apt or other package mamanger tool is impossible, because insufficient permissions,
+especially on shared servers or HPC clusters. In this case, you can install docker in your home directory without root permissions, please refer to this <a href="https://docs.docker.com/engine/security/rootless/" target="_blank">guide</a>.</p>
+
+    </div>
+<p>.</p>
+<div class="markdown-alert markdown-alert-note">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>
+        <span>Note</span>
+      </p>
+      <p>Note: In some network environments, the connection to Docker Hub may have been blocked. This may manifest as network connectivity issues when running <code>hello-world</code>. 
+In such cases, you can refer to some third-party articles or projects (we are not affiliated with these projects and cannot guarantee their security).</p>
+<p>eg: </p>
+<ul>
+<li><a href="https://github.com/DaoCloud/public-image-mirror" target="_blank">https://github.com/DaoCloud/public-image-mirror</a></li>
+<li><a href="https://github.com/dongyubin/DockerHub" target="_blank">https://github.com/dongyubin/DockerHub</a></li>
+</ul>
+
+    </div>
+<h2 id="linux-with-singularity-experimental">Linux with Singularity (experimental)</h2>
+<blockquote>
+<p>!WARNING]</p>
+<p>If you have docker installed, this section can be skipped.</p>
+</blockquote>
+<p>If you are using a Linux system where Docker is not available, such as some HPC clusters, you can use <code>Singularity</code> (or <code>Apptainer</code>) as an <strong>alternative</strong>.</p>
+<p>Official Guide: <a href="https://docs.sylabs.io/guides/3.5/admin-guide/installation.html#unprivileged-non-setuid-installation" target="_blank">Unprivileged (non-setuid) Installation</a></p>
+<p>We also bulid a custom script to help you install Singularity in your home directory without root permissions, please refer to this <a href="">script</a>.</p>
+<h2 id="windows-or-macos">Windows or macOS</h2>
+<p>For Windows or macOS users, please install <code>Docker Desktop</code> from the <a href="https://docs.docker.com/desktop/" target="_blank">official Docker Desktop installation guide</a> and 
+follow the instructions to complete the installation.</p>
+<p>For Windows 10 or 11 users, You can also install <code>WSL2</code> (Windows Subsystem for Linux) and then install <code>Docker</code> in the WSL2 environment.</p>
+<p>Please refer to：</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers" target="_blank">Get started with Docker remote containers on WSL 2</a> </li>
+<li><a href="https://gist.github.com/dehsilvadeveloper/c3bdf0f4cdcc5c177e2fe9be671820c7" target="_blank">Installing Docker on WSL 2 with Ubuntu 22.04</a></li>
+</ul>
+<p>for more details.</p>
+<h1 id="quick-install-biogaip">Quick install BioGAIP</h1>
+<p>Please note that <code>BioGAIP</code> is designed with a <code>C/S</code> architecture, which means it includes <code>BioAG</code>for connecting to LLM, managing user sessions, importing RAG... and 
+send execution command instructions to <code>BioWorker</code>. <code>BioAG</code> can run on any computer you can access (<code>local devices</code>), 
+such as your personal computer, workstation, or NAS, while BioWorker needs to run on your server/HPC/cloud computing facilities (<code>remote devices</code>) and must be accessible by <code>BioAG</code> through the network.</p>
+<div class="markdown-alert markdown-alert-note">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>
+        <span>Note</span>
+      </p>
+      <p>This section actually includes the installation steps for both BioAG and BioWorker, but you only need to choose as needed.</p>
+
+    </div>
+<p>.</p>
+<div class="markdown-alert markdown-alert-note">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>
+        <span>Note</span>
+      </p>
+      <p>BioAG and BioWorker also can be installed at single server if need</p>
+
+    </div>
+<p>.</p>
+<h3 id="docker-image">docker image</h3>
+<ol>
+<li>git clone the BioGAIP repository:<pre><code class="lang-bash">git <span class="hljs-built_in">clone</span> xxx
+</code></pre>
+</li>
+<li><p>Navigate to the BioGAIP docker directory:</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">cd</span> BioGAIP/docker
+</code></pre>
+</li>
+<li><p>build BioAG docker image</p>
+<pre><code class="lang-bash">docker build -f Dockerfile -t BioAG:lastest .
+</code></pre>
+</li>
+<li>build BioWorker docker image<pre><code class="lang-bash"><span class="hljs-built_in">cd</span> ../BioWorker
+docker build -f Dockerfile -t BioWorker:lastest .
+</code></pre>
+</li>
+</ol>
+<h3 id="singularity-image-experimental">Singularity image (experimental)</h3>
+<p>For Singularity users, you can build the Singularity image from the Docker image directly. Or you can also build the Singularity image from the Singularity definition file in the <code>BioGAIP/docker</code> and <code>BioGAIP/BioWorker</code> directories.</p>
+<ol>
+<li><p>git clone the BioGAIP repository:</p>
+<pre><code class="lang-bash">git <span class="hljs-built_in">clone</span> xxx
+</code></pre>
+</li>
+<li><p>copy BioAG Singularity definition file to your working directory:</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">cp</span> BioGAIP/BioGAIP/docker/bio_ag/xxx.sif ~/
+</code></pre>
+</li>
+<li><p>copy BioWorker Singularity definition file to your working directory:</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">cp</span> BioGAIP/BioGAIP/BioWorker/BioWorker.sif ~/
+</code></pre>
+</li>
+<li><p>Note down the xxx.sif and BioWorker.sif file path, you will need it later.</p>
+</li>
+</ol>
+<div class="markdown-alert markdown-alert-note">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>
+        <span>Note</span>
+      </p>
+      <p><strong>experimental feature</strong></p>
+<p>BioAG provide a setup wizard to help you configure the initial settings of BioWorker,
+If you're lucky, you only need to install and run BioAG, and make
+sure <code>docker</code> or <code>singularity</code> installed at remote server, then provide it with the server's SSH connection information, and it will take care of everything through a proxy script.</p>
+    </div>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="quickstart_v2.html" class="navigation navigation-prev " aria-label="Previous page: Quickstart">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="configure.html" class="navigation navigation-next " aria-label="Next page: Configure">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Prerequisites","level":"1.2.1","depth":2,"next":{"title":"Configure","level":"1.2.2","depth":2,"path":"configure.md","ref":"configure.md","articles":[]},"previous":{"title":"Quickstart","level":"1.2","depth":1,"path":"quickstart_v2.md","ref":"quickstart_v2.md","articles":[{"title":"Prerequisites","level":"1.2.1","depth":2,"anchor":"#system-prerequisites","path":"quickstart.md","ref":"quickstart.md#system-prerequisites","articles":[]},{"title":"Configure","level":"1.2.2","depth":2,"path":"configure.md","ref":"configure.md","articles":[]},{"title":"Run bioGen","level":"1.2.3","depth":2,"path":"start.md","ref":"start.md","articles":[]},{"title":"Use Singularity","level":"1.2.4","depth":2,"path":"singularity.md","ref":"singularity.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout","livereload"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"quickstart.md","mtime":"2026-03-11T10:21:03.804Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-11T09:09:37.804Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-alerts/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

@@ -1,0 +1,589 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Prompt Tips · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.1.6">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-alerts/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/honkit-plugin-blockquote-callout/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="singularity.md" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html">
+            
+                    
+                    Quickstart
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#before-you-begin">
+            
+                    
+                    Before You Begin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#system-prerequisites">
+            
+                    
+                    Prerequisites
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#quick-start-with-recommended-system-configuration">
+            
+                    
+                    Quick Start
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="quickstart_v2.html">
+            
+                <a href="quickstart_v2.html#qa">
+            
+                    
+                    Q&A
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Advanced
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="configure.html">
+            
+                <a href="configure.html">
+            
+                    
+                    Configure
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="start.html">
+            
+                <a href="start.html">
+            
+                    
+                    Run bioGAIP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="singularity.md">
+            
+                <span>
+            
+                    
+                    Use Singularity
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4" data-path="Prompt.html">
+            
+                <a href="Prompt.html">
+            
+                    
+                    Prompt Tips
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Prompt Tips</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="prompt-optimization-suggestions">Prompt Optimization Suggestions</h2>
+<p>A <strong>Prompt</strong> is the textual instruction that users provide to an AI model—the primary way humans communicate with the AI. Well-crafted Prompts are essential for reliable workflow execution and successful outcomes.</p>
+<p>Drawing from our hands-on experience debugging the BioGAIP project, we’ve compiled the following practical recommendations to help users achieve the best results with minimal interaction.</p>
+<h3 id="the-first-prompt-is-critical">The First Prompt Is Critical</h3>
+<p>BioGAIP is engineered to automate tasks with as few user interventions as possible. Consequently, the <strong>initial Prompt</strong> has an outsized impact on overall success. In our testing, a well-designed First Prompt enables more than 60% of tasks to complete automatically.</p>
+<p>A strong Prompt should clearly include:</p>
+<ul>
+<li>Task overview</li>
+<li>Desired output / success criteria</li>
+<li>Target output directory (matching the paths configured in BioGAIP)</li>
+<li>Any additional context (data sources, reference genome version, etc.)</li>
+</ul>
+<h4 id="recommended-principles">Recommended Principles</h4>
+<ol>
+<li><p><strong>Be Clear and Specific</strong><br></br>Explicitly state requirements and expectations—avoid ambiguity.</p>
+<p><strong>Good example:</strong></p>
+<pre><code class="lang-markdown">You are an experienced bioinformatician. Now process the WGS sequencing data from cell lines according to the following requirements. Strictly follow these steps exactly; do not add, omit, or assume any extra steps, tools, or paths.
+
+<span class="hljs-bullet">1.</span> Perform necessary quality control and preprocessing on the sequencing data.
+<span class="hljs-bullet">2.</span> Align the sequencing data to the reference genome using bwa.
+<span class="hljs-bullet">3.</span> Perform quality control and processing on the mapped BAM files (e.g., duplicate removal).
+...
+</code></pre>
+<p><strong>Bad example:</strong></p>
+<pre><code class="lang-markdown">Please Process WGS Sequencing data store at: /path/to/input and output to /path/to/output
+</code></pre>
+</li>
+<li><p><strong>Filename Is Also a Prompt</strong><br></br>For the Agent, a Prompt is not limited to what you type—file naming conventions act as powerful <em>implicit</em> context.<br></br>Data from sequencing vendors or public repositories often have cryptic names. We strongly recommend renaming files to convey clear biological meaning:</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Original Filename (no sample info inferable)</th>
+<th>Group</th>
+<th>Replicate</th>
+<th>Recommended Name <code>{group_name}_{rep_id}_{reads_id}.fq.gz</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>202202001H1_Line001_clean_r1.fq.gz</td>
+<td>DHX48 KO</td>
+<td>1</td>
+<td>DHX48_KO_rep1_r1.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H1<em>Line001</em> clean_r2.fq.gz</td>
+<td>DHX48 KO</td>
+<td>1</td>
+<td>DHX48_KO_rep1_r2.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H2_Line001_clean_r1.fq.gz</td>
+<td>DHX48 KO</td>
+<td>2</td>
+<td>DHX48_KO_rep2_r1.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H2_Line001_clean_r2.fq.gz</td>
+<td>DHX48 KO</td>
+<td>2</td>
+<td>DHX48_KO_rep2_r2.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H3_Line001_clean_r1.fq.gz</td>
+<td>DHX48 KO</td>
+<td>3</td>
+<td>DHX48_KO_rep3_r1.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H3_Line001_clean_r2.fq.gz</td>
+<td>DHX48 KO</td>
+<td>3</td>
+<td>DHX48_KO_rep3_r2.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H4_Line001_clean_r1.fq.gz</td>
+<td>Control</td>
+<td>1</td>
+<td>Control_rep1_r1.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H4_Line001_clean_r2.fq.gz</td>
+<td>Control</td>
+<td>1</td>
+<td>Control_rep1_r2.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H5_Line001_clean_r1.fq.gz</td>
+<td>Control</td>
+<td>2</td>
+<td>Control_rep2_r1.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H5_Line001_clean_r2.fq.gz</td>
+<td>Control</td>
+<td>2</td>
+<td>Control_rep2_r2.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H6_Line001_clean_r1.fq.gz</td>
+<td>Control</td>
+<td>3</td>
+<td>Control_rep3_r1.fq.gz</td>
+</tr>
+<tr>
+<td>202202001H6_Line001_clean_r2.fq.gz</td>
+<td>Control</td>
+<td>3</td>
+<td>Control_rep3_r2.fq.gz</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li><p><strong>Avoid Errors</strong><br></br>Many large models will not proactively correct user mistakes, rapidly consuming context. Common pitfalls we’ve observed:</p>
+<ul>
+<li>Using paths without write permissions (check BioWorker configuration)</li>
+<li>Specifying incorrect tools or parameters (e.g., STAR for WGS data, or non-existent flags)</li>
+</ul>
+</li>
+<li><p><strong>Intervene Promptly</strong><br></br>If serious errors or hallucinations appear within the first few rounds after the First Prompt, automatic recovery is unlikely. Use the UI’s <strong>Interrupt</strong> or <strong>Summarize</strong> feature immediately to reset and guide the Agent.</p>
+</li>
+<li><p><strong>Repetition Is the Best Antidote to Hallucinations (Advanced Users)</strong><br></br>Despite built-in safeguards, hallucinations can still occur. For stubborn cases:</p>
+<ul>
+<li>Repeat the First Prompt verbatim at the very beginning of the task (twice is often sufficient).</li>
+<li>Advanced users can configure custom Agents (via BioAG’s custom interface) to inject the First Prompt into every Planner round.</li>
+</ul>
+</li>
+</ol>
+<h3 id="examples">Examples</h3>
+<h4 id="bulk-rna-seq">Bulk RNA-seq</h4>
+<pre><code class="lang-markdown">You are an expert bioinformatician tasked with processing RNA-seq sequencing data from the dataset GSE281525. The data is stored in the directory <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">directory</span>, <span class="hljs-attr">e.g.</span>, /<span class="hljs-attr">mnt</span>/<span class="hljs-attr">data1</span>/<span class="hljs-attr">BioGAIP_test</span>/<span class="hljs-attr">input</span>&gt;</span></span>, which includes RNA-seq data for xxx and xxx. Please download the human reference genome <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">reference</span> <span class="hljs-attr">genome</span> <span class="hljs-attr">version</span>, <span class="hljs-attr">e.g.</span>, <span class="hljs-attr">hg38</span>&gt;</span></span> and its corresponding GTF annotation file from GENCODE or UCSC and save to <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">output</span> <span class="hljs-attr">directory</span>, <span class="hljs-attr">e.g.</span>, /<span class="hljs-attr">mnt</span>/<span class="hljs-attr">data1</span>/<span class="hljs-attr">BioGAIP_test</span>/<span class="hljs-attr">reference</span>&gt;</span></span>.
+
+Perform the following pipeline steps on the data:
+
+Conduct quality control (QC) using appropriate tools such as FastQC or MultiQC.
+Align the reads to the <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">reference</span> <span class="hljs-attr">genome</span> <span class="hljs-attr">version</span>, <span class="hljs-attr">e.g.</span>, <span class="hljs-attr">hg38</span>&gt;</span></span> reference genome using STAR.
+Quantify transcripts using featureCounts.
+Perform differential expression analysis using DESeq2 to identify genes with differential expression between xxxx and xxx tumor samples.
+
+All outputs must be saved in <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">output</span> <span class="hljs-attr">directory</span>, <span class="hljs-attr">e.g.</span>, /<span class="hljs-attr">mnt</span>/<span class="hljs-attr">data1</span>/<span class="hljs-attr">BioGAIP_test</span>/<span class="hljs-attr">output</span>&gt;</span></span>. If you need to create or manage environments (e.g., Conda envs), store them in <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">env</span> <span class="hljs-attr">directory</span>, <span class="hljs-attr">e.g.</span>, /<span class="hljs-attr">mnt</span>/<span class="hljs-attr">data1</span>/<span class="hljs-attr">BioGAIP_test</span>/<span class="hljs-attr">envs</span>&gt;</span></span>.
+You have access to <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">cpu</span> <span class="hljs-attr">number</span>&gt;</span></span> CPU cores for parallel processing where applicable.
+Expected Outputs:
+
+<span class="hljs-bullet">1.</span> Aligned BAM files for each sample.
+<span class="hljs-bullet">2.</span> Transcript quantification results (e.g., count matrices).
+<span class="hljs-bullet">3.</span> A list of differentially expressed genes, including fold changes, p-values, and adjusted p-values.
+
+Note: You only have write permissions to the output folder and the conda folder.
+</code></pre>
+<h4 id="wgs">WGS</h4>
+<pre><code class="lang-markdown">You are an experienced bioinformatician. Now process the WGS sequencing data from cell lines according to the following requirements. Strictly follow these steps exactly; do not add, omit, or assume any extra steps, tools, or paths.
+
+<span class="hljs-bullet">1.</span> Perform necessary quality control and preprocessing on the sequencing data.
+<span class="hljs-bullet">2.</span> Align the sequencing data to the reference genome using bwa.
+<span class="hljs-bullet">3.</span> Perform quality control and processing on the mapped BAM files (e.g., duplicate removal).
+<span class="hljs-bullet">4.</span> Use GATK to perform variant analysis for each sample and merge all analysis results.
+<span class="hljs-bullet">5.</span> Perform quality control on the variant analysis results.
+<span class="hljs-bullet">6.</span> Retain all necessary intermediate results and logs.
+
+Input sequencing data location: <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">directory</span>&gt;</span></span>
+Reference genome location: <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">reference</span> <span class="hljs-attr">genome</span>&gt;</span></span>
+Output directory: <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">output</span> <span class="hljs-attr">directory</span>&gt;</span></span>
+Conda environment: <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">env</span> <span class="hljs-attr">directory</span>&gt;</span></span> (use only if needed; prefer pre-installed packages).
+
+You have total <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">cpu</span> <span class="hljs-attr">number</span>&gt;</span></span> CPU cores to use.
+
+Note: You only have write permissions to the output folder and the conda folder.
+</code></pre>
+<h4 id="geo-reanalysis">GEO Reanalysis</h4>
+<pre><code class="lang-markdown">You are a bioinformatics expert tasked with analyzing the GEO public dataset GSE60052, which contains RNA-seq data from 79 small cell lung cancer (SCLC) samples and 7 normal control samples. SCLC is a tumor with complex pathogenesis and poor prognosis. Follow these steps precisely, using verified tools and data sources to avoid hallucinations or assumptions. Base all actions on factual data retrieved from reliable databases, and document your reasoning step by step.
+
+<span class="hljs-bullet">1.</span> Access the GEO database via appropriate tools to retrieve and summarize relevant information for the accession number GSE60052, including dataset description. Do not assume any details; verify everything from the source.
+<span class="hljs-bullet">2.</span> Directly download the gene expression data from the GEO database web page if needed (use wget or other tools). Analyze its content and structure, including file format, sample groups, and any preprocessing notes. Output a clear summary of the findings.
+<span class="hljs-bullet">3.</span> Use the limma R package to perform differential expression analysis. Identify differentially expressed genes between the tumor samples (SCLC) and the paired/control samples (normal). Apply standard statistical methods: normalize data, fit models, and use adjusted p-values (e.g., FDR &lt; 0.05) for significance. Explain your code and results step by step, without fabricating data.
+
+Save all outputs, including files, logs, and results, in <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">output</span> <span class="hljs-attr">directory</span>&gt;</span></span>. If creating or managing environments (e.g., Conda envs), store them in <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">env</span> <span class="hljs-attr">directory</span>&gt;</span></span>.
+
+Proceed step by step, and only use tools or code that directly support the tasks. If any information is unclear or inaccessible, note it explicitly without guessing.
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="singularity.md" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Use Singularity">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Prompt Tips","level":"1.4","depth":1,"previous":{"title":"Use Singularity","level":"1.3.3","depth":2,"path":"singularity.md","ref":"singularity.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"Prompt.md","mtime":"2026-03-12T08:39:41.590Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-16T11:48:26.022Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-alerts/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

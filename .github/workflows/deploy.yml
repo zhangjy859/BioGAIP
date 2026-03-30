@@ -1,0 +1,34 @@
+name: Deploy HonKit from subfolder to GitHub Pages
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: setting Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build HonKit
+        run: |
+          cd ./bioGen/document/                  
+          npm install --save-dev honkit-plugin-blockquote-callout gitbook-plugin-alerts
+          npx honkit build
+
+      - name: Deploy GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./bioGen/document/_book
