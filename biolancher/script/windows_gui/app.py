@@ -1369,8 +1369,12 @@ def main():
                             st.session_state.configure_path = tmp.name
                         st.info(f"Uploaded: {uploaded_file.name}")
                 else:
-                    config_yaml = 'assets/system_config.yaml'
-                    config = yaml.safe_load(open(config_yaml, 'r'))
+                    try: 
+                        config_yaml = 'assets/system_config.yaml'
+                        config = yaml.safe_load(open(config_yaml, 'r'))
+                    except Exception as e:
+                        config_yaml = 'resources/assets/system_config.yaml'
+                        config = yaml.safe_load(open(config_yaml, 'r'))
                     st.subheader("Edit Model Clients")
                     for client_name, client in config['model_client'].items():
                         with st.expander(client_name, expanded=True):
