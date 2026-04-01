@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://nondisk.136138189.xyz:2086/f/Aq5SV/bioGAIP%20Logo.png" alt="BioGAIP Logo" width="300"/>
+  <img src="https://dataweb.biogaip.top/img/bioGAIP%20Logo.png?expires=2552095591&token=864d8025f4c7e8ecb5143aa04688376dbed6d78923d710e58a65b0f11ac3d505" alt="BioGAIP Logo" width="300"/>
 </p>
 
 <h1 align="center">BioGAIP</h1>
@@ -93,26 +93,39 @@ Compared to existing solutions, BioGAIP stands out with several distinct advanta
 
 ## 🚀 Quick Start (Literally few hours)
 
-**In a typical scenario, BioGAIP requires at least 4GB of memory for operation. We strongly recommend that you use it only on devices with 16GB or more of RAM. If you use it with less than 16GB of RAM (eg. 8GB), there may be some unexpected issues.**
+BioGAIP typically runs in C/S (Client/Server) mode. BioAG, running in client mode, supports various computing platforms (e.g., local Windows 10/Linux computers), while BioWorker needs to be deployed on the user's computing resources, such as Linux servers or HPC. Typically, the local side and server side need to meet the following conditions:
 
-If it is necessary to use it on devices with low configurations, we recommend that users try our optimized Bypass mode (refer to the advanced section in the documentation)
+### Local Side:
+- A computer running Windows 10/11 (For computers running Linux, it must be started from source code).
+- Virtualization must be enabled in BIOS\*\*. (For most OEM computers, this should be enabled by default. To check if it is enabled, please refer to: [https://stackoverflow.com/questions/49005791/how-to-check-if-intel-virtualization-is-enabled-without-going-to-bios-in-windows](https://stackoverflow.com/questions/49005791/how-to-check-if-intel-virtualization-is-enabled-without-going-to-bios-in-windows)).
+- The computer should have 30GB of free space and 16GB of RAM (although it may run on devices with only 8GB or 4GB of RAM).
+- The computer should be able to communicate with the computing server.
 
+### Server Side:
+- Running Linux operating system\*.
+- Docker installed as the underlying containerization technology\*\*.
+- Firewall port for BioWorker communication (default is 38000) must be open.
 
-1. Install **docker** on Windows 10/11. [Get started with Docker remote containers on WSL 2](https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers)
-   
-   If you cant install docker, BioAG also can work with limited functions
+\* This option can be bypassed; for example, you can actually run BioWorker on a Windows platform, which requires more complex configuration. As the number of users with this need is small, we do not provide support or documentation for this workaround; please refer directly to the BioGAIP code for technical details.
+
+\*\* This option is strongly recommended, but you can use alternatives to bypass this requirement without affecting the main functions of BioGAIP. However, this will greatly increase the difficulty of configuration beyond the scope of this Quick Start. Please refer to the documentation for more details.
+
+Configuration Steps:
+If your devices meet the above requirements, follow these steps to get started:
+
+1. Refer to the [Quick Config.mp4](./Quick%20Config.mp4) included in this repository to quickly configure your computer.
 2. **Upload** Your data to your Linux server (Winscp/filezilla)
-3. **Download** BioLauncher 
-4. **Launch** on Windows 10/11 (WSL2 auto-detected)  
-5. **Connect** to your Linux server (IP + password)  
-6. **Paste** your LLM API key (Qwen / DeepSeek / local)  
-7. Paste **prompt** → **Run**  
+3. **Launch** After the quick configuration is complete, unzip `bioag-launcher-win32-x64-*.*.*.zip` and double-click `bioag-launcher.exe` to start the setup wizard.
+4. **Configure** BioLauncher will guide the user through the initial configuration of BioAG.
+5. **Connect** After step 3 is completed, BioLauncher will guide the user to connect to BioWorker. If you have a configured BioWorker instance, you can connect directly by entering the API URL and Key. If you do not have a configured BioWorker instance, you can choose to use SSH connection for initialization; BioAG will attempt to automatically complete the BioWorker configuration on the target server via SSH.
+6. Paste **prompt** → **Run**  
+7. **Done.** The AI agent takes over.
 
-**Done.** The AI agent takes over.
+We strongly suggest users watch Videos 1 and 2 in the supplementary materials of our manuscript for video guides regarding steps 2-4.
 
-**Detail Quick Start Guide** available at [here](quickstart.md)
+**Detail Quick Start Guide** available at [here](quickstart_v2.md)
 
-**Configure File Template** is available [here](https://raw.githubusercontent.com/zhangjy859/BioGAIP/refs/heads/main/bioGen/document/src/configure.yaml).
+**Configure File Template** is available [here](./configure.yaml).
 (If not download automatic, please use save as, or press `Ctrl + S`)
 
 ---
@@ -208,5 +221,4 @@ This project is licensed under a Dual License model:
 **Disclaimer**
 
 THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
-
 
