@@ -9,6 +9,8 @@ import secrets
 import subprocess
 import threading
 import uuid as uuid4
+import collections
+from typing import Deque, Tuple
 from queue import Queue, Empty
 
 import openai
@@ -1691,9 +1693,96 @@ if message is not None:
         # If empty message and no new file, do nothing
         pass
 
+class Reward:
+    def __init__(
+        self,
+        initial_reward: float,
+        decay_rate: float = 0.6,
+        slow_decay_rate: float = 0.99,
+        recovery_step: float = -1,
+        cooldown_period: int = 10,
+        window_a: int = 15,
+        min_triggers_a: int = 3,
+        window_b: int = 30,
+        min_pattern_len: int = 3
+    ):
+        self.initial_reward = initial_reward
+        self.decay_rate = decay_rate
+        self.slow_decay_rate = slow_decay_rate
+        self.recovery_step = recovery_step
+        self.cooldown_period = cooldown_period
+        self.window_a = window_a
+        self.min_triggers_a = min_triggers_a
+        self.window_b = window_b
+        self.min_pattern_len = min_pattern_len
+        if self.recovery_step < 0:
+            recovery_step = 0.1
+        self.reset()
+
+    def reset(self) -> None:
+        self.current_reward = float(self.initial_reward)
+        self.clock = 0
+        self.history: Deque[Tuple[int, str]] = collections.deque()
+        self.cooldown_until = 0
+
+    def timer(self) -> None:
+        self.clock += 1
+
+    def __call__(self, category: str = 'default') -> int:
+        self.history.append((self.clock, category))
+        self._maintain_history()
+        self._evaluate_recovery()
+        
+        output_reward = round(self.current_reward)
+        
+        if output_reward == 0:
+            self.current_reward *= self.slow_decay_rate
+        else:
+            self.current_reward *= self.decay_rate
+            
+        return output_reward
+
+    def _maintain_history(self) -> None:
+        while self.history and self.history[0][0] <= self.clock - self.window_b:
+            self.history.popleft()
+
+    def _evaluate_recovery(self) -> None:
+        if self.clock <= self.cooldown_until:
+            return
+
+        recent_triggers_a = sum(1 for tick, _ in self.history if tick > self.clock - self.window_a)
+        if recent_triggers_a < self.min_triggers_a:
+            return
+
+        recent_b = list(self.history)
+        max_len = 0
+        n = len(recent_b)
+
+        for i in range(n - self.min_pattern_len + 1):
+            cat = recent_b[i][1]
+            if recent_b[i + 1][1] != cat:
+                continue
+
+            interval = recent_b[i + 1][0] - recent_b[i][0]
+            curr_len = 2
+            
+            for j in range(i + 2, n):
+                if recent_b[j][1] == cat and recent_b[j][0] - recent_b[j - 1][0] == interval:
+                    curr_len += 1
+                else:
+                    break
+                    
+            if curr_len >= self.min_pattern_len and recent_b[i + curr_len - 1][0] == self.clock:
+                max_len = max(max_len, curr_len)
+
+        if max_len >= self.min_pattern_len:
+            recovery_amount = self.initial_reward * (max_len * self.recovery_step)
+            self.current_reward = min(self.initial_reward, self.current_reward + recovery_amount)
+            self.cooldown_until = self.clock + self.cooldown_period
+
 # Function to process the task in background thread
 st.session_state['llm_usage'] = {}
-def process_task(user_message, log_file, team, stop_team, force_stop, team_status_file = None, team_exit_file = None, team_summary_file = None, max_content=1000, load_history=True):
+def process_task(user_message, log_file, team, stop_team, force_stop, team_status_file = None, team_exit_file = None, team_summary_file = None, max_content=1000, load_history=True, sucessfulExecutate_reward = 0):
     def _create_file(file):
         if file:
             with open(file, 'w') as f:
@@ -1721,7 +1810,7 @@ def process_task(user_message, log_file, team, stop_team, force_stop, team_statu
         st.session_state['project_id'] = project_id
         if remote_tool_loaded: 
             try: 
-                _ = set_remote_tools(tools_dict = remote_tool_detail, project_id = os.environ['PROJECT_ID'], api_base_url = os.environ['API_URL'], api_key = os.environ['API_KEY'])
+                _ = set_remote_tools(tools_dict = remote_tool_detail, project_id = os.environ['PROJECT_ID'], api_base_url = os.environ['API_URL'], api_key = os.environ['API_KEY'], sucessfulExecutate_reward = 10)
                 logger.info(f"set_remote_tools: {_}")
             except Exception as e:
                 logger.info('biogen error: {e}')
@@ -1743,23 +1832,22 @@ def process_task(user_message, log_file, team, stop_team, force_stop, team_statu
                 logger.error(f"Failed to append message to history: {str(e)}")
     task_messages = history + [TextMessage(content=user_message, source="user")]
     task_messages_num = 0
-    sucessfulExecutate_Reward = 10
     
     ## sucessful reward
-    class DiminishingReward:
-        def __init__(self, initial_reward: float) -> None:
-            self.initial_reward = initial_reward
-            self.call_count = 0     
-        def __call__(self) -> float:
-            """Return current reward and increment call counter."""
-            reward = round(self.initial_reward / (1 + self.call_count), 0)
-            self.call_count += 1
-            return reward       
-        def reset(self) -> None:
-            """Reset call count to zero for reuse."""
-            self.call_count = 0
+    #class DiminishingReward:
+    #    def __init__(self, initial_reward: float) -> None:
+    #        self.initial_reward = initial_reward
+    #        self.call_count = 0     
+    #    def __call__(self) -> float:
+    #        """Return current reward and increment call counter."""
+    #        reward = round(self.initial_reward / (1 + self.call_count), 0)
+    #        self.call_count += 1
+    #        return reward       
+    #    def reset(self) -> None:
+    #        """Reset call count to zero for reuse."""
+    #        self.call_count = 0
         
-    reward = DiminishingReward(sucessfulExecutate_Reward)
+    reward = Reward(sucessfulExecutate_reward)
     
     while retries <= max_retries:
         try:
@@ -1910,9 +1998,9 @@ def process_task(user_message, log_file, team, stop_team, force_stop, team_statu
                             _json_safedump({'type': 'message', 'role': "system", "content": output}, f)
                             f.write('\n')
                         if not "Error" in output:
-                            reward_value = reward()
+                            reward_value = reward('Tool_event')
                             task_messages_num = max(task_messages_num - reward_value, 0)
-                            logger.info(f"Reward for {msg.source}: {reward_value}")
+                            logger.info(f"Reward for {msg.source}: {reward_value}, current task messages num: {task_messages_num}")
                         time_out = float('inf')
                     elif isinstance(msg, UserInputRequestedEvent):
                         logger.info(f"<==== UserInputRequestedEvent message received")
@@ -2204,8 +2292,10 @@ if "messages" in st.session_state and st.session_state.messages:
                 save_session()
             
             logger.info(f'st.session_state.automatic_start: {st.session_state.get("automatic_start", True)}, team_summary: {team_summary}')
-            if st.session_state.get('automatic_start', True):   
-                process_p = Process(target=process_task, args=(user_message, st.session_state.log_file, st.session_state.team, st.session_state.stop_team, st.session_state.force_stop, st.session_state.agent_status_file, st.session_state.team_exit_file, st.session_state.team_summary_file, st.session_state.max_content, st.session_state.get('load_history', True)),
+            if st.session_state.get('automatic_start', True): 
+                sucessfulExecutate_reward = sys_config.get('sucessfulExecutate_reward', 10)
+                #reward = Reward(sucessfulExecutate_reward)
+                process_p = Process(target=process_task, args=(user_message, st.session_state.log_file, st.session_state.team, st.session_state.stop_team, st.session_state.force_stop, st.session_state.agent_status_file, st.session_state.team_exit_file, st.session_state.team_summary_file, st.session_state.max_content, st.session_state.get('load_history', True), sucessfulExecutate_reward),
                             daemon=True)
                 process_p.start()
                 logger.info(f'Thread started, st.session_state: {st.session_state.get("processing", False)}, pid: {process_p.pid}')

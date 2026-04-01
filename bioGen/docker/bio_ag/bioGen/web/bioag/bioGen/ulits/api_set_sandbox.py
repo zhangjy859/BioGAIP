@@ -317,7 +317,8 @@ def main():
         bioworker_name = 'bioworker_' + bioworker_name 
         run_cmd = (
             f"mkdir -p ~/bioGen/bioWorker && cd ~/bioGen/bioWorker && "
-            f"docker run -d --rm --name {bioworker_name} -e API_KEY='{args.api_key}' -e BIOWORKER_PORT='{args.bioworker_port}' --user $(id -u):$(id -g) {safetly_args} --net host  {volume_str}  bioworker:latest"
+            # --net host
+            f"docker run -d --rm --name {bioworker_name} -e API_KEY='{args.api_key}' -e BIOWORKER_PORT='{args.bioworker_port}' --user $(id -u):$(id -g) -p {args.bioworker_port}:{args.bioworker_port} {safetly_args} {volume_str} bioworker:latest"
         )
         print(run_cmd)
         exec_command(ssh, run_cmd)
