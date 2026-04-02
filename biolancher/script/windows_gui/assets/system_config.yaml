@@ -57,8 +57,6 @@ model_client:
         structured_output: True
         multiple_system_messages: True
 
-  max_content: 100
-  content_summary_model: model_client4
 
 ### STOP EDITING ###
 
