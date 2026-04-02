@@ -326,7 +326,7 @@
                                 <section class="normal markdown-section">
                                 
                                 <p align="center">
-  <img src="http://nondisk.136138189.xyz:2086/f/Aq5SV/bioGAIP%20Logo.png" alt="BioGAIP Logo" width="300"></img>
+  <img src="https://dataweb.biogaip.top/img/bioGAIP%20Logo.png?expires=2552095591&amp;token=864d8025f4c7e8ecb5143aa04688376dbed6d78923d710e58a65b0f11ac3d505" alt="BioGAIP Logo" width="300"></img>
 </p>
 
 <p></p><h1 align="center" id="biogaip">BioGAIP</h1><p></p>
@@ -433,22 +433,36 @@ Expected Outputs:
 
 <hr></hr>
 <h2 id="🚀-quick-start-literally-few-hours">🚀 Quick Start (Literally few hours)</h2>
-<p><strong>In a typical scenario, BioGAIP requires at least 4GB of memory for operation. We strongly recommend that you use it only on devices with 16GB or more of RAM. If you use it with less than 16GB of RAM (eg. 8GB), there may be some unexpected issues.</strong></p>
-<p>If it is necessary to use it on devices with low configurations, we recommend that users try our optimized Bypass mode (refer to the advanced section in the documentation)</p>
+<p>BioGAIP typically runs in C/S (Client/Server) mode. BioAG, running in client mode, supports various computing platforms (e.g., local Windows 10/Linux computers), while BioWorker needs to be deployed on the user's computing resources, such as Linux servers or HPC. Typically, the local side and server side need to meet the following conditions:</p>
+<h3 id="local-side">Local Side:</h3>
+<ul>
+<li>A computer running Windows 10/11 (For computers running Linux, it must be started from source code).</li>
+<li>Virtualization must be enabled in BIOS**. (For most OEM computers, this should be enabled by default. To check if it is enabled, please refer to: <a href="https://stackoverflow.com/questions/49005791/how-to-check-if-intel-virtualization-is-enabled-without-going-to-bios-in-windows" target="_blank">https://stackoverflow.com/questions/49005791/how-to-check-if-intel-virtualization-is-enabled-without-going-to-bios-in-windows</a>).</li>
+<li>The computer should have 30GB of free space and 16GB of RAM (although it may run on devices with only 8GB or 4GB of RAM).</li>
+<li>The computer should be able to communicate with the computing server.</li>
+</ul>
+<h3 id="server-side">Server Side:</h3>
+<ul>
+<li>Running Linux operating system*.</li>
+<li>Docker installed as the underlying containerization technology**.</li>
+<li>Firewall port for BioWorker communication (default is 38000) must be open.</li>
+</ul>
+<p>* This option can be bypassed; for example, you can actually run BioWorker on a Windows platform, which requires more complex configuration. As the number of users with this need is small, we do not provide support or documentation for this workaround; please refer directly to the BioGAIP code for technical details.</p>
+<p>** This option is strongly recommended, but you can use alternatives to bypass this requirement without affecting the main functions of BioGAIP. However, this will greatly increase the difficulty of configuration beyond the scope of this Quick Start. Please refer to the documentation for more details.</p>
+<p>Configuration Steps:
+If your devices meet the above requirements, follow these steps to get started:</p>
 <ol>
-<li><p>Install <strong>docker</strong> on Windows 10/11. <a href="https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers" target="_blank">Get started with Docker remote containers on WSL 2</a></p>
-<p>If you cant install docker, BioAG also can work with limited functions</p>
-</li>
+<li>Refer to the <a href="Quick%20Config.mp4">Quick Config.mp4</a> included in this repository to quickly configure your computer.</li>
 <li><strong>Upload</strong> Your data to your Linux server (Winscp/filezilla)</li>
-<li><strong>Download</strong> BioLauncher </li>
-<li><strong>Launch</strong> on Windows 10/11 (WSL2 auto-detected)  </li>
-<li><strong>Connect</strong> to your Linux server (IP + password)  </li>
-<li><strong>Paste</strong> your LLM API key (Qwen / DeepSeek / local)  </li>
+<li><strong>Launch</strong> After the quick configuration is complete, unzip <code>bioag-launcher-win32-x64-*.*.*.zip</code> and double-click <code>bioag-launcher.exe</code> to start the setup wizard.</li>
+<li><strong>Configure</strong> BioLauncher will guide the user through the initial configuration of BioAG.</li>
+<li><strong>Connect</strong> After step 3 is completed, BioLauncher will guide the user to connect to BioWorker. If you have a configured BioWorker instance, you can connect directly by entering the API URL and Key. If you do not have a configured BioWorker instance, you can choose to use SSH connection for initialization; BioAG will attempt to automatically complete the BioWorker configuration on the target server via SSH.</li>
 <li>Paste <strong>prompt</strong> → <strong>Run</strong>  </li>
+<li><strong>Done.</strong> The AI agent takes over.</li>
 </ol>
-<p><strong>Done.</strong> The AI agent takes over.</p>
-<p><strong>Detail Quick Start Guide</strong> available at <a href="quickstart.md">here</a></p>
-<p><strong>Configure File Template</strong> is available <a href="https://raw.githubusercontent.com/zhangjy859/BioGAIP/refs/heads/main/bioGen/document/src/configure.yaml" target="_blank">here</a>.
+<p>We strongly suggest users watch Videos 1 and 2 in the supplementary materials of our manuscript for video guides regarding steps 2-4.</p>
+<p><strong>Detail Quick Start Guide</strong> available at <a href="quickstart_v2.html">here</a></p>
+<p><strong>Configure File Template</strong> is available <a href="configure.yaml">here</a>.
 (If not download automatic, please use save as, or press <code>Ctrl + S</code>)</p>
 <hr></hr>
 <h2 id="🎯-tested-analyses">🎯 Tested Analyses</h2>
@@ -586,7 +600,7 @@ Expected Outputs:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Quickstart","level":"1.2","depth":1,"path":"quickstart_v2.md","ref":"quickstart_v2.md","articles":[{"title":"Before You Begin","level":"1.2.1","depth":2,"anchor":"#before-you-begin","path":"quickstart_v2.md","ref":"quickstart_v2.md#before-you-begin","articles":[]},{"title":"Prerequisites","level":"1.2.2","depth":2,"anchor":"#system-prerequisites","path":"quickstart_v2.md","ref":"quickstart_v2.md#system-prerequisites","articles":[]},{"title":"Quick Start","level":"1.2.3","depth":2,"anchor":"#quick-start-with-recommended-system-configuration","path":"quickstart_v2.md","ref":"quickstart_v2.md#quick-start-with-recommended-system-configuration","articles":[]},{"title":"Q&A","level":"1.2.4","depth":2,"anchor":"#qa","path":"quickstart_v2.md","ref":"quickstart_v2.md#qa","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"README.md","mtime":"2026-03-30T02:31:43.642Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-30T02:31:52.665Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Quickstart","level":"1.2","depth":1,"path":"quickstart_v2.md","ref":"quickstart_v2.md","articles":[{"title":"Before You Begin","level":"1.2.1","depth":2,"anchor":"#before-you-begin","path":"quickstart_v2.md","ref":"quickstart_v2.md#before-you-begin","articles":[]},{"title":"Prerequisites","level":"1.2.2","depth":2,"anchor":"#system-prerequisites","path":"quickstart_v2.md","ref":"quickstart_v2.md#system-prerequisites","articles":[]},{"title":"Quick Start","level":"1.2.3","depth":2,"anchor":"#quick-start-with-recommended-system-configuration","path":"quickstart_v2.md","ref":"quickstart_v2.md#quick-start-with-recommended-system-configuration","articles":[]},{"title":"Q&A","level":"1.2.4","depth":2,"anchor":"#qa","path":"quickstart_v2.md","ref":"quickstart_v2.md#qa","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"README.md","mtime":"2026-04-02T03:44:04.012Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-04-02T03:44:14.574Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
