@@ -160,7 +160,7 @@ RUN apt-get update && apt-get install -y \
 USER $MAMBA_USER
 
 ENV VERSION_OLD=1.3.0.10
-ENV VERSION=1.3.0.11
+ENV VERSION=1.3.0.16
 
 
 RUN micromamba run -n base pip install paramiko #&& 
