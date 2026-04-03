@@ -259,7 +259,8 @@ def main():
     elif docker_installed:
         # Docker mode
         # Copy docker directory
-        if build_docker_from_source:
+        #if build_docker_from_source:
+        if True:
             copy_directory(ssh, web_api_docker, f"{home}/bioGen/bioWorker")
             print("%50%", "Sync local files.")
         # Clean existing environment
@@ -271,6 +272,7 @@ def main():
         print("%60%", "Cleaned existing Docker containers.")
         print("%60%", "Pull latest bioworker, that may take 5 to 10 minutes")
 
+        #if not build_docker_from_source or True:
         if not build_docker_from_source or True:
             try:
                 exec_command(ssh, "docker pull 10.157.66.19:5000/bioworker:latest")
