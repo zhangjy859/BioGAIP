@@ -1341,7 +1341,7 @@ def main():
             """)
             col1, col2 = st.columns(2)
             st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown('Need our built configuration template? Download it here from https://notebook.biogaip.top/src/configure.yaml (Please copy the URL and open it in your browser).')
+            st.markdown('Need our built configuration template? Download it from https://notebook.biogaip.top/src/configure.yaml (Please copy the URL and open it in your browser).')
             with col1:
                 st.markdown("### 📤 Upload File\n**Pros:**\n- Quick and straightforward\n- Allow custom configurations\n**Cons:**\n- Requires preparing the file\n- Less flexibility")
                 if st.button("Upload File", key="select_upload"):

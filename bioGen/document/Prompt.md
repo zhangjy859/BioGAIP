@@ -67,6 +67,11 @@ A strong Prompt should clearly include:
    - Repeat the First Prompt verbatim at the very beginning of the task (twice is often sufficient).
    - Advanced users can configure custom Agents (via BioAG’s custom interface) to inject the First Prompt into every Planner round.
 
+### Try Before You Run
+我们建议你在运行正式的任务之前，尝试通过小规模的，但是分析目标相同的任务进行实验性的运行。
+例如，你要运行一个包含了300个正常样本和300个实验样本的RNA-seq数据的分析，我们建议你可以设置一个小的评估数据集。
+在上面的例子中，你可以先从中选取10 V.S. 10的样本测试你的Prompt的效果，如果满意，您可以在此基础上进行进一步的分析，如果不满意则需要进行调整。
+
 ### Examples
 
 #### Bulk RNA-seq
