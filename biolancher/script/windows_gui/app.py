@@ -320,7 +320,13 @@ def build_image_if_needed(docker_prefix, output_queue=None):
                     CONTAINER_IMAGE
                 ]
                 env_output = subprocess.check_output(inspect_cmd, stderr=subprocess.DEVNULL).decode('utf-8', errors='ignore')
-                version_match = TARGET_BIOAGVARSION in env_output
+                bioag_config = parse_bio_config(CONFIG_JSON, TARGET_BIOAGVARSION, ENCRYPTION_KEY, 2048)
+                try:
+                    TARGET_BIOAGVARSION_VALUE = bioag_config['BioAG']['version']
+                except Exception as e:
+                    log_warning(f"Failed to get target BioAG version from config, using default {TARGET_BIOAGVARSION}. Error: {e}")
+                    TARGET_BIOAGVARSION_VALUE = TARGET_BIOAGVARSION
+                version_match = TARGET_BIOAGVARSION_VALUE in env_output
                 sys.stderr.write(f"Image env output: {env_output}\n")
                 log_info(f"Local image version check: {'✅ MATCH' if version_match else '❌ MISMATCH'}")
             except Exception as e:
