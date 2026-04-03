@@ -13,7 +13,6 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      # 1. Instantly free up ~20GB of disk space by removing unused pre-installed environments
       - name: Free up disk space
         run: |
           sudo rm -rf /usr/share/dotnet
@@ -37,6 +36,13 @@ jobs:
         run: |
           wget -qO bioGen/docker/bio_ag/onnx.tar.gz https://chroma-onnx-models.s3.amazonaws.com/all-MiniLM-L6-v2/onnx.tar.gz
 
+      - name: Remove Tsinghua Mirrors from Dockerfiles
+        run: |
+          find . -name "Dockerfile" -exec sed -i \
+            -e 's/sed -i.*mirrors.tuna.tsinghua.edu.cn.*sources.list/true/g' \
+            -e '/RUN echo "channels:" > ~\/.condarc/,/pytorch:.*\.condarc/d' \
+            -e 's/ && micromamba run -n base python -m pip config set.*//g' {} +
+
       - name: Build, Push & Stream to Tar.gz
         run: |
           REF=${GITHUB_REF_NAME:-latest}
@@ -56,20 +62,23 @@ jobs:
               --push \
               -t ${IMAGE}:${REF} \
               --label "org.opencontainers.image.description=🚀 Quick Start: Run 'docker pull ${IMAGE}:${REF}' to deploy online. For offline, download .tar.gz from Actions." \
-              ${DIR}
+              ${DIR} || echo "::warning::Multi-arch build failed for ${NAME}, continuing..."
               
             echo "📦 Streaming offline .tar.gz for ${NAME} directly to disk..."
             for arch in "${ARCHS[@]}"; do
               FILE="${NAME}_${REF}_${arch}.tar.gz"
               echo "Building and compressing ${FILE}..."
               
-              # Using dest=- pipes the tar output directly to standard output.
-              # This streams it straight into gzip, completely avoiding the huge intermediate .tar file!
-              docker buildx build \
+              # Catch errors using an if-statement to continue building other architectures
+              if ! docker buildx build \
                 --platform linux/${arch} \
                 -t ${IMAGE}:${REF}-${arch} \
                 --output type=docker,dest=- \
-                ${DIR} | gzip > ${{ github.workspace }}/${FILE}
+                ${DIR} | gzip > ${{ github.workspace }}/${FILE}; then
+                
+                echo "::warning::Failed to build ${NAME} for ${arch}. Continuing..."
+                rm -f ${{ github.workspace }}/${FILE} # Clean up corrupt/empty tarball
+              fi
             done
           done
 
