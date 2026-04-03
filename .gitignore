@@ -12,4 +12,5 @@ bioag_latest_1.0.3.10.tar.gz
 bioGen/docker/bioWorker/bioworker.sif
 bak/*
 bioGen/document/node_modules/*
+password.txt
 bioGen/docker/bio_ag/onnx.tar.gz

@@ -57,9 +57,9 @@ jobs:
             IMAGE="ghcr.io/${OWNER}/${NAME}"
             
             echo "🚀 Pushing multi-arch ${NAME} to GHCR..."
+            #--push \
             docker buildx build \
               --platform linux/amd64,linux/arm64 \
-              --push \
               -t ${IMAGE}:${REF} \
               --label "org.opencontainers.image.description=🚀 Quick Start: Run 'docker pull ${IMAGE}:${REF}' to deploy online. For offline, download .tar.gz from Actions." \
               ${DIR} || echo "::warning::Multi-arch build failed for ${NAME}, continuing..."
