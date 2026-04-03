@@ -205,6 +205,7 @@ RUN cd /cache && \
 #        mkdir -p chroma/onnx_models/all-MiniLM-L6-v2 && \
 #	cd -
 COPY --chown=$MAMBA_USER:$MAMBA_USER onnx.tar.gz /cache/chroma/onnx_models/all-MiniLM-L6-v2/onnx.tar.gz
+COPY --chown=$MAMBA_USER:$MAMBA_USER onnx.tar.gz /app/onnx.tar.gz
 RUN cd /cache/chroma/onnx_models/all-MiniLM-L6-v2 && \
 	tar zxvf onnx.tar.gz && \
         rm onnx.tar.gz && \

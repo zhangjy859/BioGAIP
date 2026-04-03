@@ -259,7 +259,8 @@ def main():
     elif docker_installed:
         # Docker mode
         # Copy docker directory
-        if build_docker_from_source:
+        #if build_docker_from_source:
+        if True:
             copy_directory(ssh, web_api_docker, f"{home}/bioGen/bioWorker")
             print("%50%", "Sync local files.")
         # Clean existing environment
@@ -271,7 +272,9 @@ def main():
         print("%60%", "Cleaned existing Docker containers.")
         print("%60%", "Pull latest bioworker, that may take 5 to 10 minutes")
 
-        if not build_docker_from_source or True:
+        #if not build_docker_from_source or True:
+        build_docker_from_source = True
+        if True:
             try:
                 exec_command(ssh, "docker pull 10.157.66.19:5000/bioworker:latest")
                 ## tag it
@@ -293,7 +296,10 @@ def main():
             #exec_command(ssh, "mkdir -p ~/bioGen/bioWorker && cd ~/bioGen/bioWorker && docker build -t bioworker:latest .")
             exec_command(ssh, "mkdir -p ~/bioGen/bioWorker && wget -O ~/bioGen/bioWorker/bioworker_latest.tar.gz " + " -q " + f'"{bioworker_url}"')
             exec_command(ssh, "docker load -i ~/bioGen/bioWorker/bioworker_latest.tar.gz")
-            exec_command(ssh, "rm ~/bioGen/bioWorker/bioworker_latest.tar.gz")
+            try:
+                exec_command(ssh, "rm ~/bioGen/bioWorker/bioworker_latest.tar.gz")
+            except:
+                print("Failed to remove tar.gz file, please check and remove it manually to save space: " + f"{home}/bioGen/bioWorker/bioworker_latest.tar.gz")
 
         # Prepare volumes
         volume_str = build_volume_string(args.ro_dir, args.rw_dir, args.work_dir, docker=True)
