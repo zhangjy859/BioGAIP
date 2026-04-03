@@ -1060,6 +1060,7 @@ if not st.session_state.get('api_setup_done', False):
                 print('rw dir:', read_write_directory)
                 success, output, error_output = api_set2(server_ip, username, port, ssh_password, api_key, read_directory, read_write_directory, work_dir, bioworker_port = bioworker_port, use_sandbox_type = use_sandbox_type)
                 print('API set result:', success)
+                st.info('Initializing BioWorker at your server with SSH, thats may take 5-10 minutes, BioWorker will remain running in the background. If you wish to stop it, please do so through the BioAG panel, or execute " docker stop $(docker ps -q --filter "name=^bioworker_") " in the server.')
                 if not success:
                     st.error("Setup failed. Please check the error messages.")
                     if error_output:
