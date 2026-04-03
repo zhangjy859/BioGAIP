@@ -48,7 +48,7 @@ jobs:
           REF=${GITHUB_REF_NAME:-latest}
           OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           
-          APPS=("bioag:bioGen/docker/bio_ag" "bioworker:bioGen/docker/bioWorker")
+          APPS=("bioag:bioGen/docker/bioag" "bioworker:bioGen/docker/bioWorker")
           ARCHS=("amd64" "arm64")
           
           for app in "${APPS[@]}"; do

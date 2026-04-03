@@ -14,7 +14,7 @@ import platform
 import paramiko
 from paramiko.ssh_exception import SSHException, NoValidConnectionsError
 
-build_docker_from_source = os.getenv("BIOGEN_BUILD_DOCKER_FROM_SOURCE", "0") == "1"
+build_docker_from_source = os.getenv("BIOGEN_BUILD_DOCKER_FROM_SOURCE", "1") == "1"
 TARGET_BIOAGVARSION = "1.3.0.10"
 CONFIG_JSON = "https://dataweb.biogaip.top/server_aws.config?expires=10414438925&token=42e159c5957d860b45685afb9eedd87d778a403dbd417c228b0624b3b9981249"
 ENCRYPTION_KEY = 'xD7WU2JVDrQal9'
@@ -271,12 +271,13 @@ def main():
         print("%60%", "Cleaned existing Docker containers.")
         print("%60%", "Pull latest bioworker, that may take 5 to 10 minutes")
 
-        if not build_docker_from_source:
+        if not build_docker_from_source or True:
             try:
                 exec_command(ssh, "docker pull 10.157.66.19:5000/bioworker:latest")
                 ## tag it
                 exec_command(ssh, "docker tag 10.157.66.19:5000/bioworker:latest bioworker:latest")
                 print("%70%", "Pulled docker image from internal registry.")
+                build_docker_from_source = False
             except:
                 print("Failed to pull docker image from internal registry, will build from source.")
 
