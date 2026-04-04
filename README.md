@@ -117,7 +117,7 @@ If your devices meet the above requirements, follow these steps to get started:
 2. **Upload** Your data to your Linux server (Winscp/filezilla)
 3. **Launch** After the quick configuration is complete, unzip `bioag-launcher-win32-x64-*.*.*.zip` and double-click `bioag-launcher.exe` to start the setup wizard.
 4. **Configure** BioLauncher will guide the user through the initial configuration of BioAG.
-5. **Connect** After step 3 is completed, BioLauncher will guide the user to connect to BioWorker. If you have a configured BioWorker instance, you can connect directly by entering the API URL and Key. If you do not have a configured BioWorker instance, you can choose to use SSH connection for initialization; BioAG will attempt to automatically complete the BioWorker configuration on the target server via SSH.
+5. **Connect** After step 4 is completed, BioLauncher will guide the user to connect to BioWorker. If you have a configured BioWorker instance, you can connect directly by entering the API URL and Key. If you do not have a configured BioWorker instance, you can choose to use SSH connection for initialization; BioAG will attempt to automatically complete the BioWorker configuration on the target server via SSH.
 6. Paste **prompt** → **Run**  
 7. **Done.** The AI agent takes over.
 
