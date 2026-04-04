@@ -296,7 +296,10 @@ def main():
             #exec_command(ssh, "mkdir -p ~/bioGen/bioWorker && cd ~/bioGen/bioWorker && docker build -t bioworker:latest .")
             exec_command(ssh, "mkdir -p ~/bioGen/bioWorker && wget -O ~/bioGen/bioWorker/bioworker_latest.tar.gz " + " -q " + f'"{bioworker_url}"')
             exec_command(ssh, "docker load -i ~/bioGen/bioWorker/bioworker_latest.tar.gz")
-            exec_command(ssh, "rm ~/bioGen/bioWorker/bioworker_latest.tar.gz")
+            try:
+                exec_command(ssh, "rm ~/bioGen/bioWorker/bioworker_latest.tar.gz")
+            except:
+                print("Failed to remove tar.gz file, please check and remove it manually to save space: " + f"{home}/bioGen/bioWorker/bioworker_latest.tar.gz")
 
         # Prepare volumes
         volume_str = build_volume_string(args.ro_dir, args.rw_dir, args.work_dir, docker=True)
