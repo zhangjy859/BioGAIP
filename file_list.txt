@@ -73,7 +73,7 @@ bioGen/ulits/web_shell_command_v5.py
 ## document
 bioGen/document bioGen/document
 bioGen/document/readme.txt  
-bioGen/document/README.md README.md 
+#bioGen/document/README.md README.md 
 bioGen/document/img bioGen/document/img
 bioGen/document/src bioGen/document/src
 bioGen/document/book.json

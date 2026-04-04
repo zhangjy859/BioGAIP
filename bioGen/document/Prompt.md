@@ -68,9 +68,13 @@ A strong Prompt should clearly include:
    - Advanced users can configure custom Agents (via BioAG’s custom interface) to inject the First Prompt into every Planner round.
 
 ### Try Before You Run
-我们建议你在运行正式的任务之前，尝试通过小规模的，但是分析目标相同的任务进行实验性的运行。
-例如，你要运行一个包含了300个正常样本和300个实验样本的RNA-seq数据的分析，我们建议你可以设置一个小的评估数据集。
-在上面的例子中，你可以先从中选取10 V.S. 10的样本测试你的Prompt的效果，如果满意，您可以在此基础上进行进一步的分析，如果不满意则需要进行调整。
+
+We highly recommend performing a small-scale experimental run
+ with the same analysis goals before executing your full production task. 
+
+For example, if you plan to analyze an RNA-seq dataset containing 300 control samples and 300 experimental samples, we suggest setting up a smaller evaluation dataset first. 
+
+In this scenario, you could select a subset of 10 vs. 10 samples to test the effectiveness of your prompt. If the results meet your expectations, you can confidently proceed with the full-scale analysis. If not, you can easily tweak and optimize your prompt beforehand.
 
 ### Examples
 

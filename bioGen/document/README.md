@@ -132,13 +132,13 @@ We strongly suggest users watch Videos 1 and 2 in the supplementary materials of
 
 ## 🎯 Tested Analyses
 
-- **Bulk RNA-seq** (DE, pathway, volcano plots)  
-- **ATAC-seq / ChIP-seq** (peak calling)  
-- **scRNA-seq** (Seurat/CellRanger, clustering, markers)  
-- **WGS** (variant calling)
+- **Bulk RNA-seq** (QC, Aligement, DE, pathway, volcano plots)  
+- **ATAC-seq / ChIP-seq** (QC, Aligement,peak calling)  
+- **scRNA-seq** (QC, Seurat/CellRanger, clustering, markers)  
+- **WGS** (QC, Aligement, variant calling)
 - **Custom pipelines** — just describe them!
 
-All tools (STAR, DESeq2, CellRanger, MACS2, etc.) are auto-installed in isolated conda/docker environments.
+All tools (STAR, DESeq2, CellRanger, MACS2, etc.) are auto-installed in isolated conda environments.
 
 ---
 
@@ -146,7 +146,7 @@ All tools (STAR, DESeq2, CellRanger, MACS2, etc.) are auto-installed in isolated
 
 - **Client-Server mode**: Your raw data **never** leaves your server  
 - **AGPL-3.0** open source (audit everything)  
-- **Docker + sandbox** isolation  
+- **Docker + sandbox** isolation (sandbox is highly experimental)
 - **High customization** for Advanced user
 
 ---
@@ -159,7 +159,7 @@ All tools (STAR, DESeq2, CellRanger, MACS2, etc.) are auto-installed in isolated
 
 ## 📚 Full Documentation
 
-**[Guidelines](Guidelines.txt)** → Detailed guide with screenshots, prompt templates, troubleshooting, and server config examples.
+**[Guidelines](https://notebook.biogaip.top)** → Detailed guide with screenshots, prompt templates, troubleshooting, and server config examples.
 
 ---
 
