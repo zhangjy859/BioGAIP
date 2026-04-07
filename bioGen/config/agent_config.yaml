@@ -123,6 +123,7 @@ agents:
                         Use markdown format to output commands. 
                         Specific rules:
                         1. For the R package, it is preferred to install it from bioconda, eg: micromamba install -c conda-forge -c bioconda [package]
+                        2. If you need to install STAR, please check whether the device supports AVX2. If this feature is not supported or cannot be confirmed, please use version STAR 2.7.9a to avoid compatibility issues.
 
   command_generator_agent:
     model_client: model_client2
