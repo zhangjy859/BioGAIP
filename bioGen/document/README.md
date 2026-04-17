@@ -97,7 +97,7 @@ BioGAIP typically runs in C/S (Client/Server) mode. BioAG, running in client mod
 
 ### Local Side:
 - A computer running Windows 10/11 (For computers running Linux, it must be started from source code).
-- Virtualization must be enabled in BIOS\*\*. (For most OEM computers, this should be enabled by default. To check if it is enabled, please refer to: [https://stackoverflow.com/questions/49005791/how-to-check-if-intel-virtualization-is-enabled-without-going-to-bios-in-windows](https://stackoverflow.com/questions/49005791/how-to-check-if-intel-virtualization-is-enabled-without-going-to-bios-in-windows)).
+- Virtualization must be enabled in BIOS (Recommend, but optional) \*\*. (For most OEM computers, this should be enabled by default. To check if it is enabled, please refer to: [https://stackoverflow.com/questions/49005791/how-to-check-if-intel-virtualization-is-enabled-without-going-to-bios-in-windows](https://stackoverflow.com/questions/49005791/how-to-check-if-intel-virtualization-is-enabled-without-going-to-bios-in-windows)).
 - The computer should have 30GB of free space and 16GB of RAM (although it may run on devices with only 8GB or 4GB of RAM).
 - The computer should be able to communicate with the computing server.
 

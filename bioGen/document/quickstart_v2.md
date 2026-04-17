@@ -91,6 +91,7 @@ The quick-start guide and **biolauncher** wizard assume the standard client–se
 ² Must reliably reach: github.com, huggingface.co, hub.docker.com.  
 ³ On Windows we strongly recommend WSL2.
 
+
 ### 🛠️ Windows System Checker
 
 To ensure a frictionless setup on Windows 10/11, we've built a lightweight pre-flight utility to instantly verify your system environment.
@@ -110,6 +111,18 @@ If your environment falls short of the requirements, the tool will flag the exac
 
 > [!TIP]
 > **Pro Tip:** We highly recommend resolving all warnings until your system reads **Optimal** across the board, with the possible exception of RAM. While boosting RAM requires a physical hardware upgrade, software misconfigurations (like missing WSL2, Docker issues, or low disk space) are quick fixes that will drastically improve your BioGAIP experience and stability.
+> If you dont want to use WSL2 as backend, we have provided a **bypass** mode, allowing the software to run independently of WSL2. To do so, please skip install docker, simply launch the `BioLancher` executable and select bypass mode (running directly on Windows) in the very first step (please be aware that we provide only limited support for this mode).
+
+
+> Bypass mode requires the Microsoft Visual C++ 2015 Redistributable. While this is already installed on most Windows machines, you may need to install it if it's missing. 
+
+> You can find the installers in the root directory of the extracted archive:
+> * Run `VC_redist.x64.exe` (recommended for most 64-bit systems).
+> * Run `VC_redist.x86.exe` (for 32-bit systems).
+> *(Tip: If you are unsure whether you already have it, it is perfectly safe to just run the installer anyway.)*
+
+> Setting up Bypass mode for the first time takes **approximately 20 minutes**. This is because the software needs to build and configure a local Python runtime environment in the background. Please be patient and do not close the program. This process only occurs during the initial launch.
+
 
 ---
 
@@ -202,7 +215,7 @@ The SSH user must be able to run docker commands without sudo. The simplest appr
    6. The API endpoints of any LLM providers you intend to use (e.g., api.openai.com, api.anthropic.com, etc.)
 
 
-### Quick Start with Recommended System Configuration
+### Quick Start with Recommended System Configuration (WSL2)
 
 
 **Note:** This wizard only works when your system meets the recommended configuration requirements. If you prefer to begin with the minimal system configuration, please read the next section first.

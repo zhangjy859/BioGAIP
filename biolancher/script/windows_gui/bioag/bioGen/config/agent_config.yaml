@@ -74,6 +74,8 @@ agents:
       7. Please use Loop to handle repetitive tasks, such as using a for loop to perform read alignment for different samples.
 
       8. When All tasks Completed, Please check all expected results exists.
+
+      9. If you need to upload files from the web, it is recommended to use wget or aria2c. Direct downloads via web surfer agent are not permitted.
   
   
 
@@ -123,6 +125,7 @@ agents:
                         Use markdown format to output commands. 
                         Specific rules:
                         1. For the R package, it is preferred to install it from bioconda, eg: micromamba install -c conda-forge -c bioconda [package]
+                        2. If you need to install STAR, please check whether the device supports AVX2. If this feature is not supported or cannot be confirmed, please use version STAR 2.7.9a to avoid compatibility issues.
 
   command_generator_agent:
     model_client: model_client2
@@ -187,6 +190,7 @@ agents:
                         4. Compatibility issues: The following software packages cannot be installed via micromamba. You can try installing them via pip:
                             - macs2
                         5. For shell scripts, the script must be able to exit when an error occurs
+                        6. When reviewing the download links, usually only the source website is examined, but not the content itself.
       
 
   executor_agent:

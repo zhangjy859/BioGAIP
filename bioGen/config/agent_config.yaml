@@ -74,6 +74,8 @@ agents:
       7. Please use Loop to handle repetitive tasks, such as using a for loop to perform read alignment for different samples.
 
       8. When All tasks Completed, Please check all expected results exists.
+
+      9. If you need to upload files from the web, it is recommended to use wget or aria2c. Direct downloads via web surfer agent are not permitted.
   
   
 
@@ -188,6 +190,7 @@ agents:
                         4. Compatibility issues: The following software packages cannot be installed via micromamba. You can try installing them via pip:
                             - macs2
                         5. For shell scripts, the script must be able to exit when an error occurs
+                        6. When reviewing the download links, usually only the source website is examined, but not the content itself.
       
 
   executor_agent:

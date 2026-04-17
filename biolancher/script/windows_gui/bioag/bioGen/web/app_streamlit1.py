@@ -10,6 +10,7 @@ import subprocess
 import threading
 import uuid as uuid4
 import collections
+import platform
 from typing import Deque, Tuple
 from queue import Queue, Empty
 
@@ -2296,13 +2297,21 @@ if "messages" in st.session_state and st.session_state.messages:
             if st.session_state.get('automatic_start', True): 
                 sucessfulExecutate_reward = sys_config.get('sucessfulExecutate_reward', 10)
                 #reward = Reward(sucessfulExecutate_reward)
-                process_p = Process(target=process_task, args=(user_message, st.session_state.log_file, st.session_state.team, st.session_state.stop_team, st.session_state.force_stop, st.session_state.agent_status_file, st.session_state.team_exit_file, st.session_state.team_summary_file, st.session_state.max_content, st.session_state.get('load_history', True), sucessfulExecutate_reward),
-                            daemon=True)
-                process_p.start()
-                logger.info(f'Thread started, st.session_state: {st.session_state.get("processing", False)}, pid: {process_p.pid}')
+                if platform.system().lower() != 'windows':
+                    process_p = Process(target=process_task, args=(user_message, st.session_state.log_file, st.session_state.team, st.session_state.stop_team, st.session_state.force_stop, st.session_state.agent_status_file, st.session_state.team_exit_file, st.session_state.team_summary_file, st.session_state.max_content, st.session_state.get('load_history', True), sucessfulExecutate_reward),
+                                daemon=True)
+                    process_p.start()
+                    logger.info(f'Thread started, st.session_state: {st.session_state.get("processing", False)}, pid: {process_p.pid}')
+                    with open(pid_file, 'w') as f:
+                        f.write(str(process_p.pid))
+                else:
+                    process_p = threading.Thread(target=process_task, args=(user_message, st.session_state.log_file, st.session_state.team, st.session_state.stop_team, st.session_state.force_stop, st.session_state.agent_status_file, st.session_state.team_exit_file, st.session_state.team_summary_file, st.session_state.max_content, st.session_state.get('load_history', True), sucessfulExecutate_reward), daemon=True)
+                    process_p.start()
+                    task_pid = os.getpid() 
+                    logger.info(f'Thread started, st.session_state: {st.session_state.get("processing", False)}, pid: {task_pid}')
+                    with open(pid_file, 'w') as f:
+                        f.write(str(task_pid))
                 st.toast('Team starting', icon="✅", duration=60)
-                with open(pid_file, 'w') as f:
-                    f.write(str(process_p.pid))
                 if 'init_processing' in st.session_state: 
                     st.session_state.init_processing = False
                 if team_summary or st.session_state.get("finish_summary", False):

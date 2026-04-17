@@ -44,7 +44,22 @@ if not os.path.exists(cache_path):
     os.makedirs(cache_path)
 # Script directory
 script_dir = os.path.dirname(os.path.abspath(__file__))
-micromamba_path = os.path.join(script_dir, 'micromamba.exe')
+# if os is windows, use micromamba.exe, otherwise use micromamba
+system = platform.system().lower()
+machine = platform.machine().lower()
+if system == 'windows':
+    micromamba_path = os.path.join(script_dir, 'micromamba.exe')
+else:
+    micromamba_path = os.path.join(script_dir, 'micromamba')
+if machine in ["x86_64", "amd64"]:
+    arch_name = "64"
+elif machine in ["arm64", "aarch64"]:
+    if system == "darwin":
+        arch_name = "arm64"
+    else:
+        arch_name = "aarch64"
+else:
+    raise RuntimeError(f"Unsupported cpu architecture: {machine}")
 envs_dir = os.path.join(script_dir, 'envs')
 biogen_env = os.path.join(envs_dir, 'biogen')
 env_yaml = os.path.join(script_dir, 'envs', 'env.yaml')
@@ -607,6 +622,12 @@ def start_bypass(front_ui, configure, conda_meta, workflow, user_ext, cache, pro
         shutil.copy(configure, os.path.join(target_config_dir, 'system_config.yaml'))
 
     streamlit_path = os.path.join(script_dir, 'bioag', 'bioGen', 'web', 'app_streamlit1.py')
+    if not os.path.exists(streamlit_path):
+        streamlit_path = os.path.join(script_dir, 'app', 'bioag', 'bioGen', 'web', 'app_streamlit.py')
+    if not os.path.exists(streamlit_path):
+        output_queue.put("Error: Streamlit app script not found.")
+        output_queue.put("DONE")
+        return
     cmd = [micromamba_path, 'run', '-p', biogen_env, 'streamlit', 'run', '--server.headless=true', streamlit_path, '--server.port', str(port)]
     if not allow_network:
         cmd = cmd + ['--server.address=127.0.0.1']
@@ -1014,11 +1035,16 @@ def main():
                         @st.dialog("Installing Micromamba and Environment")
                         def install_micromamba():
                             inject_dialog_style()
-                            st.markdown("This may take a while depending on internet speed.")
+                            st.markdown("This may take a while (up to 30 minutes) depending on internet speed.")
+                            st.markdown("This process only occurs during the initial launch")
                             output_queue = queue.Queue()
                             def install_thread():
                                 try:
-                                    url = "https://micro.mamba.pm/api/micromamba/win-64/latest"
+                                    #url = "https://micro.mamba.pm/api/micromamba/win-64/latest"
+                                    if system == "windows":
+                                        url = "https://micro.mamba.pm/api/micromamba/win-64/latest"
+                                    else:
+                                        url = f"https://micro.mamba.pm/api/micromamba/{system}-{arch_name}/latest"
                                     output_queue.put("Downloading micromamba...")
                                     response = requests.get(url, stream=True)
                                     total_size = int(response.headers.get('content-length', 0))
@@ -1037,7 +1063,10 @@ def main():
                                     with tarfile.open(tar_bz2_path, 'r:bz2') as tar:
                                         tar.extractall(script_dir)
                                     output_queue.put("Extraction complete.")
-                                    lib_bin_mm = os.path.join(script_dir, 'Library', 'bin', 'micromamba.exe')
+                                    if system == "windows":
+                                        lib_bin_mm = os.path.join(script_dir, 'Library', 'bin', 'micromamba.exe')
+                                    else:
+                                        lib_bin_mm = os.path.join(script_dir, 'Library', 'bin', 'micromamba')
                                     shutil.move(lib_bin_mm, micromamba_path)
                                     output_queue.put("Moved micromamba.exe")
                                     os.remove(tar_bz2_path)
@@ -1055,7 +1084,7 @@ def main():
                                         subprocess.check_call([micromamba_path, 'config', 'set', 'channel_priority', 'strict'])
                                         output_queue.put("Using Tsinghua mirror for channels.")
                                     create_cmd = [micromamba_path, 'create', '-p', biogen_env, '-f', env_yaml, '-y']
-                                    process = subprocess.Popen(create_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                                    process = subprocess.Popen(create_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding='utf-8', errors='replace')
                                     for line in iter(process.stdout.readline, ''): output_queue.put(line.strip())
                                     for line in iter(process.stderr.readline, ''): output_queue.put(f"ERR: {line.strip()}")
                                     process.wait()
@@ -1185,8 +1214,9 @@ def main():
                 ## check images version
                 version_match = False
                 try:
-                    bioag_config = parse_bio_config(CONFIG_JSON, TARGET_BIOAGVARSION, ENCRYPTION_KEY, 2048)
-                    TARGET_BIOAGVARSION_VALUE = bioag_config['BioAG']['version']
+                    with st.spinner("Check BioAG Update", show_time=True):
+                        bioag_config = parse_bio_config(CONFIG_JSON, TARGET_BIOAGVARSION, ENCRYPTION_KEY, 2048)
+                        TARGET_BIOAGVARSION_VALUE = bioag_config['BioAG']['version']
                 except Exception as e:
                     write_to_debug_file(f"Error parsing config: {e}")
                     TARGET_BIOAGVARSION_VALUE = TARGET_BIOAGVARSION
@@ -1388,7 +1418,7 @@ def main():
                             
                 conda_meta = st.text_input("Conda Meta DB (optional)", value=st.session_state.params.get("conda_meta", ""), help="Path to Conda meta database directory.")
                 workflow = st.text_input("Workflow DB (optional)", value=st.session_state.params.get("workflow", ""), help="Path to workflow database directory.")
-                user_ext = st.text_input("User Ext DB (optional)", value=st.session_state.params.get("user_ext", ""), help="Path to user extension database directory.")
+                user_ext = st.text_input("User Ext Resources (Directory with pdf, docx, txt, etc. Optional)", value=st.session_state.params.get("user_ext", ""), help="Path to user extension database directory.")
                 
                 home_dir = os.path.expanduser("~")
                 st.session_state.cache_default = os.path.join(home_dir, "bioGen", "cache")
@@ -1420,16 +1450,21 @@ def main():
                 if not st.session_state.bypass_mode and st.session_state.docker_runtime == 'wsl':
                     st.warning("⚠️ When using WSL Docker, ensure that the proxy is accessible within WSL.")
                     
-                user_name = st.text_input("User Name (optional)", value="admin", )
-                user_password = st.text_input("Password (optional)", value="admin", type="password")
+                user_name = st.text_input("User Name (optional)", value=st.session_state.get("user_name", "admin"), )
+                user_password = st.text_input("Password (optional)", value=st.session_state.get("user_password", "admin"), type="password")
+                remember_password = st.checkbox("Remember password", value=st.session_state.get("remember_password", False))
+                st.session_state.remember_password = remember_password
+                if remember_password:
+                    st.session_state.user_name = user_name
+                    st.session_state.user_password = user_password
                 st.info(f"Default user name and password are admin/admin, please change them in production environment!")
                 
                 #enable_gpu = st.checkbox("Enable GPU support", value=False, help="Enable NVIDIA GPU acceleration.") if not st.session_state.bypass_mode else False
                 enable_gpu = False
-                
+                gemini_mode = False
                 with st.expander("Advanced Options", expanded=False):
-                    gemini_mode = st.checkbox("Activate Gemini Compatible Mode", value=False)
-                    bioag_port = st.number_input("BioAG Frontend Port", min_value=1024, max_value=65535, value=8501, help="Port to expose the BioAG frontend UI.")
+                    #gemini_mode = st.checkbox("Activate Gemini Compatible Mode", value=False)
+                    bioag_port = st.number_input("BioAG Frontend Port", min_value=1024, max_value=65535, value=st.session_state.get('bioag_port', 8501), help="Port to expose the BioAG frontend UI.")
                     st.session_state.bioag_port = bioag_port
                     session_id = st.text_input('BioAG session id', value=st.session_state.get('random_key', '_' + f"{random.randbytes(3).hex()}"), help="BioAG session id.")
                     if session_id != st.session_state.random_key:
