@@ -31,7 +31,9 @@ function isPortInUse(port) {
 function findPython() {
   const possibilities = [
     path.join(process.resourcesPath, 'python', 'python.exe'),
-    path.join(__dirname, 'python', 'python.exe')
+    path.join(__dirname, 'python', 'python.exe'),
+    path.join(process.resourcesPath, 'python', 'python'),
+    path.join(__dirname, 'python', 'python')
   ];
   for (const p of possibilities) {
     if (fs.existsSync(p)) return p;
