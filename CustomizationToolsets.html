@@ -99,6 +99,25 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.1" data-path="./">
+            
+                <a href="./#milestones--roadmap">
+            
+                    
+                    Roadmap
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.2" data-path="quickstart_v2.html">
@@ -172,7 +191,78 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3" data-path="advanced.html">
+        <li class="chapter " data-level="1.3" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Run BioGAIP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Winodws
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    macOS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Linux
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Manual Deployment
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="advanced.html">
             
                 <a href="advanced.html">
             
@@ -186,7 +276,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.3.1" data-path="configure.html">
+        <li class="chapter " data-level="1.4.1" data-path="install_BioGAIP.md">
+            
+                <span>
+            
+                    
+                    Install BioGAIP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="configure.html">
             
                 <a href="configure.html">
             
@@ -199,7 +302,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.2" data-path="CustomizationAgents.html">
+        <li class="chapter " data-level="1.4.3" data-path="CustomizationAgents.html">
             
                 <a href="CustomizationAgents.html">
             
@@ -212,7 +315,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.3.3" data-path="CustomizationToolsets.html">
+        <li class="chapter active" data-level="1.4.4" data-path="CustomizationToolsets.html">
             
                 <a href="CustomizationToolsets.html">
             
@@ -225,12 +328,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.4" data-path="start.html">
+        <li class="chapter " data-level="1.4.5" data-path="start.html">
             
                 <a href="start.html">
             
                     
-                    Run bioGAIP
+                    Run BioGAIP
             
                 </a>
             
@@ -238,7 +341,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.5" data-path="singularity.html">
+        <li class="chapter " data-level="1.4.6" data-path="singularity.html">
             
                 <a href="singularity.html">
             
@@ -251,7 +354,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.6" data-path="bypassmode.html">
+        <li class="chapter " data-level="1.4.7" data-path="bypassmode.html">
             
                 <a href="bypassmode.html">
             
@@ -269,12 +372,38 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4" data-path="Prompt.html">
+        <li class="chapter " data-level="1.5" data-path="session_explorer.md">
+            
+                <span>
+            
+                    
+                    Session Explorer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="Prompt.html">
             
                 <a href="Prompt.html">
             
                     
                     Prompt Tips
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="UsageExample.md">
+            
+                <span>
+            
+                    
+                    Usage Example
             
                 </a>
             
@@ -327,7 +456,71 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h3 id="tbd">TBD</h3>
+                                <h1 id="customization-toolsets">Customization Toolsets</h1>
+<p>BioGAIP features a highly extensible architecture that allows advanced users to define custom tools via a unified YAML configuration file. This empowers your AI Agents with specialized capabilities tailored to your specific bioinformatics workflows. </p>
+<p>Custom tools are categorized into two types based on their execution environment: <strong>Local Tools</strong> (executed within the BioAG environment) and <strong>Remote Tools</strong> (executed on the BioWorker backend).</p>
+<hr></hr>
+<h2 id="1-local-tools-tools">1. Local Tools (<code>tools</code>)</h2>
+<p>Local tools are executed natively by the BioAG process. They are converted into AutoGen <code>FunctionTool</code> objects and can be defined using either inline Python functions or by importing external Python classes.</p>
+<h3 id="method-a-inline-python-functions">Method A: Inline Python Functions</h3>
+<p>For lightweight utilities, you can write raw Python code directly in your YAML file. BioGAIP parses the code block, extracts the function, and maps the parameter descriptions (<code>kwargs</code>).</p>
+<pre><code>tools:
+  hello_tool_key:
+    name: 'hello_tool'
+    description: 'A simple tool that greets the user.'
+    kwargs:
+      value: 'The name of the user to greet (str).'
+    function: |
+      def test_tools(value: str) -&gt; str:
+          return f"Hello {value}!"
+</code></pre><h3 id="method-b-importing-python-classes">Method B: Importing Python Classes</h3>
+<p>For complex logic, you can encapsulate your tool within a Python module and import it dynamically.</p>
+<pre><code>tools:
+  advanced_analysis_tool:
+    class: 'my_custom_package.modules.AnotherToolClass'
+    name: 'AdvancedDataAnalyzer'       # Optional: Overrides the class name
+    description: 'Performs deep data analysis.' # Optional: Overrides the class description
+    kwargs:
+      paramA: 'valueA'                 # Initialization parameters passed to the class
+      paramB: 123
+</code></pre><blockquote>
+<p><strong>Note:</strong> If the environment variable <code>SKIP_CUSTOM_TOOL=True</code> is set, BioAG will bypass loading all local custom tools.</p>
+</blockquote>
+<hr></hr>
+<h2 id="2-remote-tools-remotetools">2. Remote Tools (<code>remote_tools</code>)</h2>
+<p>Remote tools are custom scripts or commands pushed directly to the <strong>BioWorker</strong> backend via API. They are executed in the secure analysis environment. </p>
+<p>BioGAIP automatically compiles the definitions of these tools into a Markdown manual and injects them into the Agent's system prompt, ensuring the LLM understands how to invoke them.</p>
+<pre><code>remote_tools:
+  custom_aligner:
+    name: 'Custom RNA Aligner'
+    description: 'Aligns RNA sequences using a proprietary algorithm.'
+    usage: 'custom_aligner -i &lt;input.fasta&gt; -o &lt;output.bam&gt;'
+    kwargs: '-i: Path to input fasta file. -o: Path to output bam file.'
+    script: |
+      #!/bin/bash
+      # This script runs securely on the BioWorker container
+      echo "Starting alignment for $1..."
+</code></pre><p><em>Behind the scenes: BioAG extracts these scripts and pushes them to the BioWorker via the <code>/projects/{project_id}/import-tools</code> API endpoint during session initialization.</em></p>
+<hr></hr>
+<h2 id="3-equipping-agents-with-tools">3. Equipping Agents with Tools</h2>
+<p>Once your tools are defined in the configuration, you can assign them to specific agents within the <code>agents</code> block. </p>
+<ul>
+<li>Use the <code>tools</code> list to assign <strong>Local Tools</strong> (referencing the tool key).</li>
+<li><p>Set <code>allow_remote_tools: True</code> to inject the <strong>Remote Tools</strong> manual into the agent's system message.</p>
+<p>  agents:</p>
+<pre><code>analysis_executor_agent:
+  model_client: model_client1
+  description: 'An agent capable of executing local functions and remote scripts.'
+  system_message: |
+    You are an executor agent. 
+    Use the tools provided to fulfill the user's request.
+  tools:
+    - hello_tool_key
+    - advanced_analysis_tool
+  allow_remote_tools: True
+</code></pre></li>
+</ul>
+<p>By decoupling tool definition from agent logic, BioGAIP allows you to seamlessly mix and match capabilities, building highly specialized AI teams without altering the core codebase.</p>
 
                                 
                                 </section>
@@ -360,7 +553,7 @@
                 </a>
                 
                 
-                <a href="start.html" class="navigation navigation-next " aria-label="Next page: Run bioGAIP">
+                <a href="start.html" class="navigation navigation-next " aria-label="Next page: Run BioGAIP">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -371,7 +564,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Customization Toolsets","level":"1.3.3","depth":2,"next":{"title":"Run bioGAIP","level":"1.3.4","depth":2,"path":"start.md","ref":"start.md","articles":[]},"previous":{"title":"Customization Agents","level":"1.3.2","depth":2,"path":"CustomizationAgents.md","ref":"CustomizationAgents.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"CustomizationToolsets.md","mtime":"2026-04-17T12:39:30.341Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-04-17T12:39:40.548Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Customization Toolsets","level":"1.4.4","depth":2,"next":{"title":"Run BioGAIP","level":"1.4.5","depth":2,"path":"start.md","ref":"start.md","articles":[]},"previous":{"title":"Customization Agents","level":"1.4.3","depth":2,"path":"CustomizationAgents.md","ref":"CustomizationAgents.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"CustomizationToolsets.md","mtime":"2026-08-17T03:42:10.483Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-08-17T03:42:28.268Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

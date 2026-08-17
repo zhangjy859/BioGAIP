@@ -59,7 +59,7 @@
     <link rel="next" href="CustomizationAgents.html" />
     
     
-    <link rel="prev" href="advanced.html" />
+    <link rel="prev" href="install_BioGAIP.md" />
     
 
     </head>
@@ -98,6 +98,25 @@
                 </a>
             
 
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.1" data-path="./">
+            
+                <a href="./#milestones--roadmap">
+            
+                    
+                    Roadmap
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
             
         </li>
     
@@ -172,7 +191,78 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3" data-path="advanced.html">
+        <li class="chapter " data-level="1.3" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Run BioGAIP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Winodws
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    macOS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Linux
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Manual Deployment
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="advanced.html">
             
                 <a href="advanced.html">
             
@@ -186,7 +276,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="1.3.1" data-path="configure.html">
+        <li class="chapter " data-level="1.4.1" data-path="install_BioGAIP.md">
+            
+                <span>
+            
+                    
+                    Install BioGAIP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.2" data-path="configure.html">
             
                 <a href="configure.html">
             
@@ -199,7 +302,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.2" data-path="CustomizationAgents.html">
+        <li class="chapter " data-level="1.4.3" data-path="CustomizationAgents.html">
             
                 <a href="CustomizationAgents.html">
             
@@ -212,7 +315,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.3" data-path="CustomizationToolsets.html">
+        <li class="chapter " data-level="1.4.4" data-path="CustomizationToolsets.html">
             
                 <a href="CustomizationToolsets.html">
             
@@ -225,12 +328,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.4" data-path="start.html">
+        <li class="chapter " data-level="1.4.5" data-path="start.html">
             
                 <a href="start.html">
             
                     
-                    Run bioGAIP
+                    Run BioGAIP
             
                 </a>
             
@@ -238,7 +341,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.5" data-path="singularity.html">
+        <li class="chapter " data-level="1.4.6" data-path="singularity.html">
             
                 <a href="singularity.html">
             
@@ -251,7 +354,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.6" data-path="bypassmode.html">
+        <li class="chapter " data-level="1.4.7" data-path="bypassmode.html">
             
                 <a href="bypassmode.html">
             
@@ -269,12 +372,38 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4" data-path="Prompt.html">
+        <li class="chapter " data-level="1.5" data-path="session_explorer.md">
+            
+                <span>
+            
+                    
+                    Session Explorer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="Prompt.html">
             
                 <a href="Prompt.html">
             
                     
                     Prompt Tips
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="UsageExample.md">
+            
+                <span>
+            
+                    
+                    Usage Example
             
                 </a>
             
@@ -425,7 +554,6 @@ By defaults, three model clients are defined in the template file: <code>model_c
 if you only have one LLM model client, you can change all the model clients configure for same.</p>
 <p><code>bioGen</code> Support OpenAI API compatible models, such as <code>OpenAI</code>, <code>Grok</code>, <code>Anthropic</code>, <code>Cohere</code> and <code>HuggingFace</code>. But also support other API Endpoints, 
 such as AzureOpenAIChatCompletionClient (Microsoft Azure OpenAI Service), GeminiChatCompletionClient(Google Gemini).</p>
-<p>D</p>
 <p>Under normal circumstances, there are three items that must be modified: </p>
 <ul>
 <li>model: the model name you want to use</li>
@@ -440,28 +568,254 @@ such as AzureOpenAIChatCompletionClient (Microsoft Azure OpenAI Service), Gemini
 <li>DeepSeek: <a href="https://api-docs.deepseek.com/" target="_blank">https://api-docs.deepseek.com/</a></li>
 <li>...</li>
 </ul>
-<h2 id="configyaml">config.yaml</h2>
-<blockquote>
-<p><strong>[warning] warning</strong></p>
-<p>If you use containerization technology (docker or Singularity) to run <code>bioGen</code>, you do not need to configure this section.</p>
-</blockquote>
-<p>This is user prefernece configuration file, you can modify the agents definition,
-    which looks like this:</p>
-<pre><code class="lang-yaml"><span class="hljs-attr">bioAG:</span>
-  <span class="hljs-comment">## all paths should be absolute paths in local computer</span>
-  <span class="hljs-attr">CONDA_META_DATABASE:</span> <span class="hljs-string">''</span>
-  <span class="hljs-attr">WORKFLOW_DATABASE:</span> <span class="hljs-string">''</span>
-  <span class="hljs-attr">USER_EXT_DATABASE:</span> <span class="hljs-string">''</span>
-  <span class="hljs-attr">API_URL:</span> <span class="hljs-string">''</span>
-  <span class="hljs-attr">API_KEY:</span> <span class="hljs-string">''</span>
-  <span class="hljs-comment">## deprecated Settings, dont use</span>
-  <span class="hljs-attr">ASK_EXEC:</span> <span class="hljs-string">'False'</span>
-  <span class="hljs-attr">MARKDOWN_RENDERER:</span> <span class="hljs-string">'TRUE'</span>
-  <span class="hljs-comment">## deprecated Settings end</span>
-<span class="hljs-attr">bioWorker:</span>
-    <span class="hljs-comment">## all paths should be absolute paths in remote computer</span>
-    <span class="hljs-attr">WORK_DIR:</span> <span class="hljs-string">'/data/work_dir'</span>
-</code></pre>
+<h1 id="environment-variables--configuration-reference">Environment Variables &amp; Configuration Reference</h1>
+<p>BioGAIP provides fine-grained control over system paths, BioWorker API connections, authentication, logging, persistent storage, RAG memory databases, and agent behaviors through environment variables and YAML configuration files.</p>
+<hr></hr>
+<h2 id="⚙️-configuration-file-overrides">⚙️ Configuration File Overrides</h2>
+<p>By default, BioGAIP resolves its configuration directory relative to the package directory or <code>/config</code>. You can explicitly override configuration file locations using the variables below:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Environment Variable</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Default</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>SYSTEM_CONFIG_PATH</code></td>
+<td style="text-align:left">String (Directory Path)</td>
+<td style="text-align:left"><code>/config</code> or package <code>config/</code></td>
+<td style="text-align:left">Directory path containing default configuration YAML files (<code>system_config.yaml</code>, <code>config.yaml</code>, <code>agent_config.yaml</code>, <code>tool_config.yaml</code>).</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>SYSTEM_CONFIG_YAML_PATH</code></td>
+<td style="text-align:left">String (File Path)</td>
+<td style="text-align:left"><em>None</em></td>
+<td style="text-align:left">Absolute path to a specific <code>system_config.yaml</code> file. If specified, overrides the default path resolution for the system configuration.</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="🔐-web-ui-authentication--cookie-security">🔐 Web UI Authentication &amp; Cookie Security</h2>
+<p>These variables manage user access control and frontend session encryption:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Environment Variable</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Default</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>APP_USER</code></td>
+<td style="text-align:left">String (Inline or File Path)</td>
+<td style="text-align:left"><code>"admin:admin"</code></td>
+<td style="text-align:left">Configures authentication credentials. Can be either an inline <code>username:password</code> string or a file path to an htpasswd-like file containing <code>username:password</code> pairs (one per line, <code>#</code> comments ignored).</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>PASSWORD_SALT</code></td>
+<td style="text-align:left">String</td>
+<td style="text-align:left"><em>None</em></td>
+<td style="text-align:left">Optional cryptographic salt string. When provided, passwords are authenticated using SHA-256 hashing (<code>SHA256(password + salt)</code>).</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>COOKIE_PASSWORD</code></td>
+<td style="text-align:left">String (Hex)</td>
+<td style="text-align:left"><em>Auto-generated 64-byte hex</em></td>
+<td style="text-align:left">Encryption key used by <code>EncryptedCookieManager</code> to secure browser session cookies. Specify a fixed string to persist user login states across service restarts.</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="💾-storage-session-persistence--logging">💾 Storage, Session Persistence &amp; Logging</h2>
+<p>These variables govern where session states, temporary task files, and system logs are stored:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Environment Variable</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Default</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>PERSIST_DIR</code></td>
+<td style="text-align:left">String (Directory Path)</td>
+<td style="text-align:left"><code>&lt;work_dir&gt;/user_sessions_&lt;hex&gt;</code></td>
+<td style="text-align:left">Directory path where persistent user sessions, task status files (<code>.agjson</code>), communication queues, and process PIDs are stored.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>MAX_CHAT_MESSAGE</code></td>
+<td style="text-align:left">Integer</td>
+<td style="text-align:left"><code>200</code></td>
+<td style="text-align:left">Maximum number of chat messages retained in memory per session history.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>REDIRECT_LOGGER_TO_PERSIST_DIR</code></td>
+<td style="text-align:left">String (<code>"true"</code> / <code>"false"</code>)</td>
+<td style="text-align:left"><code>"false"</code></td>
+<td style="text-align:left">When set to <code>1</code>, <code>true</code>, or <code>yes</code>, automatically directs logger output to <code>redirected_app.log</code> located inside <code>PERSIST_DIR</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>LOG_DIR</code></td>
+<td style="text-align:left">String (Directory Path)</td>
+<td style="text-align:left"><em>None</em></td>
+<td style="text-align:left">Custom directory path for writing system logs (<code>app.log</code>).</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>SKIP_DIR_OUTPUT</code></td>
+<td style="text-align:left">String</td>
+<td style="text-align:left"><em>None</em></td>
+<td style="text-align:left">If set and <code>LOG_DIR</code> is not explicitly defined, automatically redirects logs to <code>&lt;PERSIST_DIR&gt;/logs/app.log</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="🌐-bioworker-server--network-settings">🌐 BioWorker Server &amp; Network Settings</h2>
+<p>These variables configure connectivity and authentication with the BioWorker execution backend:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Environment Variable</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Default</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>API_URL</code></td>
+<td style="text-align:left">String (URL)</td>
+<td style="text-align:left"><code>http://localhost:8000</code></td>
+<td style="text-align:left">Base URL of the BioWorker execution API server. Can also be defined under the <code>bioAG.API_URL</code> field in <code>config.yaml</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>API_KEY</code></td>
+<td style="text-align:left">String</td>
+<td style="text-align:left"><code>""</code></td>
+<td style="text-align:left">Authentication key required to access the BioWorker API. Can also be defined under <code>bioAG.API_KEY</code> in <code>config.yaml</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>PROJECT_ID</code></td>
+<td style="text-align:left">String</td>
+<td style="text-align:left"><em>Auto-generated</em></td>
+<td style="text-align:left">Active project session ID on BioWorker. If empty, BioGAIP creates a new project session and updates this variable dynamically.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>WORK_DIR</code></td>
+<td style="text-align:left">String (Path)</td>
+<td style="text-align:left"><code>/data/work_dir</code> or current working directory</td>
+<td style="text-align:left">Target working directory where commands, scripts, and workflows are executed on the worker. Can also be configured via <code>bioWorker.WORK_DIR</code> in <code>config.yaml</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>HTTPS_PROXY</code></td>
+<td style="text-align:left">String (URL)</td>
+<td style="text-align:left"><em>None</em></td>
+<td style="text-align:left">HTTP/HTTPS proxy address used for network requests.</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="📚-rag--vector-memory-databases">📚 RAG &amp; Vector Memory Databases</h2>
+<p>BioGAIP utilizes ChromaDB persistent stores for various specialized retrieval-augmented generation (RAG) pipelines:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Environment Variable</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Default</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>CONDA_META_DATABASE</code></td>
+<td style="text-align:left">String (Directory Path)</td>
+<td style="text-align:left"><code>/data/conda_meta</code> (or <code>~/.chromadb_autogen.conda_meta1</code>)</td>
+<td style="text-align:left">Directory path to the ChromaDB database containing Conda package metadata and environment definitions.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>WORKFLOW_DATABASE</code></td>
+<td style="text-align:left">String (Directory Path)</td>
+<td style="text-align:left"><code>/data/pipelines_meta</code> (or <code>~/.all-MiniLM-embedding.chromadb_autogen.nfcore2</code>)</td>
+<td style="text-align:left">Directory path to the ChromaDB vector database containing Nextflow / nf-core pipeline templates and metadata.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>USER_EXT_DATABASE</code></td>
+<td style="text-align:left">String (Directory Path)</td>
+<td style="text-align:left"><code>/data/user_ext</code></td>
+<td style="text-align:left">Path to a local directory containing custom user literature/documents (<code>.pdf</code>, <code>.txt</code>, <code>.md</code>, <code>.markdown</code>, <code>.html</code>). All documents are parsed, chunked, and loaded into the vector memory at startup.</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="🛠️-tool--custom-extension-controls">🛠️ Tool &amp; Custom Extension Controls</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Environment Variable</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Default</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>SKIP_CUSTOM_TOOL</code></td>
+<td style="text-align:left">String (<code>"true"</code> / <code>"false"</code>)</td>
+<td style="text-align:left"><code>"false"</code></td>
+<td style="text-align:left">When set to <code>"true"</code>, skips loading local custom tools defined in <code>tool_config.yaml</code> and <code>system_config.yaml</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>SKIP_REMOTE_CUSTOM_TOOL</code></td>
+<td style="text-align:left">String (<code>"true"</code> / <code>"false"</code>)</td>
+<td style="text-align:left"><code>"false"</code></td>
+<td style="text-align:left">When set to <code>"true"</code>, skips loading and embedding remote tool specifications into agent memory.</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="🖥️-ui-formatting--execution-output">🖥️ UI, Formatting &amp; Execution Output</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Environment Variable</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Default</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>MARKDOWN_RENDERER</code></td>
+<td style="text-align:left">String (<code>"TRUE"</code> / <code>"FALSE"</code>)</td>
+<td style="text-align:left"><code>"TRUE"</code></td>
+<td style="text-align:left">Wraps truncated shell/script outputs in Markdown code blocks (<code>···</code>) for enhanced UI readability.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>MAX_LINES</code></td>
+<td style="text-align:left">Integer</td>
+<td style="text-align:left"><code>10</code></td>
+<td style="text-align:left">Maximum number of output lines to display before truncation. For directory listing commands (<code>ls</code>, <code>ll</code>), this limit is automatically raised to at least <code>100</code>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>SKIP_MODEL_CONTEXT</code></td>
+<td style="text-align:left">String (<code>"True"</code> / <code>"False"</code>)</td>
+<td style="text-align:left"><code>"False"</code></td>
+<td style="text-align:left">When set to <code>"True"</code> (or enabled via <code>skip_params_model_context</code> in configuration), omits certain model parameter context when loading agents.</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="⚠️-deprecated-variables">⚠️ Deprecated Variables</h2>
+<ul>
+<li><strong><code>ASK_EXEC</code></strong>: <strong>Deprecated.</strong> Manual user confirmation prompts prior to command execution have been superseded by platform-native approval workflows. Setting this variable will no longer have any effect.</li>
+</ul>
 
                                 
                                 </section>
@@ -489,7 +843,7 @@ such as AzureOpenAIChatCompletionClient (Microsoft Azure OpenAI Service), Gemini
 
             
                 
-                <a href="advanced.html" class="navigation navigation-prev " aria-label="Previous page: Advanced">
+                <a href="install_BioGAIP.md" class="navigation navigation-prev " aria-label="Previous page: Install BioGAIP">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -505,7 +859,7 @@ such as AzureOpenAIChatCompletionClient (Microsoft Azure OpenAI Service), Gemini
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Configure","level":"1.3.1","depth":2,"next":{"title":"Customization Agents","level":"1.3.2","depth":2,"path":"CustomizationAgents.md","ref":"CustomizationAgents.md","articles":[]},"previous":{"title":"Advanced","level":"1.3","depth":1,"path":"advanced.md","ref":"advanced.md","articles":[{"title":"Configure","level":"1.3.1","depth":2,"path":"configure.md","ref":"configure.md","articles":[]},{"title":"Customization Agents","level":"1.3.2","depth":2,"path":"CustomizationAgents.md","ref":"CustomizationAgents.md","articles":[]},{"title":"Customization Toolsets","level":"1.3.3","depth":2,"path":"CustomizationToolsets.md","ref":"CustomizationToolsets.md","articles":[]},{"title":"Run bioGAIP","level":"1.3.4","depth":2,"path":"start.md","ref":"start.md","articles":[]},{"title":"Use Singularity","level":"1.3.5","depth":2,"path":"singularity.md","ref":"singularity.md","articles":[]},{"title":"Bypass mode","level":"1.3.6","depth":2,"path":"bypassmode.md","ref":"bypassmode.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"configure.md","mtime":"2026-04-17T12:39:30.341Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-04-17T12:39:40.548Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Configure","level":"1.4.2","depth":2,"next":{"title":"Customization Agents","level":"1.4.3","depth":2,"path":"CustomizationAgents.md","ref":"CustomizationAgents.md","articles":[]},"previous":{"title":"Install BioGAIP","level":"1.4.1","depth":2,"path":"install_BioGAIP.md","ref":"install_BioGAIP.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"configure.md","mtime":"2026-08-17T03:42:10.483Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-08-17T03:42:28.268Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

@@ -99,6 +99,25 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.1" data-path="./">
+            
+                <a href="./#milestones--roadmap">
+            
+                    
+                    Roadmap
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.2" data-path="quickstart_v2.html">
@@ -172,7 +191,78 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3" data-path="advanced.html">
+        <li class="chapter " data-level="1.3" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Run BioGAIP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Winodws
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    macOS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Linux
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="RunBioGAIP.md">
+            
+                <span>
+            
+                    
+                    Manual Deployment
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="advanced.html">
             
                 <a href="advanced.html">
             
@@ -186,7 +276,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.3.1" data-path="configure.html">
+        <li class="chapter " data-level="1.4.1" data-path="install_BioGAIP.md">
+            
+                <span>
+            
+                    
+                    Install BioGAIP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="configure.html">
             
                 <a href="configure.html">
             
@@ -199,7 +302,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.3.2" data-path="CustomizationAgents.html">
+        <li class="chapter active" data-level="1.4.3" data-path="CustomizationAgents.html">
             
                 <a href="CustomizationAgents.html">
             
@@ -212,7 +315,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.3" data-path="CustomizationToolsets.html">
+        <li class="chapter " data-level="1.4.4" data-path="CustomizationToolsets.html">
             
                 <a href="CustomizationToolsets.html">
             
@@ -225,12 +328,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.4" data-path="start.html">
+        <li class="chapter " data-level="1.4.5" data-path="start.html">
             
                 <a href="start.html">
             
                     
-                    Run bioGAIP
+                    Run BioGAIP
             
                 </a>
             
@@ -238,7 +341,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.5" data-path="singularity.html">
+        <li class="chapter " data-level="1.4.6" data-path="singularity.html">
             
                 <a href="singularity.html">
             
@@ -251,7 +354,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.6" data-path="bypassmode.html">
+        <li class="chapter " data-level="1.4.7" data-path="bypassmode.html">
             
                 <a href="bypassmode.html">
             
@@ -269,12 +372,38 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4" data-path="Prompt.html">
+        <li class="chapter " data-level="1.5" data-path="session_explorer.md">
+            
+                <span>
+            
+                    
+                    Session Explorer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="Prompt.html">
             
                 <a href="Prompt.html">
             
                     
                     Prompt Tips
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="UsageExample.md">
+            
+                <span>
+            
+                    
+                    Usage Example
             
                 </a>
             
@@ -327,7 +456,197 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h3 id="tbd">TBD</h3>
+                                <h3 id="overview">Overview</h3>
+<p>Unlike many other tools, BioGAIP's Agent definitions are completely decoupled from the codebase. This grants users the absolute freedom to customize their Agent teams. This plug-and-play customization is centrally managed via a single YAML file.</p>
+<div class="markdown-alert markdown-alert-warning">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>
+        <span>Warning</span>
+      </p>
+      <p><strong>Advanced Feature</strong>
+Customizing Agents is intended for advanced users. It requires a solid understanding of Prompt Engineering and basic programming skills.
+Improper Agent configurations can introduce unexpected security risks that were not anticipated during BioGAIP's design. Furthermore, troubleshooting and debugging custom Agent systems can be extremely difficult.</p>
+    </div>
+<p><br></br></p>
+<div class="markdown-alert markdown-alert-warning">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>
+        <span>Warning</span>
+      </p>
+      <p><strong>Exclusive Operation</strong>
+Please note that BioGAIP operates exclusively with either its built-in Agent system OR a user-defined one. Once an external Agent configuration is detected, BioGAIP will immediately stop loading its internal Agents.</p>
+    </div>
+<p><br></br></p>
+<h3 id="key-conventions">Key Conventions</h3>
+<ul>
+<li><p><strong>Entry Point</strong>: Your custom Agent system MUST include a <code>planning_agent</code>. The design of this agent can be modeled after the one described in the original BioGAIP publication.</p>
+<blockquote>
+<p><strong>Tip:</strong> While the agent doesn't strictly have to be named <code>planning_agent</code>, we highly recommend adhering to this naming convention.</p>
+</blockquote>
+</li>
+<li><p><strong>User Interaction Agent</strong>: This agent interacts with the built-in APIs of the BioAG frontend to pause execution and retrieve user input. This agent is injected into your custom Agent system.
+We recommend integrating a <code>user_proxy</code> into your custom setup. You can refer to the following usage example:</p>
+<pre><code class="lang-YAML">  <span class="hljs-attr">agents:</span>
+    <span class="hljs-comment">### other agents here</span>
+    <span class="hljs-attr">user_chat:</span>
+      <span class="hljs-attr">model_client:</span> <span class="hljs-string">model_client1</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">An</span> <span class="hljs-string">assistant</span> <span class="hljs-string">who</span> <span class="hljs-string">asks</span> <span class="hljs-string">users</span> <span class="hljs-string">about</span> <span class="hljs-string">their</span> <span class="hljs-string">needs</span> <span class="hljs-string">or</span> <span class="hljs-string">responds</span> <span class="hljs-string">to</span> <span class="hljs-string">users'</span> <span class="hljs-string">questions.</span>
+      <span class="hljs-attr">model_context:</span> <span class="hljs-number">10</span>
+      <span class="hljs-attr">system_message:</span> <span class="hljs-string">|
+        You are an assistant inquiring about user needs or responding to users' questions. The user's needs should be related to bioinformatics operations. 
+        When responding to user questions, provide as detailed and clear an answer as possible, formatted using Markdown syntax.
+        No matter what language the user uses, you should respond in English. 
+        You need to reject irrelevant requests. 
+        If the request is unclear or needs more details, please request clarification. 
+        Otherwise, pass the request directly.
+        If you want to ask the user a question, ask @user_proxy to do that.
+</span></code></pre>
+</li>
+<li><p><strong>Function Calling</strong>:
+If you do not specify a custom Toolset, BioAG provides the following built-in functions for Agents to call:</p>
+</li>
+</ul>
+<p>a. <code>execute_tool</code>: The most critical function. It serves as the primary interaction gateway between BioAG and BioWorker. Example usage:</p>
+<pre><code class="lang-YAML">    <span class="hljs-attr">agents:</span>
+      <span class="hljs-attr">executor_agent:</span>
+        <span class="hljs-attr">model_client:</span> <span class="hljs-string">model_client1</span>
+        <span class="hljs-attr">tools:</span> <span class="hljs-comment">## select available tools</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">execute_tool</span>
+        <span class="hljs-attr">description:</span> <span class="hljs-string">An</span> <span class="hljs-string">assistant</span> <span class="hljs-string">that</span> <span class="hljs-string">only</span> <span class="hljs-string">executes</span> <span class="hljs-string">safe</span> <span class="hljs-string">Linux</span> <span class="hljs-string">commands.</span>
+        <span class="hljs-attr">model_context:</span> <span class="hljs-number">10</span>
+        <span class="hljs-attr">system_message:</span> <span class="hljs-string">|
+          You have access to the 'execute_command' tool. \
+          When @safety_checker_agent says 'command is safe: [command]', use the 'execute_command' tool to execute [command] and report the output(if any). \
+          If @safety_checker_agent says 'command is not safe', say 'Command not executed due to safety concerns' \
+          ONLY EXECUTE ONE TASK AT A TIME, IF NOT, execute_tool WILL RETURN `Error when running [command], A command is already running in this project`
+          execute_command tool params: \
+          :param command: The command or script content to execute (str). \
+          :param project_id: The project ID (str, optional). [DONT NEED TO SET]
+          :param working_dir: The working directory (str, optional). [DONT NEED TO SET]
+          :param script_type: The script type ('python', 'r', 'perl') (str, optional). [if not set, treat as shell command]
+          :param interpreter: Path to interpreter (str, optional). [DONT NEED TO SET]
+          :param conda_env: Conda environment name or prefix path (str, optional). [only set when run raw python/r/perl script]
+          :param wait: If True, wait for completion and return output; if False, return task ID (bool). [always set to true]
+          :param api_url: The base API URL (str, optional). [DONT NEED TO SET]
+          :param timeout: Optional timeout in seconds (float, optional). [DONT NEED TO SET]
+          :param max_lines: Optional. How many stdout and stderr lines to return (default 10, optional). [SET IF YOU list files]
+          :return: Task ID if wait=False; output or error message if wait=True (str). 
+          When asked to execute R or Python code, you can execute it directly without writing to a file, but you must specify the script_type and conda_env when calling execute_tool.
+          You must submit all commands at once and cannot call execute_tool simultaneously, as this may lead to unexpected behavior.
+</span></code></pre>
+<p>b. <code>add_to_memory_func</code>: Allows Agents to manually update their internal memory.</p>
+<p>c. <code>pubmed_search_to_rag_tool</code>: Enables Agents to perform external searches on PubMed.</p>
+<div class="markdown-alert markdown-alert-tip">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>
+        <span>Tip</span>
+      </p>
+      <p>The functions listed here are exclusively for BioAG to call directly, NOT functions that Agents can invoke via the BioWorker API!</p>
+<p>Notice that these functions have been specially crafted to restrict unauthorized code execution capabilities on the user's local machine.</p>
+    </div>
+<p><br></br></p>
+<div class="markdown-alert markdown-alert-tip">
+      <p class="markdown-alert-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewbox="0 0 16 16"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>
+        <span>Tip</span>
+      </p>
+      <p>You can also refer to <a href="CustomizationToolsets.html">Customization Toolsets</a> to provide your own custom functions for Agents.</p>
+    </div>
+<ul>
+<li><strong>RAG (Retrieval-Augmented Generation)</strong>:
+BioAG provides the following default memory modules for RAG:</li>
+</ul>
+<pre><code>    user_memory
+    rag_memory_pubmed
+    conda_memory
+    nf_memory
+</code></pre><p>Users can directly customize the contents of <code>user_memory</code>. For the other modules, you can choose to enable or disable them.
+If you wish to utilize RAG, here is a configuration example:</p>
+<pre><code class="lang-YAML">    <span class="hljs-attr">agents:</span>
+      <span class="hljs-attr">manager_mem_agent:</span>
+        <span class="hljs-attr">model_client:</span> <span class="hljs-string">model_client1</span>
+        <span class="hljs-attr">memory:</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">user_memory</span> <span class="hljs-comment">## select memory module</span>
+        <span class="hljs-attr">tools:</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">add_to_memory_func</span>
+        <span class="hljs-attr">description:</span> <span class="hljs-string">A</span> <span class="hljs-string">memory</span> <span class="hljs-string">manager</span> <span class="hljs-string">agent</span> <span class="hljs-string">that</span> <span class="hljs-string">updates</span> <span class="hljs-string">the</span> <span class="hljs-string">memory</span> <span class="hljs-string">based</span> <span class="hljs-string">on</span> <span class="hljs-string">user-assistant</span> <span class="hljs-string">exchanges.</span>
+        <span class="hljs-attr">model_context:</span> <span class="hljs-number">10</span>
+        <span class="hljs-attr">system_message:</span> <span class="hljs-string">|
+          You are a memory updater agent. Your role is to analyze user-assistant exchange contents
+          and decide if a short summary should be added to the memory. 
+          Output a concise summary only if new important information is present; 
+          otherwise, output exactly 'No update'.
+</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">**Advanced Options**:</span>
+<span class="hljs-attr">The following advanced settings can be defined in your configuration file:</span>
+
+    <span class="hljs-attr">default_model:</span> <span class="hljs-string">model_client1</span> <span class="hljs-comment">## Select default LLM provider (must match LLM config)</span>
+    <span class="hljs-attr">builtin_agent:</span> <span class="hljs-literal">False</span> <span class="hljs-comment">## Whether to mix built-in and custom agents. Do not enable unless you fully understand the risks.</span>
+    <span class="hljs-attr">textMentionTermination:</span> <span class="hljs-string">TERMINATETERMINATE</span> <span class="hljs-comment">## Termination flag; BioAG stops agent execution upon detecting this string.</span>
+    <span class="hljs-attr">max_content:</span> <span class="hljs-number">200</span>
+    <span class="hljs-attr">max_summary_content:</span> <span class="hljs-number">1000</span>
+    <span class="hljs-attr">content_summary_model:</span> <span class="hljs-string">model_client4</span>
+</code></pre>
+<pre><code class="lang-YAML"><span class="hljs-comment">### Complete Example</span>
+
+<span class="hljs-string">The</span> <span class="hljs-string">best</span> <span class="hljs-string">practice</span> <span class="hljs-string">for</span> <span class="hljs-string">applying</span> <span class="hljs-string">custom</span> <span class="hljs-string">Agents</span> <span class="hljs-string">is</span> <span class="hljs-string">to</span> <span class="hljs-string">define</span> <span class="hljs-string">them</span> <span class="hljs-string">alongside</span> <span class="hljs-string">your</span> <span class="hljs-string">LLM</span> <span class="hljs-string">configuration.</span> <span class="hljs-string">Below</span> <span class="hljs-string">is</span> <span class="hljs-string">a</span> <span class="hljs-string">simplified,</span> <span class="hljs-attr">generalized template highlighting the core structure:</span>
+
+    <span class="hljs-attr">model_clients:</span>
+      <span class="hljs-attr">model_client1:</span>
+        <span class="hljs-attr">class:</span> <span class="hljs-string">OpenAIChatCompletionClient</span>
+        <span class="hljs-attr">kwargs:</span>
+          <span class="hljs-attr">model:</span> <span class="hljs-string">qwen-plus</span>
+          <span class="hljs-attr">base_url:</span> <span class="hljs-string">https://dashscope-intl.aliyuncs.com/compatible-mode/v1/</span>
+          <span class="hljs-attr">api_key:</span> <span class="hljs-string">YOUR_API_KEY</span>
+          <span class="hljs-attr">max_tokens:</span> <span class="hljs-number">8192</span>
+      <span class="hljs-comment"># ... other model clients can be added here ...</span>
+
+    <span class="hljs-attr">max_content:</span> <span class="hljs-number">200</span>
+    <span class="hljs-attr">max_summary_content:</span> <span class="hljs-number">1000</span>
+    <span class="hljs-attr">content_summary_model:</span> <span class="hljs-string">model_client1</span>
+
+    <span class="hljs-attr">agents:</span>
+      <span class="hljs-attr">planning_agent:</span>
+        <span class="hljs-attr">model_client:</span> <span class="hljs-string">model_client1</span>
+        <span class="hljs-attr">memory:</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">user_memory</span>
+        <span class="hljs-attr">description:</span> <span class="hljs-string">An</span> <span class="hljs-string">agent</span> <span class="hljs-string">for</span> <span class="hljs-string">planning</span> <span class="hljs-string">tasks,</span> <span class="hljs-string">this</span> <span class="hljs-string">agent</span> <span class="hljs-string">should</span> <span class="hljs-string">be</span> <span class="hljs-string">the</span> <span class="hljs-string">first</span> <span class="hljs-string">to</span> <span class="hljs-string">engage</span> <span class="hljs-string">when</span> <span class="hljs-string">given</span> <span class="hljs-string">a</span> <span class="hljs-string">new</span> <span class="hljs-string">task.</span>
+        <span class="hljs-attr">model_context:</span> <span class="hljs-number">1000</span>
+        <span class="hljs-attr">system_message:</span> <span class="hljs-string">|
+          You are a planning agent. Your job is to break down complex tasks into smaller, manageable subtasks.
+          Your team members are:
+              user_proxy: Asks users about their needs.
+              user_chat: Responds to users' questions.
+              system_check_agent: Generates precise Linux commands to check system configurations.
+              executor_agent: Executes safe Linux commands.
+              # [Add other custom agents here]
+</span>
+          <span class="hljs-attr">CRITICAL RULE:</span> <span class="hljs-string">ONLY</span> <span class="hljs-string">ASSIGN</span> <span class="hljs-string">ONE</span> <span class="hljs-string">TASK</span> <span class="hljs-string">EACH</span> <span class="hljs-string">TIME!</span>
+          <span class="hljs-string">This</span> <span class="hljs-string">means</span> <span class="hljs-string">your</span> <span class="hljs-string">delegation</span> <span class="hljs-string">response</span> <span class="hljs-string">MUST</span> <span class="hljs-string">contain</span> <span class="hljs-string">EXACTLY</span> <span class="hljs-string">ONE</span> <span class="hljs-string">task</span> <span class="hljs-string">assignment.</span> 
+          <span class="hljs-string">When</span> <span class="hljs-string">assigning</span> <span class="hljs-string">tasks,</span> <span class="hljs-attr">use this format:</span>
+          <span class="hljs-number">1</span><span class="hljs-string">.</span> <span class="hljs-string">&lt;agent&gt;</span> <span class="hljs-string">:</span> <span class="hljs-string">&lt;task&gt;</span>
+
+          <span class="hljs-string">After</span> <span class="hljs-string">completing</span> <span class="hljs-string">all</span> <span class="hljs-string">tasks,</span> <span class="hljs-string">ask</span> <span class="hljs-string">the</span> <span class="hljs-string">user</span> <span class="hljs-string">if</span> <span class="hljs-string">they</span> <span class="hljs-string">have</span> <span class="hljs-string">any</span> <span class="hljs-string">additional</span> <span class="hljs-string">needs.</span> <span class="hljs-string">If</span> <span class="hljs-string">the</span> <span class="hljs-string">user</span> <span class="hljs-string">indicates</span> <span class="hljs-literal">no</span> <span class="hljs-string">further</span> <span class="hljs-string">needs,</span> <span class="hljs-string">conclude</span> <span class="hljs-string">by</span> <span class="hljs-string">outputting</span> <span class="hljs-string">"TERMINATETERMINATE"</span><span class="hljs-string">.</span>
+
+      <span class="hljs-attr">user_chat:</span>
+        <span class="hljs-attr">model_client:</span> <span class="hljs-string">model_client1</span>
+        <span class="hljs-attr">description:</span> <span class="hljs-string">An</span> <span class="hljs-string">assistant</span> <span class="hljs-string">who</span> <span class="hljs-string">asks</span> <span class="hljs-string">users</span> <span class="hljs-string">about</span> <span class="hljs-string">their</span> <span class="hljs-string">needs</span> <span class="hljs-string">or</span> <span class="hljs-string">responds</span> <span class="hljs-string">to</span> <span class="hljs-string">users'</span> <span class="hljs-string">questions.</span>
+        <span class="hljs-attr">model_context:</span> <span class="hljs-number">10</span>
+        <span class="hljs-attr">system_message:</span> <span class="hljs-string">|
+          You are an assistant inquiring about user needs or responding to users' questions related to bioinformatics. 
+          If the request is unclear, please request clarification. 
+          Otherwise, pass the request directly.
+          If you want to ask the user a question, ask @user_proxy to do that.
+</span>
+      <span class="hljs-attr">system_check_agent:</span>
+        <span class="hljs-attr">model_client:</span> <span class="hljs-string">model_client1</span>
+        <span class="hljs-attr">description:</span> <span class="hljs-string">A</span> <span class="hljs-string">knowledgeable</span> <span class="hljs-string">assistant</span> <span class="hljs-string">that</span> <span class="hljs-string">generates</span> <span class="hljs-string">precise</span> <span class="hljs-string">Linux</span> <span class="hljs-string">commands</span> <span class="hljs-string">to</span> <span class="hljs-string">check</span> <span class="hljs-string">system</span> <span class="hljs-string">configurations.</span>
+        <span class="hljs-attr">model_context:</span> <span class="hljs-number">10</span>
+        <span class="hljs-attr">system_message:</span> <span class="hljs-string">|
+          You are an assistant that generates precise Linux commands to check system configurations (e.g., verifying package installations). 
+          Try to ensure that commands are executed silently as much as possible, because users may not be able to interact with the terminal. 
+          Only plan the code for the required tasks.
+</span></code></pre>
 
                                 
                                 </section>
@@ -371,7 +690,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Customization Agents","level":"1.3.2","depth":2,"next":{"title":"Customization Toolsets","level":"1.3.3","depth":2,"path":"CustomizationToolsets.md","ref":"CustomizationToolsets.md","articles":[]},"previous":{"title":"Configure","level":"1.3.1","depth":2,"path":"configure.md","ref":"configure.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"CustomizationAgents.md","mtime":"2026-04-17T12:39:30.341Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-04-17T12:39:40.548Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Customization Agents","level":"1.4.3","depth":2,"next":{"title":"Customization Toolsets","level":"1.4.4","depth":2,"path":"CustomizationToolsets.md","ref":"CustomizationToolsets.md","articles":[]},"previous":{"title":"Configure","level":"1.4.2","depth":2,"path":"configure.md","ref":"configure.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["alerts","blockquote-callout"],"pluginsConfig":{"alerts":{},"blockquote-callout":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css"}},"file":{"path":"CustomizationAgents.md","mtime":"2026-08-17T03:42:10.483Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-08-17T03:42:28.268Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
