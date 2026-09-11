@@ -12,4 +12,5 @@ bioGen/docker/bioWorker/bioworker.sif
 bioGen/docker/bio_ag/onnx.tar.gz
 bioGen/document/node_modules/*
 biolancher/script/windows_gui_v2/python/*
+biolancher/script/windows_gui_v2/bioag/onnx.tar.gz
 bak/*

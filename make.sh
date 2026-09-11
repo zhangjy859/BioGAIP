@@ -51,7 +51,8 @@ echo "bioGen/docker/bioWorker/bioworker.sif" >> .gitignore
 echo "bioGen/docker/bio_ag/onnx.tar.gz" >> .gitignore
 echo "bioGen/document/node_modules/*" >> .gitignore
 echo "bak/*" >> .gitignore
-echo "biolancher/script/windows_gui_v2/python" >> .gitignore
+echo "biolancher/script/windows_gui_v2/bioag/onnx.tar.gz" >> .gitignore
+echo "biolancher/script/windows_gui_v2/python/*" >> .gitignore
 
 sed -i -E 's#\./(src|img)#./bioGen/document/\1#g' README.md
 
