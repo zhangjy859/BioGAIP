@@ -76,6 +76,7 @@ jobs:
             
           echo "Exporting offline tarballs for ${NAME}..."
           ARCHS=("amd64" "arm64")
+          BUILT_ANY=false
           for arch in "${ARCHS[@]}"; do
             TAR_FILE="${NAME}_${REF}_${arch}.tar"
             echo "Building ${TAR_FILE}..."
@@ -86,13 +87,20 @@ jobs:
               --output type=docker,dest=${{ github.workspace }}/${TAR_FILE} \
               ${DIR}; then
               
-              echo "::error::Failed to build ${NAME} for ${arch}. Stopping."
-              exit 1
+              echo "::warning::Failed to build ${NAME} for ${arch}. Continuing with remaining architectures."
+              rm -f "${{ github.workspace }}/${TAR_FILE}" "${{ github.workspace }}/${TAR_FILE}.gz"
+              continue
             fi
             
             gzip ${{ github.workspace }}/${TAR_FILE}
+            BUILT_ANY=true
             docker buildx prune -a -f
           done
+
+          if [ "${BUILT_ANY}" != "true" ]; then
+            echo "::error::No offline tarball could be built for ${NAME}."
+            exit 1
+          fi
 
       - name: Upload Offline Tarballs
         uses: actions/upload-artifact@v4
