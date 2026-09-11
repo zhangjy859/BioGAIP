@@ -44,7 +44,7 @@ jobs:
       - name: Download ONNX requirement (bioag only)
         if: matrix.app == 'bioag'
         run: |
-          wget -qO bioGen/docker/bio_ag/onnx.tar.gz https://chroma-onnx-models.s3.amazonaws.com/all-MiniLM-L6-v2/onnx.tar.gz
+          wget -qO ${{ matrix.dir }}/onnx.tar.gz https://chroma-onnx-models.s3.amazonaws.com/all-MiniLM-L6-v2/onnx.tar.gz
 
       - name: Remove Tsinghua Mirrors from Dockerfiles
         run: |
@@ -53,8 +53,10 @@ jobs:
             -e '/RUN echo "channels:" > ~\/.condarc/,/pytorch:.*\.condarc/d' \
             -e 's/ && micromamba run -n base python -m pip config set.*//g' {} +
 
-      - name: Build, Push & Stream to Tar.gz
+      - name: Build, Push & Export
         run: |
+          set -e
+          
           REF=${GITHUB_REF_NAME:-latest}
           OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           
@@ -68,26 +70,27 @@ jobs:
             --platform linux/amd64,linux/arm64 \
             -t ${IMAGE}:${REF} \
             --label "org.opencontainers.image.description=Run 'docker pull ${IMAGE}:${REF}' for online deployment. Download .tar.gz for offline." \
-            ${DIR} || echo "::warning::Multi-arch build failed for ${NAME}, continuing..."
+            ${DIR} || echo "::warning::Multi-arch build/push failed for ${NAME}"
             
           docker buildx prune -f
             
-          echo "Streaming offline .tar.gz for ${NAME}..."
+          echo "Exporting offline tarballs for ${NAME}..."
           ARCHS=("amd64" "arm64")
           for arch in "${ARCHS[@]}"; do
-            FILE="${NAME}_${REF}_${arch}.tar.gz"
-            echo "Building ${FILE}..."
+            TAR_FILE="${NAME}_${REF}_${arch}.tar"
+            echo "Building ${TAR_FILE}..."
             
             if ! docker buildx build \
               --platform linux/${arch} \
               -t ${IMAGE}:${REF}-${arch} \
-              --output type=docker,dest=- \
-              ${DIR} | gzip > ${{ github.workspace }}/${FILE}; then
+              --output type=docker,dest=${{ github.workspace }}/${TAR_FILE} \
+              ${DIR}; then
               
-              echo "::warning::Failed to build ${NAME} for ${arch}."
-              rm -f ${{ github.workspace }}/${FILE} 
+              echo "::error::Failed to build ${NAME} for ${arch}. Stopping."
+              exit 1
             fi
             
+            gzip ${{ github.workspace }}/${TAR_FILE}
             docker buildx prune -a -f
           done
 
