@@ -13,7 +13,6 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     
-    # Only enforce success on Windows; ignore failures on Linux/macOS
     continue-on-error: ${{ matrix.os != 'windows-latest' }}
     
     strategy:
@@ -75,28 +74,34 @@ jobs:
         run: |
           Get-ChildItem -Path out -Filter *-win32-x64 -Directory | ForEach-Object { Compress-Archive -Path "$($_.FullName)\*" -DestinationPath "out\make\$($_.Name).zip" -Force }
 
-      - name: Upload Build Artifacts
+      - name: Upload Installer Packages
         uses: actions/upload-artifact@v4
         with:
-          name: app-builds-${{ matrix.os }}
+          name: app-installer-${{ matrix.os }}
           path: |
             biolancher/script/windows_gui/out/make/**/*.exe
-            biolancher/script/windows_gui/out/make/**/*.zip
             biolancher/script/windows_gui/out/make/**/*.dmg
             biolancher/script/windows_gui/out/make/**/*.deb
             biolancher/script/windows_gui/out/make/**/*.rpm
+          retention-days: 1
+
+      - name: Upload Portable ZIP Packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-portable-${{ matrix.os }}
+          path: biolancher/script/windows_gui/out/make/**/*.zip
           retention-days: 1
 
   release:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
-    
+      
     steps:
       - name: Download all Artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: app-builds-*
+          pattern: app-*
           path: release-artifacts
           merge-multiple: true
 
