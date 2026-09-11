@@ -1,0 +1,58 @@
+### EDIT FOLLOWING WITH CAUTION ###
+model_clients:
+  model_client1:
+    class: OpenAIChatCompletionClient
+    kwargs:
+      model: <your model name>
+      base_url: <your api base url>
+      api_key: <your api key>
+      max_tokens: 131072
+      model_info:
+        vision: False
+        function_calling: True
+        json_output: False
+        family: gpt-4o
+        structured_output: True
+        multiple_system_messages: True
+  model_client2:
+    class: OpenAIChatCompletionClient
+    kwargs:
+      model: <your model name>
+      base_url: <your api base url>
+      api_key: <your api key>
+      max_tokens: 131072
+      model_info:
+        vision: False
+        function_calling: True
+        json_output: False
+        family: gpt-4o
+        structured_output: True
+        multiple_system_messages: True
+  model_client3:
+    class: OpenAIChatCompletionClient
+    kwargs:
+      model: <your model name>
+      base_url: <your api base url>
+      api_key: <your api key>
+      max_tokens: 131072
+      model_info:
+        vision: False
+        function_calling: True
+        json_output: False
+        family: gpt-4o
+        structured_output: True
+        multiple_system_messages: True
+  model_client4:
+    class: OpenAIChatCompletionClient
+    kwargs:
+      model: <your model name>
+      base_url: <your api base url>
+      api_key: <your api key>
+      max_tokens: 131072
+      model_info:
+        vision: False
+        function_calling: True
+        json_output: False
+        family: gpt-4o
+        structured_output: True
+        multiple_system_messages: True

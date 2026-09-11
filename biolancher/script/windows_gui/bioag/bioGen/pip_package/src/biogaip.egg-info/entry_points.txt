@@ -1,0 +1,4 @@
+[console_scripts]
+biogaip = bioGen.cli:main
+biogen = bioGen.cli:main
+session_explorer = bioGen.web_v2.session_explorer:run_gui

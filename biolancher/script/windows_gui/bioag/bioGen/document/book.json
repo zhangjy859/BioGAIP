@@ -1,0 +1,6 @@
+{
+    "plugins": ["alerts", "blockquote-callout"],
+    "styles": {
+    "website": "styles/website.css"
+  }
+}

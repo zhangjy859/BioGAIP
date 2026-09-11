@@ -1,0 +1,99 @@
+name: Release to GitHub Packages
+
+on:
+  workflow_dispatch:
+  push:
+    tags: [ 'v*' ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: bioag
+            dir: bioGen/docker/bioag
+          - app: bioworker
+            dir: bioGen/docker/bioWorker
+
+    steps:
+      - name: Maximize Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost "$AGENT_TOOLSDIRECTORY"
+          sudo swapoff -a
+          sudo rm -f /mnt/swapfile
+          sudo docker image prune --all --force
+          sudo docker builder prune -a -f
+
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Authenticate to GitHub Packages
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download ONNX requirement (bioag only)
+        if: matrix.app == 'bioag'
+        run: |
+          wget -qO bioGen/docker/bio_ag/onnx.tar.gz https://chroma-onnx-models.s3.amazonaws.com/all-MiniLM-L6-v2/onnx.tar.gz
+
+      - name: Remove Tsinghua Mirrors from Dockerfiles
+        run: |
+          find . -name "Dockerfile" -exec sed -i \
+            -e 's/sed -i.*mirrors.tuna.tsinghua.edu.cn.*sources.list/true/g' \
+            -e '/RUN echo "channels:" > ~\/.condarc/,/pytorch:.*\.condarc/d' \
+            -e 's/ && micromamba run -n base python -m pip config set.*//g' {} +
+
+      - name: Build, Push & Stream to Tar.gz
+        run: |
+          REF=${GITHUB_REF_NAME:-latest}
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          
+          NAME="${{ matrix.app }}"
+          DIR="${{ matrix.dir }}"
+          IMAGE="ghcr.io/${OWNER}/${NAME}"
+          
+          echo "Pushing multi-arch ${NAME} to GHCR..."
+          docker buildx build \
+            --push \
+            --platform linux/amd64,linux/arm64 \
+            -t ${IMAGE}:${REF} \
+            --label "org.opencontainers.image.description=Run 'docker pull ${IMAGE}:${REF}' for online deployment. Download .tar.gz for offline." \
+            ${DIR} || echo "::warning::Multi-arch build failed for ${NAME}, continuing..."
+            
+          docker buildx prune -f
+            
+          echo "Streaming offline .tar.gz for ${NAME}..."
+          ARCHS=("amd64" "arm64")
+          for arch in "${ARCHS[@]}"; do
+            FILE="${NAME}_${REF}_${arch}.tar.gz"
+            echo "Building ${FILE}..."
+            
+            if ! docker buildx build \
+              --platform linux/${arch} \
+              -t ${IMAGE}:${REF}-${arch} \
+              --output type=docker,dest=- \
+              ${DIR} | gzip > ${{ github.workspace }}/${FILE}; then
+              
+              echo "::warning::Failed to build ${NAME} for ${arch}."
+              rm -f ${{ github.workspace }}/${FILE} 
+            fi
+            
+            docker buildx prune -a -f
+          done
+
+      - name: Upload Offline Tarballs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Docker-Offline-${{ matrix.app }}-${{ github.ref_name }}
+          path: "*.tar.gz"
+          retention-days: 14

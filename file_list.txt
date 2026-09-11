@@ -1,0 +1,124 @@
+## bioAG
+bioGen/biogen.py
+bioGen/__init__.py
+bioGen/context_summary.py
+bioGen/manager.py
+## bioAG config
+bioGen/config/agent_config.yaml
+bioGen/config/_config.yaml
+bioGen/config/tool_config.yaml
+bioGen/config/load_config.py
+## web ui
+bioGen/context_summary.py
+bioGen/web/config.py
+bioGen/web/__init__.py
+bioGen/web/psql_demo.py
+bioGen/web/app_streamlit1.py
+bioGen/web/app_chainlit1.py
+bioGen/web_v2/app.py
+bioGen/web_v2/app3.py
+bioGen/web_v2/agent_processor.py
+bioGen/web_v2/api_manager.py 
+bioGen/web_v2/db_viewer.py
+bioGen/web_v2/db_viewer_v3.py
+bioGen/web_v2/generate_user_password_config.py
+bioGen/web_v2/session_explorer.py
+bioGen/web_v2/session_explorer.ico
+bioGen/web_v2/ui
+bioGen/web_v2/storage.py
+bioGen/web_v2/utils.py
+## conda meta
+bioGen/conda_pkg_meta/conda_meta2.py conda_pkg_meta/conda_meta2.py
+# nf core meta
+bioGen/nf_pipeline_meta/nf_pipeline_meta.py nf_pipeline_meta/nf_pipeline_meta.py
+## pubmed
+bioGen/pubmed
+## biolanucher
+bioGen/script/env.yaml biolancher/script/env.yaml
+bioGen/script/quick_start.py biolancher/script/quick_start.py
+bioGen/script/quick_start.sh biolancher/script/quick_start.sh
+bioGen/script/readme.md biolancher/script/readme.md
+bioGen/script/start_docker.ps1 biolancher/script/start_docker.ps1
+bioGen/script/start_docker_warpper.bat biolancher/script/start_docker_warpper.bat
+bioGen/script/start_docker_warpper.exe biolancher/script/start_docker_warpper.exe
+bioGen/script/windows_gui/assets biolancher/script/windows_gui/assets
+bioGen/script/windows_gui/app.py biolancher/script/windows_gui/app.py
+bioGen/script/windows_gui/envs/env.yaml biolancher/script/windows_gui/envs/env.yaml
+bioGen/script/windows_gui/info biolancher/script/windows_gui/info
+bioGen/script/windows_gui/main.js biolancher/script/windows_gui/main.js
+bioGen/script/windows_gui/node_modules biolancher/script/windows_gui/node_modules
+bioGen/script/windows_gui/out biolancher/script/windows_gui/out
+bioGen/script/windows_gui/package-lock.json biolancher/script/windows_gui/package-lock.json
+bioGen/script/windows_gui/package.json biolancher/script/windows_gui/package.json
+bioGen/script/windows_gui/python biolancher/script/windows_gui/python
+bioGen/script/windows_gui/.chainlit biolancher/script/windows_gui/.chainlit
+bioGen/script/windows_gui/.streamlit biolancher/script/windows_gui/.streamlit
+bioGen/script/windows_gui/readme.md biolancher/script/windows_gui/readme.md
+bioGen/script/windows_gui_v2 biolancher/script/windows_gui_v2
+## docker 
+bioGen/docker/bioWorker/Dockerfile
+bioGen/docker/bioWorker/bioworker.sif
+bioGen/docker/bioWorker/env.yaml
+bioGen/docker/bioWorker/docker_to_singulartiy.sh
+bioGen/docker/bioWorker/web_shell_command_v5.py
+bioGen/docker/bioWorker/web_shell/web_shell_command_v8.py
+bioGen/docker/bio_ag/Dockerfile bioGen/docker/bio_ag/Dockerfile
+bioGen/docker/bio_ag/app_start.sh
+bioGen/docker/bio_ag/db_init.sh
+bioGen/docker/bio_ag/env.yaml
+bioGen/docker/bio_ag/env_mini.yaml
+bioGen/docker/bio_ag/fetch_file.sh
+bioGen/docker/bio_ag/start.sh
+bioGen/docker/bio_ag/start_app.sh
+bioGen/docker/bio_ag/start_script.sh
+#bioGen/docker/bio_ag/onnx.tar.gz
+bioGen/docker/bio_ag/.chainlit
+bioGen/docker/bio_ag/init.sql
+bioGen/docker/bio_ag/summary_conda_env_yaml.py
+bioGen/docker/bio_ag/summary_conda_env_yaml.tab
+bioGen/docker/bio_ag/onnx.tar.gz
+bioGen/docker/bio_ag/summary_conda_env_yaml_v2.py
+## utils
+bioGen/ulits/api_set.py
+bioGen/ulits/api_set.sh
+bioGen/ulits/api_set_sandbox.py
+bioGen/ulits/api_set_warp.sh
+bioGen/ulits/shell_command.py
+bioGen/ulits/web_shell_command.py
+bioGen/ulits/web_shell_command_v2.py
+bioGen/ulits/web_shell_command_v5.py
+bioGen/pip_package
+## document
+bioGen/document bioGen/document
+bioGen/document/readme.txt  
+#bioGen/document/README.md README.md 
+bioGen/document/img bioGen/document/img
+bioGen/document/src bioGen/document/src
+bioGen/document/book.json
+bioGen/document/package.json
+bioGen/document/quickstart_v2.md
+bioGen/document/quickstart.md
+bioGen/document/Prompt.md
+bioGen/document/configure.md
+bioGen/document/SUMMARY.md
+bioGen/document/Advance_configure.md
+bioGen/document/Advance_configure.md
+bioGen/document/CustomizationAgents.md
+bioGen/document/CustomizationToolsets.md
+bioGen/document/advanced.md
+bioGen/document/configure.md
+bioGen/document/singularity.md
+bioGen/document/bypassmode.md
+bioGen/document/start.md
+## other
+.chainlit
+.env
+bioGen/.chainlit
+
+### env 
+env
+
+
+## Next Run make.sh to fix file structure
+
+
