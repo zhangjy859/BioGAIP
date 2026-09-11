@@ -6,9 +6,6 @@ on:
       - 'v*'
   workflow_dispatch:
 
-with:
-    retention-days: 10
-
 permissions:
   contents: write
 
