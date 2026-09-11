@@ -17,7 +17,7 @@ jobs:
       matrix:
         include:
           - app: bioag
-            dir: bioGen/docker/bioag
+            dir: bioGen/docker/bio_ag
           - app: bioworker
             dir: bioGen/docker/bioWorker
 
