@@ -22,7 +22,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./biolancher/script/windows_gui/
+        working-directory: ./biolancher/script/windows_gui_v2/
 
     steps:
       - uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: './biolancher/script/windows_gui/package-lock.json'
+          cache-dependency-path: './biolancher/script/windows_gui_v2/package-lock.json'
 
       - name: Download Python (Windows)
         if: runner.os == 'Windows'
