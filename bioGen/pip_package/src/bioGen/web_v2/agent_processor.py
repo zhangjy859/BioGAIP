@@ -190,20 +190,11 @@ def process_task(user_message, log_file, team, stop_team, force_stop, team_statu
                                 storage.json_safedump({'type': 'message', 'role': current_source, "content": current_content}, f)
                                 f.write('\n')
                             if task_messages_num > max_content or 'SUMMARYSUMMARY' in current_content:
-                                logger.info(f"Task messages exceeded max_content ({max_content}) or SUMMARYSUMMARY detected. Triggering summary and exit.")
-                                ### logger summary path
-                                logger.info(f"Creating team summary file: {team_summary_file}")
                                 _create_file(team_summary_file)
                                 _create_file(team_summary_file + '_no_user_confirm')
                                 _exit_team()
                                 _create_file(team_exit_file)
                                 storage.save_agents(team, team_status_file)
-                                ### logger all files state
-                                logger.info(f"=======Team status file status=======")
-                                logger.info(f"Team status file: {team_status_file}, exists: {os.path.exists(team_status_file)}")
-                                logger.info(f"Team exit file: {team_exit_file}, exists: {os.path.exists(team_exit_file)}")
-                                logger.info(f"Team summary file: {team_summary_file}, exists: {os.path.exists(team_summary_file)}")
-                                logger.info(f"=======End of team status file status=======")
                                 reward.reset()
                                 with open(log_file, 'a') as f:
                                     storage.json_safedump({'type': 'toast', 'message': f"Start executing command\nView progression at {os.environ.get('API_URL', 'bioWorker panel')} with your API key", 'icon': "ℹ️", "time": 10}, f)

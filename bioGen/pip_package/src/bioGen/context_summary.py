@@ -178,7 +178,6 @@ def _is_token_limit_error(e: Exception) -> bool:
 
 
 def run_summary(session_file, model, max_summary_content=10000, user_task=None):
-    logger.info(f"Running summary for session file: {session_file} with max_summary_content={max_summary_content}")
     with disable_all_logging():
         system_prompt = get_summary_system_prompt()
         agent = get_agent(model, system_prompt)

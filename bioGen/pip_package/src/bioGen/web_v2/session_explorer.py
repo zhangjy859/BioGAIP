@@ -552,7 +552,7 @@ def parse_debug_log(filepath):
 
 def run_gui(initial_db=None, initial_port=8080):
     root = tk.Tk()
-    root.title("bioGAIP Session Explorer")
+    root.title("bioGen Enhanced Manager")
     root.geometry("850x700")
     style = ttk.Style()
     style.theme_use('clam')
