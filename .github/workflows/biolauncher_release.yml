@@ -79,17 +79,17 @@ jobs:
         with:
           name: app-installer-${{ matrix.os }}
           path: |
-            biolancher/script/windows_gui/out/make/**/*.exe
-            biolancher/script/windows_gui/out/make/**/*.dmg
-            biolancher/script/windows_gui/out/make/**/*.deb
-            biolancher/script/windows_gui/out/make/**/*.rpm
+            biolancher/script/windows_gui_v2/out/make/**/*.exe
+            biolancher/script/windows_gui_v2/out/make/**/*.dmg
+            biolancher/script/windows_gui_v2/out/make/**/*.deb
+            biolancher/script/windows_gui_v2/out/make/**/*.rpm
           retention-days: 1
 
       - name: Upload Portable ZIP Packages
         uses: actions/upload-artifact@v4
         with:
           name: app-portable-${{ matrix.os }}
-          path: biolancher/script/windows_gui/out/make/**/*.zip
+          path: biolancher/script/windows_gui_v2/out/make/**/*.zip
           retention-days: 1
 
   release:
