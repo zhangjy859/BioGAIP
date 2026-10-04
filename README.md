@@ -113,10 +113,10 @@ BioGAIP typically runs in C/S (Client/Server) mode. BioAG, running in client mod
 Configuration Steps:
 If your devices meet the above requirements, follow these steps to get started:
 
-1. Refer to the [Quick Config.mp4](https://dataweb.biogaip.top/video/Quick%20Config.mp4?expires=1861699343&token=22aff225ce06485a232538491f409800732c6b4edbddd982e9de56a0882269c0) included in this repository to quickly configure your computer.
+~~1. Refer to the [Quick Config.mp4](https://dataweb.biogaip.top/video/Quick%20Config.mp4?expires=1861699343&token=22aff225ce06485a232538491f409800732c6b4edbddd982e9de56a0882269c0) included in this repository to quickly configure your computer.~~
 2. **Upload** Your data to your Linux server (Winscp/filezilla)
 3. **Launch** After the quick configuration is complete, unzip `bioag-launcher-win32-x64-*.*.*.zip` and double-click `bioag-launcher.exe` to start the setup wizard.
-4. **Configure** BioLauncher will guide the user through the initial configuration of BioAG.
+4. **Configure** BioLauncher will guide the user through the initial configuration of BioAG (You can choose Easy mode).
 5. **Connect** After step 4 is completed, BioLauncher will guide the user to connect to BioWorker. If you have a configured BioWorker instance, you can connect directly by entering the API URL and Key. If you do not have a configured BioWorker instance, you can choose to use SSH connection for initialization; BioAG will attempt to automatically complete the BioWorker configuration on the target server via SSH.
 6. Paste **prompt** → **Run**  
 7. **Done.** The AI agent takes over.
