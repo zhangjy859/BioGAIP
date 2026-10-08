@@ -19,7 +19,7 @@
 
 
 <p align="center">
-  <a href="quickstart.md"><strong>Quick Start →</strong></a>
+  <a href="https://notebook.biogaip.top/quickstart_v2.html"><strong>Quick Start →</strong></a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="#✨-why-biogaip">Features</a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
