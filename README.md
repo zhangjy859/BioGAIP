@@ -25,7 +25,7 @@
   &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="#🎯-tested-analyses">Supported Analyses</a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
-  <a href="📚-full-documentation">Full Guidelines</a>
+  <a href="https://notebook.biogaip.top">Full Guidelines</a>
 </p>
 
 ---
