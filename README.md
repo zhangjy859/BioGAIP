@@ -51,6 +51,11 @@ Compared to existing solutions, BioGAIP stands out with several distinct advanta
 - **Secure & Flexible Architecture**: Built on a robust Client/Server (C/S) architecture utilizing `BioWorker` as the server. By leveraging containerization and sandboxing (highly experimental), it delivers exceptional scalability while keeping your sensitive data completely secure.
 - **Ultimate Customizability**: Designed with power users in mind. Through a unified configuration file, you can deeply tailor the platform—fine-tuning everything from RAG pipelines and multi-agent teams to hallucination mitigation strategies.
 
+**### Important notice**
+
+We have updated the software to version 1.4.0 to fix several critical issues present in version 1.3.6. These issues prevented some users from correctly launching and configuring BioGAIP. Due to differences between our development environment and user environments, we were unable to detect these anomalies during testing of version 1.3.6.
+
+Please Download 1.4.6 package from release
 
 ## 📸 Demo Video of End-to-end Graphic Deploy
 

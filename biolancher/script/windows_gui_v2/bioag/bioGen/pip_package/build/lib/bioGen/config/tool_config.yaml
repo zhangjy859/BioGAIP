@@ -1,0 +1,150 @@
+## visit this tool at agnents config by 
+## custom_tool.name or custom_tool.values()
+tools:
+  tool_name1:
+    name: 'tool1'
+    description: 'Description of tool 1.'
+    kwargs:
+      param1: 'description1'
+      param2: 'description2'
+    function: |
+      def test_tools(value: str):
+          return(f"hello {value}")
+#  write_file_tool:
+#    name: 'write_file_tool'
+#    description: 'write only text file to specificed path.'
+#    kwargs:
+#      content: file text content
+#      file_path: file path to write
+#    function: |
+#      def write_file_to_api(content: str, file_path: str) -> str:
+#          """
+#          Calls the write_file API to write text content to a file.
+#          
+#          :param server_url: The base URL of the API server (e.g., "http://localhost:38000")
+#          :param project_id: The project ID
+#          :param api_key: The API key for authentication
+#          :param file_path: The relative path to the file
+#          :param content: The text content to write
+#          :return: Response message as text
+#          """
+#          api_key = os.getenv("API_KEY")
+#          if not api_key:
+#              raise ValueError("API_KEY not set")
+#      
+#          api_url = api_url or os.getenv("API_URL")
+#          if not api_url:
+#              raise ValueError("API_URL not set")
+#          else:
+#              server_url = api_url
+#      
+#          if working_dir is None:
+#              working_dir = os.getenv("WORK_DIR") or os.getcwd()
+#      
+#          if project_id is None:
+#              project_id = os.getenv("PROJECT_ID")
+#          try:
+#              response = requests.get(api_url)
+#              response.raise_for_status()
+#          except Exception as e:
+#              raise ValueError(f"API not reachable: {str(e)}")
+#          endpoint = f"{server_url}/projects/{project_id}/write_file"
+#          content_base64 = base64.b64encode(content.encode("utf-8")).decode("utf-8")
+#          payload = {
+#              "path": file_path,
+#              "content_base64": content_base64,
+#              "mode": "text"
+#          }
+#          headers = {
+#              "x-api-key": api_key,
+#              "Content-Type": "application/json"
+#          }
+#          response = requests.post(endpoint, json=payload, headers=headers)
+#          if response.status_code == 200:
+#              return response.json().get("message", "Success")
+#          else:
+#              return f"Error: {response.status_code} - {response.text}"
+#
+#remote_tools:
+#  tool_name1:
+#    name: 'tool1.py'
+#    description: 'Description of tool 1.'
+#    usage: | 
+#      tool1.py [input.bam] [output.bed] [reference.fa]
+#    kwargs: |
+#      input.bam [necessary]: input fastq flile[gz]
+#      output.bed [necessary]: output bed file
+#      reference.fa [necessary]: reference genenome fastq file
+#    script: |
+#      #!/usr/bin/env python3
+#      """
+#      tool1.py: Generate a BED file of variant positions from a BAM file using samtools and bcftools.
+#      
+#      Usage:
+#          tool1.py [input.bam] [output.bed] [reference.fa]
+#      
+#      This script performs variant calling using samtools mpileup and bcftools call, then extracts
+#      chromosome, start, and end positions to a BED file. It assumes samtools and bcftools are installed
+#      and available in the PATH. The reference FASTA file is required for accurate pileup.
+#      
+#      Note: The script uses temporary files for intermediate VCF output. Adjust thresholds or options
+#      as needed for your specific use case (e.g., adding -c for consensus calling).
+#      """
+#      
+#      import sys
+#      import subprocess
+#      import os
+#      import tempfile
+#      
+#      def run_command(cmd, check=True):
+#          """Run a shell command and return the result."""
+#          try:
+#              result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=check)
+#              if result.returncode != 0:
+#                  print(f"Error: {result.stderr}", file=sys.stderr)
+#                  sys.exit(1)
+#              return result.stdout
+#          except subprocess.CalledProcessError as e:
+#              print(f"Command failed: {e}", file=sys.stderr)
+#              sys.exit(1)
+#      
+#      def main():
+#          if len(sys.argv) != 4:
+#              print("Usage: tool1.py <input.bam> <output.bed> <reference.fa>", file=sys.stderr)
+#              sys.exit(1)
+#      
+#          input_bam = sys.argv[1]
+#          output_bed = sys.argv[2]
+#          reference_fa = sys.argv[3]
+#      
+#          if not os.path.exists(input_bam):
+#              print(f"Error: Input BAM file '{input_bam}' not found.", file=sys.stderr)
+#              sys.exit(1)
+#          if not os.path.exists(reference_fa):
+#              print(f"Error: Reference FASTA file '{reference_fa}' not found.", file=sys.stderr)
+#              sys.exit(1)
+#      
+#          # Step 1: Generate pileup
+#          pileup_file = tempfile.NamedTemporaryFile(mode='w', suffix='.pileup', delete=False)
+#          pileup_file.close()
+#          run_command(f"samtools mpileup -f {reference_fa} {input_bam} > {pileup_file.name}")
+#      
+#          # Step 2: Call variants to VCF
+#          vcf_file = tempfile.NamedTemporaryFile(mode='w', suffix='.vcf', delete=False)
+#          vcf_file.close()
+#          run_command(f"bcftools call -mv -O v {pileup_file.name} > {vcf_file.name}")
+#      
+#          # Step 3: Extract to BED (chr start end)
+#          run_command(f"bcftools query -f '%CHROM\\t%POS\\t%END\\n' {vcf_file.name} > {output_bed}")
+#      
+#          # Cleanup
+#          os.unlink(pileup_file.name)
+#          os.unlink(vcf_file.name)
+#      
+#          print(f"Variant BED file generated: {output_bed}")
+#      
+#      if __name__ == "__main__":
+#          main()
+      
+
+
