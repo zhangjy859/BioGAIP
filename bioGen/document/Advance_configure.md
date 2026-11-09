@@ -104,7 +104,7 @@ such as your personal computer, workstation, or NAS, while BioWorker needs to ru
 
 1. git clone the BioGAIP repository:
 ```bash
-git clone xxx
+git clone https://github.com/zhangjy859/BioGAIP
 ```
 2. Navigate to the BioGAIP docker directory:
 ```bash
@@ -125,7 +125,7 @@ docker build -f Dockerfile -t BioWorker:lastest .
 For Singularity users, you can build the Singularity image from the Docker image directly. Or you can also build the Singularity image from the Singularity definition file in the `BioGAIP/docker` and `BioGAIP/BioWorker` directories.
 1. git clone the BioGAIP repository:
 ```bash
-git clone xxx
+git clone [xxx](https://github.com/zhangjy859/BioGAIP)
 ```
 
 2. copy BioAG Singularity definition file to your working directory:

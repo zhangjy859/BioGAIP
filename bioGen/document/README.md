@@ -26,6 +26,8 @@
   <a href="#🎯-tested-analyses">Supported Analyses</a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
   <a href="📚-full-documentation">Full Guidelines</a>
+  &nbsp;&nbsp;•&nbsp;&nbsp;
+  <a href="https://github.com/zhangjy859/BioGAIP/releases">Download</a>
 </p>
 
 ---
@@ -180,7 +182,7 @@ We welcome:
 
 # Milestones & Roadmap
 
-We are building the future of AI-driven bioinformatics — one milestone at a time.  
+We are building the AI-driven bioinformatics — one milestone at a time.  
 Here’s our transparent roadmap:
 
 | Milestone | Target Date | Priority | Status | Key Achievements & Goals | Notes |

@@ -15,7 +15,7 @@ You can launch the Session Explorer directly from the command line. You can opti
 python session_explorer.py
 
 # Launch with a specific database and port
-python session_explorer.py /path/to/kv_sessions.db --port 8080
+python session_explorer.py /path/to/example_sessions.db --port 8080
 ```
 
 For Windows users, we additionally provide an executable file session_explorer.exe. Users can double-click this file to directly open the main interface of the software.
@@ -26,7 +26,7 @@ For Windows users, we additionally provide an executable file session_explorer.e
 
 The interface is divided into a global top panel for session selection and a notebook with four main functional tabs: **Viewer**, **Alchemy Mode**, **Debug Tool**, and **Configuration**.
 
-### 1. Global Session Selection
+### 1. Session Selection
 At the top of the window, you can load your session data.
 - **Database File:** Click **Browse** to select a BioGAIP SQLite database (`*.db`) or an exported JSON session file (`*.json`).
 - **Select Session:** Once loaded, use the dropdown menu to select the specific user session or project key you want to analyze.

@@ -246,6 +246,9 @@ We’ve created a clear, step-by-step demo video that shows exactly how to deplo
 </video>
 
 #### Install Docker on Windows
+
+**We've provided an Easy Mode that allows deployment without a local Docker environment. If you plan to use this mode, you can safely skip this section.**
+
 To achieve the best ***performance**, we expect users to install Docker on their devices. For Windows 10/11 users, please refer to the link below:
 [https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers](https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers)
 
@@ -287,6 +290,8 @@ We have prepared a video to demonstrate the installation process.
    - **API Key** — your secret key
    - **Model Name** — the exact model identifier you want to use
 
+   **Template Configuration File**: We recommend configuring the API via a configuration file rather than online setup, as it simplifies the process and improves stability. Download the template from [here](./src/configure.yaml) (if you are unable to download it, please right-click and select "Save As").
+
    **⚠️ Important:** Always keep your API keys private. BioGAIP handles them locally and never sends them anywhere. Leaking a key — especially with post-paid services like Gemini — can result in serious charges.
 
    **Advanced users:** You can also run locally deployed LLMs on your own hardware. BioGAIP maintains broad compatibility with the majority of local and remote LLM APIs.
@@ -296,7 +301,7 @@ We have prepared a video to demonstrate the installation process.
 > We don’t endorse any single provider. The best choice always depends on your specific tasks — we encourage quick testing to find the perfect fit.  
 > In our own benchmarks, **Qwen** and **Grok** are the two we use most often.
 
-5. **BioAG Runtime Configuration**
+1. **BioAG Runtime Configuration**
 
    BioAG Runtime Settings
    
@@ -313,7 +318,7 @@ We have prepared a video to demonstrate the installation process.
      • Gemini Compatible mode – deprecated, leave unchecked  
      • Frontend Port – useful when running multiple BioAG instances
 
-6. **Review & Launch BioAG**
+2. **Review & Launch BioAG**
 
    Review and Launch Panel
    

@@ -1,0 +1,23 @@
+{
+  "name": "honkit-secure-docs",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-03-01",
+  
+  // Serve static files directly from your HonKit output directory
+  "assets": {
+    "directory": "./_book",
+	// 1. Explicitly bind the assets to the ASSETS variable in your code
+	"binding": "ASSETS",
+	// 2. FORCE Cloudflare to run your authentication script BEFORE serving files
+	"run_worker_first": true
+  },
+  
+  // Map the Worker to your custom domain
+  // Replace "docs.yourdomain.com" with your actual domain
+  "routes": [
+    {
+      "pattern": "notebook.biogaip.top",
+      "custom_domain": true
+    }
+  ]
+}

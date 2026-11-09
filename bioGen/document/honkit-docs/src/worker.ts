@@ -29,6 +29,11 @@ export default {
       });
     };
 
+    // remove authentication
+    if (true) {
+      return env.ASSETS.fetch(request);
+    }
+
     if (!authHeader) {
       return requireAuth();
     }
