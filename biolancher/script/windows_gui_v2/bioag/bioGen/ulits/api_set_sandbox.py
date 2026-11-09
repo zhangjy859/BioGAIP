@@ -297,7 +297,7 @@ def main():
         # Build image
         if build_docker_from_source:
             print("Building Docker image on remote server...")
-            print("%70%", "Download from backup server.")
+            print("%70%", "Download from backup server, this may take more time.")
             #exec_command(ssh, "mkdir -p ~/bioGen/bioWorker && cd ~/bioGen/bioWorker && docker build -t bioworker:latest .")
             exec_command(ssh, "mkdir -p ~/bioGen/bioWorker && wget -O ~/bioGen/bioWorker/bioworker_latest.tar.gz " + " -q " + f'"{bioworker_url}"')
             exec_command(ssh, "docker load -i ~/bioGen/bioWorker/bioworker_latest.tar.gz")

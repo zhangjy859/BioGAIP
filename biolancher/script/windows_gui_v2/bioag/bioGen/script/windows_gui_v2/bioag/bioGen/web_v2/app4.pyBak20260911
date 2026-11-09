@@ -1,0 +1,33 @@
+import streamlit as st
+from bioGen.web import config as web_config
+from bioGen.biogen import *
+from modules.setup import init_environment, handle_browser_reload, render_global_css_and_splash, initialize_session_state
+from modules.auth import handle_authentication
+from modules.sidebar import render_sidebar
+from modules.chat import render_welcome_and_messages
+from modules.task import handle_task_execution
+
+# Initialization
+logger, persist_dir, storage, version_data = init_environment()
+
+st.set_page_config(page_title=f"BioGAIP {version_data}", page_icon="🧬", layout="centered")
+
+handle_browser_reload(storage)
+
+render_global_css_and_splash()
+
+cookies = handle_authentication(storage)
+
+render_sidebar(persist_dir, storage, logger, cookies, version_data)
+
+initialize_session_state(persist_dir)
+
+starters = list(getattr(web_config, 'starters', []))
+starters.append({
+    "label": "Genomic Phasing",
+    "message": "Perform genomic phasing analysis to resolve haplotype blocks from the provided variant data."
+})
+
+render_welcome_and_messages(storage, starters)
+
+handle_task_execution(persist_dir, storage, logger)

@@ -292,7 +292,7 @@ if not st.session_state.get('api_setup_done', False):
                     usrname_id_login = ''
                 logger.info(f"API credentials set: URL={api_url_input}, Key={'*' * len(api_key_input)}")
                 logger.info(f"Project ID set: {usrname_id_login}")
-                reset_project_id = usrname_id_login != '' and usrname_id_login
+                reset_project_id = usrname_id_login != '' and usrname_id_login and usrname_id_login != st.session_state.get('project_id', '')
                 if reset_project_id:
                     st.session_state.project_id = usrname_id_login
                     os.environ['PROJECT_ID'] = st.session_state.project_id

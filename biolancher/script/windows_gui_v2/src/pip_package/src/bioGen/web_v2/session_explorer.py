@@ -552,7 +552,7 @@ def parse_debug_log(filepath):
 
 def run_gui(initial_db=None, initial_port=8080):
     root = tk.Tk()
-    root.title("bioGen Enhanced Manager")
+    root.title("bioGAIP Session Explorer")
     root.geometry("850x700")
     style = ttk.Style()
     style.theme_use('clam')
@@ -746,7 +746,7 @@ def run_gui(initial_db=None, initial_port=8080):
     ttk.Button(tab_viewer, text="Generate / View", command=execute_viewer).pack(fill=tk.X, pady=20)
 
     tab_refine = ttk.Frame(notebook, padding=15)
-    notebook.add(tab_refine, text="Refine")
+    notebook.add(tab_refine, text="Alchemy Mode")
     ttk.Label(tab_refine, text="Advanced LLM Processing Generation", style="Header.TLabel").pack(anchor=tk.W, pady=(0,10))
     ttk.Button(tab_refine, text="Generate Snakemake Workflow", command=lambda: execute_llm('snakemake')).pack(fill=tk.X, pady=5)
     ttk.Button(tab_refine, text="Generate Execution Flowchart", command=lambda: execute_llm('flowchart')).pack(fill=tk.X, pady=5)

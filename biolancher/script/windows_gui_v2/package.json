@@ -34,6 +34,8 @@
           "bypass_mgr.py",
           "docker_mgr.py",
           "docker_ops.py",
+          "ui.py",
+          "utils.py",
           ".streamlit",
           "bioag",
           "src",

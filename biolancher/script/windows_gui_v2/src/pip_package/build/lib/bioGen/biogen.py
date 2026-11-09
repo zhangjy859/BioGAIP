@@ -123,7 +123,7 @@ if 'agents' not in sys_config and os.path.exists(agent_yaml):
 if 'model_clients' not in sys_config and not os.path.exists(agent_yaml):
     raise FileNotFoundError('Agent configuration file not found')
 if 'model_clients' not in sys_config:
-    raise ValueError('No model_clients found in system configuration')
+    raise ValueError(f'No model_clients found in system configuration: {sys_config}')
 default_model_name = sys_config.get('default_model')
 content_summary_model_name = sys_config.get('content_summary_model', None)
 if not content_summary_model_name:
@@ -309,7 +309,8 @@ async def execute_shell_command_via_api(command: str, project_id: str = None, wo
         raise ValueError(f"API check failed: {str(e)}")
 
     # If project_id is still empty or not set, create a new project and set working directory
-    if not project_id:
+    if not project_id or project_id.strip() == "":
+        logger.info("No project_id provided. Creating a new project.")
         headers = {
             "x-api-key": api_key
         }

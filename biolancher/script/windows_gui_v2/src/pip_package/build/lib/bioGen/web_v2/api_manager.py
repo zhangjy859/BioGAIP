@@ -51,7 +51,9 @@ def get_project_status(project_id, API_URL=None, API_KEY=None):
 
 def check_api(session_state, remote_tool_loaded, logger, reset_project_id=False, recovery=False):
     try:
-        if ('project_id' not in session_state and os.getenv('PROJECT_ID') is None) or reset_project_id:
+        ## for firefox browser compatibility, we need to check if the project_id is set in session_state or environment variable
+        if ('project_id' not in session_state and os.getenv('PROJECT_ID') is None) or reset_project_id or session_state.get('project_id') is None or session_state.get('project_id') == '':
+            logger.info("No project_id found in session_state or environment. Executing shell command via API to create a new project.")
             result = asyncio.run(execute_shell_command_via_api(command=''))
             session_state['project_id'] = os.environ["PROJECT_ID"]
             if remote_tool_loaded:

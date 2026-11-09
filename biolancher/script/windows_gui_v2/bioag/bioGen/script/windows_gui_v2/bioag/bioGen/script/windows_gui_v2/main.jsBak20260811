@@ -1,0 +1,738 @@
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { spawn } = require('child_process');
+const path = require('path');
+const fs = require('fs');
+const net = require('net');
+
+let mainWindow;
+let streamlitProcess;
+
+const PORT = 8503;
+const SHOW_MODE_SELECTION = true; // 页面开关：设为 false 则默认静默进入高级模式
+
+app.commandLine.appendSwitch('log-level', '3');
+app.commandLine.appendSwitch('no-proxy-server');
+app.commandLine.appendSwitch('ignore-certificate-errors');
+app.commandLine.appendSwitch('allow-insecure-localhost');
+app.commandLine.appendSwitch('disable-http2');
+
+const LOADING_HTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      background-color: #f2f3f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card {
+      background: #ffffff;
+      padding: 40px 48px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+      text-align: center;
+      width: 480px;
+      animation: fadeIn 0.4s ease-out;
+      transition: all 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #1677ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px auto;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1d2129;
+      margin: 0 0 8px 0;
+    }
+    .status {
+      font-size: 14px;
+      color: #4e5969;
+      margin: 0 0 12px 0;
+    }
+    .info {
+      font-size: 13px;
+      color: #86909c;
+      margin: 0 0 16px 0;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .action-area {
+      margin-top: 16px;
+      display: none;
+    }
+    .btn {
+      background-color: #f2f3f5;
+      color: #4e5969;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover:not(:disabled) {
+      background-color: #e5e6eb;
+      color: #1d2129;
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .log-viewer {
+      display: none;
+      background: #f7f8fa;
+      border: 1px solid #e5e6eb;
+      border-radius: 8px;
+      padding: 12px;
+      height: 100px;
+      overflow-y: auto;
+      text-align: left;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 11px;
+      color: #86909c;
+      margin-top: 16px;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+    .log-viewer div {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mode-selection {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 24px;
+      animation: fadeIn 0.4s ease-out;
+    }
+    .mode-card {
+      background: #ffffff;
+      border: 1px solid #e5e6eb;
+      border-radius: 8px;
+      padding: 16px 20px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .mode-card:hover {
+      border-color: #1677ff;
+      background: #f0f6ff;
+      box-shadow: 0 2px 8px rgba(22, 119, 255, 0.08);
+      transform: translateY(-1px);
+    }
+    .mode-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1d2129;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mode-desc {
+      font-size: 13px;
+      color: #86909c;
+    }
+    .warning {
+      background: #fff7e8;
+      color: #ff7d00;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+      text-align: center;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="main-card">
+    <div class="spinner" id="spinner"></div>
+    <div class="title" id="title">Starting Workspace</div>
+    <div class="status" id="status">Initializing system services...</div>
+    <div class="info" id="info"></div>
+    
+    <div class="action-area" id="action-area">
+      <button class="btn" id="cancel-btn">Cancel Installation</button>
+    </div>
+    
+    <div class="log-viewer" id="log-viewer"></div>
+    
+    <div class="mode-selection" id="mode-selection">
+      <div class="mode-card" id="btn-mode-easy">
+        <div class="mode-title">✨ BioGAIP Easymode</div>
+        <div class="mode-desc">Streamlined workflow for quick and automated results.</div>
+      </div>
+      <div class="mode-card" id="btn-mode-advanced">
+        <div class="mode-title">🛠️ Advanced Mode</div>
+        <div class="mode-desc">Full professional control and comprehensive tool access.</div>
+      </div>
+    </div>
+
+    <div class="warning" id="warning"></div>
+  </div>
+  <script>
+    const { ipcRenderer } = require('electron');
+    
+    function sendLog(msg) {
+      ipcRenderer.send('renderer-log', msg);
+    }
+
+    try {
+      document.getElementById('cancel-btn').addEventListener('click', () => {
+        sendLog('Cancel Installation button clicked');
+        const btn = document.getElementById('cancel-btn');
+        btn.innerText = 'Cancelling...';
+        btn.disabled = true;
+        ipcRenderer.send('cancel-biogaip-install');
+      });
+
+      document.getElementById('btn-mode-easy').addEventListener('click', () => window.selectMode('easy'));
+      document.getElementById('btn-mode-advanced').addEventListener('click', () => window.selectMode('advanced'));
+
+      window.updateUI = (title, status, info, showCancel) => {
+        if (title) document.getElementById('title').innerText = title;
+        if (status) document.getElementById('status').innerText = status;
+        if (info !== undefined) {
+          const el = document.getElementById('info');
+          el.innerText = info;
+          el.style.display = info ? 'block' : 'none';
+        }
+        
+        const actionArea = document.getElementById('action-area');
+        if (showCancel) {
+          actionArea.style.display = 'block';
+          const btn = document.getElementById('cancel-btn');
+          btn.innerText = 'Cancel Installation';
+          btn.disabled = false;
+        } else {
+          actionArea.style.display = 'none';
+        }
+      };
+
+      window.appendLog = (text) => {
+        const viewer = document.getElementById('log-viewer');
+        viewer.style.display = 'block';
+        const line = document.createElement('div');
+        line.innerText = text;
+        viewer.appendChild(line);
+        if (viewer.childNodes.length > 50) {
+          viewer.removeChild(viewer.firstChild);
+        }
+        viewer.scrollTop = viewer.scrollHeight;
+      };
+
+      window.showModeSelection = () => {
+        sendLog('Rendering Mode Selection UI');
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('log-viewer').style.display = 'none';
+        document.getElementById('action-area').style.display = 'none';
+        document.getElementById('info').style.display = 'none';
+        
+        document.getElementById('title').innerText = 'Choose Your Workspace';
+        document.getElementById('status').innerText = 'Select an operating mode to continue';
+        document.getElementById('mode-selection').style.display = 'flex';
+      };
+
+      window.selectMode = (mode) => {
+        sendLog('User selected mode: ' + mode);
+        document.getElementById('mode-selection').style.pointerEvents = 'none';
+        document.getElementById('mode-selection').style.opacity = '0.6';
+        
+        document.getElementById('spinner').style.display = 'block';
+        document.getElementById('title').innerText = 'Starting Service';
+        document.getElementById('status').innerText = 'Launching application server...';
+        
+        ipcRenderer.send('mode-selected', mode);
+      };
+
+      window.showWarning = (msg) => {
+        const el = document.getElementById('warning');
+        el.innerText = msg;
+        el.style.display = 'block';
+      };
+
+      sendLog('HTML UI completely loaded and initialized.');
+    } catch (e) {
+      sendLog('UI Initialization Error: ' + e.message);
+    }
+  </script>
+</body>
+</html>
+`;
+
+function logDebug(message) {
+  if (process.stdout.isTTY || process.env.NODE_ENV !== 'production') {
+    const timestamp = new Date().toISOString().substring(11, 23);
+    console.log(`[UI-DEBUG ${timestamp}] ${message}`);
+  }
+}
+
+ipcMain.on('renderer-log', (event, msg) => {
+  logDebug(`[Frontend] ${msg}`);
+});
+
+function updateUI(title, status, info = '', showCancel = false) {
+  logDebug(`State Transition -> [${title}] | ${status}`);
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  mainWindow.webContents.executeJavaScript(`window.updateUI(${JSON.stringify(title)}, ${JSON.stringify(status)}, ${JSON.stringify(info)}, ${showCancel})`).catch(e => logDebug(`UI Update Error: ${e.message}`));
+}
+
+function appendUILog(text) {
+  if (!mainWindow || mainWindow.isDestroyed() || !text) return;
+  mainWindow.webContents.executeJavaScript(`window.appendLog(${JSON.stringify(text)})`).catch(() => {});
+}
+
+function showUIWarning(message) {
+  logDebug(`UI Warning -> ${message}`);
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  mainWindow.webContents.executeJavaScript(`window.showWarning(${JSON.stringify(message)})`).catch(() => {});
+}
+
+function runCommand(cmd, args, opts = {}, onLog = null) {
+  logDebug(`Executing: ${cmd} ${args.join(' ')}`);
+  return new Promise((resolve) => {
+    // Inject a hard timeout default to prevent infinite hanging
+    const timeout = opts.timeout || 60000; 
+    const proc = spawn(cmd, args, { stdio: ['pipe', 'pipe', 'pipe'], timeout, ...opts });
+    let stdout = '';
+    let stderr = '';
+    
+    const processLog = (data) => {
+      const txt = data.toString();
+      if (onLog) {
+        const lines = txt.split(/[\r\n]+/).filter(l => l.trim().length > 0);
+        lines.forEach(l => onLog(l.trim()));
+      }
+      return txt;
+    };
+
+    proc.stdout.on('data', d => stdout += processLog(d));
+    proc.stderr.on('data', d => stderr += processLog(d));
+    
+    proc.on('close', code => {
+      logDebug(`Command exited with code: ${code}`);
+      resolve({ code, stdout, stderr });
+    });
+    proc.on('error', err => {
+      logDebug(`Command execution error: ${err.message}`);
+      resolve({ code: -1, stdout: '', stderr: err.message });
+    });
+  });
+}
+
+async function checkPackageInstalled(pythonPath, packageName) {
+  logDebug(`Checking package presence: ${packageName}`);
+  // Timeout 5s to prevent hang
+  const res = await runCommand(pythonPath, ['-c', `import ${packageName}`], { timeout: 5000 });
+  return res.code === 0;
+}
+
+async function checkBiogaipInstalled(pythonPath) {
+  logDebug(`Checking BioGAIP easymode presence via CLI test`);
+  const pythonDir = path.dirname(pythonPath);
+  
+  let searchPaths = [];
+  if (process.platform === 'win32') {
+    searchPaths = [
+      path.join(pythonDir, 'Scripts', 'biogaip.exe'),
+      path.join(pythonDir, 'Scripts', 'biogaip.cmd'),
+      path.join(pythonDir, 'Scripts', 'biogaip')
+    ];
+  } else {
+    searchPaths = [
+      path.join(pythonDir, 'biogaip')
+    ];
+  }
+
+  let biogaipPath = null;
+  for (const p of searchPaths) {
+    if (fs.existsSync(p)) {
+      biogaipPath = p;
+      break;
+    }
+  }
+
+  if (!biogaipPath) {
+    logDebug('BioGAIP executable not found in expected directories.');
+    return false;
+  }
+
+  logDebug(`Found BioGAIP executable at: ${biogaipPath}`);
+  
+  const isCmd = process.platform === 'win32' && biogaipPath.endsWith('.cmd');
+  // Use a strict 8-second timeout here. If the CLI hangs, we assume failure to proceed gracefully.
+  const res = await runCommand(biogaipPath, ['-h'], { shell: isCmd, timeout: 8000 });
+  
+  return res.code === 0;
+}
+
+function checkPortReady(port) {
+  return new Promise((resolve) => {
+    const socket = new net.Socket();
+    socket.setTimeout(400);
+    socket.on('connect', () => {
+      socket.destroy();
+      resolve(true);
+    });
+    socket.on('error', () => {
+      socket.destroy();
+      resolve(false);
+    });
+    socket.on('timeout', () => {
+      socket.destroy();
+      resolve(false);
+    });
+    socket.connect(port, '127.0.0.1');
+  });
+}
+
+function isPortInUse(port) {
+  return new Promise((resolve) => {
+    const server = net.createServer();
+    server.once('error', (err) => resolve(err.code === 'EADDRINUSE'));
+    server.once('listening', () => {
+      server.close();
+      resolve(false);
+    });
+    server.listen(port, '127.0.0.1');
+  });
+}
+
+function findPython() {
+  const possibilities = [
+    path.join(process.resourcesPath, 'python', 'python.exe'),
+    path.join(__dirname, 'python', 'python.exe'),
+    path.join(process.resourcesPath, 'python', 'python'),
+    path.join(__dirname, 'python', 'python'),
+    path.join(process.resourcesPath, 'python', 'bin', 'python'),
+    path.join(__dirname, 'python', 'bin', 'python')
+  ];
+  for (const p of possibilities) {
+    if (fs.existsSync(p)) {
+      logDebug(`Python found at: ${p}`);
+      return p;
+    }
+  }
+  throw new Error('Python environment not found');
+}
+
+ipcMain.handle('open-file-dialog', async () => {
+  const result = await dialog.showOpenDialog(mainWindow, { properties: ['openFile'] });
+  return result.canceled ? '' : result.filePaths[0];
+});
+
+ipcMain.handle('open-directory-dialog', async () => {
+  const result = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
+  return result.canceled ? '' : result.filePaths[0];
+});
+
+async function waitForUserModeSelection() {
+  logDebug('--- ENTERING MODE SELECTION WAIT STATE ---');
+  return new Promise(resolve => {
+    ipcMain.once('mode-selected', (event, mode) => {
+      logDebug(`Received mode-selected event: ${mode}`);
+      resolve(mode);
+    });
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      logDebug('Instructing Renderer to display Mode Selection');
+      mainWindow.webContents.executeJavaScript(`window.showModeSelection()`).catch(e => logDebug(`Failed to call showModeSelection: ${e.message}`));
+    }
+  });
+}
+
+async function createWindow() {
+  mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    show: true,
+    backgroundColor: '#f2f3f5',
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      webSecurity: false,
+      allowRunningInsecureContent: true
+    }
+  });
+
+  logDebug('Writing HTML payload to physical temp file to bypass strict CSP');
+  const tempHtmlPath = path.join(app.getPath('temp'), 'biogen_splash.html');
+  fs.writeFileSync(tempHtmlPath, LOADING_HTML);
+
+  await mainWindow.loadFile(tempHtmlPath);
+
+  app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+    event.preventDefault();
+    callback(true);
+  });
+
+  let pythonPath;
+  try {
+    pythonPath = findPython();
+  } catch (err) {
+    logDebug('Failed to locate Python environment');
+    dialog.showMessageBoxSync({ type: 'error', title: 'Environment Error', message: 'Python environment not found.' });
+    app.quit();
+    return;
+  }
+
+  updateUI('Checking Environment', 'Verifying required dependencies...', 'Scanning local Python environment.');
+
+  const hasStreamlit = await checkPackageInstalled(pythonPath, 'streamlit');
+  if (!hasStreamlit) {
+    logDebug('Streamlit not found. Entering core installation mode.');
+    updateUI(
+      'Initial Setup', 
+      'Installing core dependencies...', 
+      'This process only runs during the first launch.\nPlease be patient as it may take a few minutes.'
+    );
+    const reqPath = app.isPackaged
+      ? path.join(process.resourcesPath, 'requirements.txt')
+      : path.join(__dirname, 'requirements.txt');
+
+    if (fs.existsSync(reqPath)) {
+      // 5 min max timeout for pip install
+      await runCommand(pythonPath, ['-m', 'pip', 'install', '-r', reqPath], { timeout: 300000 }, appendUILog);
+    } else {
+      logDebug(`requirements.txt not found at: ${reqPath}`);
+    }
+  } else {
+    logDebug('Streamlit check passed.');
+  }
+
+  const hasBiogaip = await checkBiogaipInstalled(pythonPath);
+  if (!hasBiogaip) {
+    logDebug('BioGAIP easymode not found. Starting countdown for installation.');
+    
+    let userCancelled = false;
+    const cancelHandler = () => {
+      logDebug('User clicked UI cancel button. Aborting BioGAIP easymode install.');
+      userCancelled = true;
+    };
+    ipcMain.once('cancel-biogaip-install', cancelHandler);
+
+    for (let i = 3; i > 0; i--) {
+      if (userCancelled) break;
+      updateUI(
+        'Environment Setup',
+        'Preparing to install BioGAIP easymode...',
+        `Installation will start automatically in ${i} seconds.`,
+        true
+      );
+      await new Promise(r => setTimeout(r, 1000));
+    }
+
+    ipcMain.removeListener('cancel-biogaip-install', cancelHandler);
+
+    if (!userCancelled) {
+      logDebug('Countdown finished without cancellation. Starting pip install for pip_package.');
+      updateUI(
+        'Configuring Modules', 
+        'Installing BioGAIP easymode...', 
+        'This is a one-time setup. Please wait while packages are configured.',
+        false
+      );
+      const pkgPath = app.isPackaged
+        ? path.join(process.resourcesPath, 'src', 'pip_package')
+        : path.join(__dirname, 'src', 'pip_package');
+
+      if (fs.existsSync(pkgPath)) {
+        const installRes = await runCommand(pythonPath, ['-m', 'pip', 'install', pkgPath], { timeout: 300000 }, appendUILog);
+        if (installRes.code !== 0) {
+          logDebug(`BioGAIP installation failed. stderr: ${installRes.stderr}`);
+          showUIWarning('Installation failed. The app will launch, but BioGAIP easymode will be unavailable.');
+          await new Promise(r => setTimeout(r, 3500)); 
+        } else {
+          logDebug('BioGAIP easymode installed successfully.');
+        }
+      } else {
+        logDebug(`Package path not found: ${pkgPath}`);
+      }
+    } else {
+      updateUI('Installation Skipped', 'BioGAIP easymode setup cancelled by user.', '', false);
+      showUIWarning('Note: BioGAIP easymode will remain unavailable.');
+      await new Promise(r => setTimeout(r, 2500));
+    }
+  } else {
+    logDebug('BioGAIP easymode check passed.');
+  }
+
+  logDebug('All dependency checks complete.');
+
+  // ==========================================
+  // MODE SELECTION LOGIC
+  // ==========================================
+  let selectedMode = 'advanced'; 
+  if (SHOW_MODE_SELECTION) {
+    logDebug('Prompting user for operating mode selection.');
+    selectedMode = await waitForUserModeSelection();
+    logDebug(`User successfully selected mode: ${selectedMode}`);
+  } else {
+    logDebug('SHOW_MODE_SELECTION is false. Defaulting to advanced mode.');
+    updateUI('Starting Service', 'Launching application server...', 'Almost there...', false);
+  }
+
+  const appPyPath = app.isPackaged
+    ? path.join(process.resourcesPath, 'app.py')
+    : path.join(__dirname, 'app.py');
+
+  let launchArgs = [];
+  if (selectedMode === 'easy') {
+    logDebug('Preparing backend parameters for [EASY] mode.');
+    launchArgs = [
+      '-m', 'streamlit', 'run', appPyPath,
+      '--server.port', PORT.toString(),
+      '--server.address', '127.0.0.1',
+      '--server.headless', 'true',
+      '--browser.gatherUsageStats', 'false',
+      '--server.enableCORS', 'false',
+      '--server.enableXsrfProtection', 'false'
+    ];
+  } else {
+    logDebug('Preparing backend parameters for [ADVANCED] mode.');
+    launchArgs = [
+      '-m', 'streamlit', 'run', appPyPath,
+      '--server.port', PORT.toString(),
+      '--server.address', '127.0.0.1',
+      '--server.headless', 'true',
+      '--browser.gatherUsageStats', 'false',
+      '--server.enableCORS', 'false',
+      '--server.enableXsrfProtection', 'false'
+    ];
+  }
+  
+  logDebug(`Spawning Streamlit with args: ${launchArgs.join(' ')}`);
+  
+  streamlitProcess = spawn(pythonPath, launchArgs, {
+    stdio: ['pipe', 'pipe', 'pipe'],
+    env: { ...process.env, PYTHONUNBUFFERED: '1', APP_MODE: selectedMode }
+  });
+
+  let loaded = false;
+
+  const tryLoad = () => {
+    if (loaded || !mainWindow) return;
+    loaded = true;
+    logDebug(`Server detected as ready. Redirecting UI to http://127.0.0.1:${PORT}`);
+    if (checkInterval) clearInterval(checkInterval);
+    
+    // Clean up temp file
+    try { if(fs.existsSync(tempHtmlPath)) fs.unlinkSync(tempHtmlPath); } catch(e){}
+
+    mainWindow.loadURL(`http://127.0.0.1:${PORT}`).catch(err => {
+      logDebug(`loadURL failed: ${err}`);
+    });
+  };
+
+  const checkInterval = setInterval(async () => {
+    if (await checkPortReady(PORT)) {
+      logDebug(`Port ${PORT} connection check passed.`);
+      tryLoad();
+    }
+  }, 500);
+
+  streamlitProcess.stdout.on('data', (data) => {
+    const output = data.toString();
+    if (output.includes('You can now view your Streamlit app') ||
+        output.includes('Uvicorn server started') ||
+        output.includes('Local URL')) {
+      logDebug('Streamlit stdout indicated ready state.');
+      tryLoad();
+    }
+  });
+
+  streamlitProcess.stderr.on('data', (data) => {
+    logDebug(`[Streamlit STDERR] ${data.toString().trim()}`);
+  });
+
+  streamlitProcess.on('error', (err) => {
+    logDebug(`Streamlit spawn error: ${err.message}`);
+    if (checkInterval) clearInterval(checkInterval);
+    dialog.showErrorBox('Startup Failed', err.message);
+  });
+
+  streamlitProcess.on('exit', (code, signal) => {
+    logDebug(`Streamlit process exited. Code: ${code}, Signal: ${signal}`);
+  });
+
+  setTimeout(() => {
+    if (!loaded) {
+      logDebug('20-second backend timeout reached. Forcing UI redirect just in case.');
+      tryLoad();
+    }
+  }, 20000);
+
+  mainWindow.on('closed', () => {
+    logDebug('Main window closed by user.');
+    if (checkInterval) clearInterval(checkInterval);
+    mainWindow = null;
+    if (streamlitProcess) {
+      streamlitProcess.kill();
+      streamlitProcess = null;
+    }
+  });
+}
+
+app.on('ready', async () => {
+  logDebug(`App ready event fired. Checking if port ${PORT} is occupied.`);
+  const portOccupied = await isPortInUse(PORT);
+  if (portOccupied) {
+    logDebug(`Port ${PORT} is currently in use. Blocking startup.`);
+    dialog.showMessageBoxSync({
+      type: 'warning',
+      title: 'Port Occupied',
+      message: `Port ${PORT} is already in use.`,
+      buttons: ['OK']
+    });
+    app.quit();
+    return;
+  }
+  logDebug(`Port ${PORT} is free. Proceeding to create window.`);
+  createWindow();
+});
+
+app.on('window-all-closed', () => {
+  logDebug('All windows closed. Quitting app (except Darwin).');
+  if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+  if (mainWindow === null) {
+    logDebug('App activated (macOS). Recreating window.');
+    createWindow();
+  }
+});
+
+app.on('before-quit', () => {
+  logDebug('App before-quit event. Killing child process if exists.');
+  if (streamlitProcess) {
+    streamlitProcess.kill('SIGTERM');
+    streamlitProcess = null;
+  }
+});

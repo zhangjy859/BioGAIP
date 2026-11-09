@@ -399,10 +399,11 @@ if not st.session_state.get('api_setup_done', False):
         api_key_input = st.text_input("Enter bioWorker API Key", value=os.environ.get('API_KEY', ''), type="password")
         with st.expander("Advanced Settings"): usrname_id_login = st.text_input("Project ID (optional)", value=st.session_state.get('project_id', ""))
         if st.button("Set API Credentials", type="primary"):
+            logger.info(f"Attempting to set API credentials: URL={api_url_input}, Key={'*' * len(api_key_input)}, ProjectID={usrname_id_login}")
             if api_url_input and api_key_input:
                 os.environ['API_URL'] = api_url_input
                 os.environ['API_KEY'] = api_key_input
-                reset_project_id = usrname_id_login != ''
+                reset_project_id = usrname_id_login != '' and usrname_id_login is not None and usrname_id_login != st.session_state.get('project_id', '')
                 if reset_project_id:
                     st.session_state.project_id = usrname_id_login
                     os.environ['PROJECT_ID'] = st.session_state.project_id

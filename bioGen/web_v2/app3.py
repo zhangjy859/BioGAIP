@@ -23,7 +23,7 @@ logger = logging.getLogger(EVENT_LOGGER_NAME)
 logger.setLevel(logging.INFO)
 llm_usage = LLMUsageTracker()
 logger.handlers = [llm_usage]
-version_data = 'v1.3.4'
+version_data = 'v1.4.0'
 
 starters = list(getattr(web_config, 'starters', []))
 starters.append({
@@ -80,7 +80,7 @@ if st.session_state.get('trigger_browser_reload', False):
 st.markdown("""
   <style>
   [data-testid="stHeader"], .stDeployButton, #MainMenu { display: none !important; }
-   
+
   #splash-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff;
     z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -92,11 +92,11 @@ st.markdown("""
     width: 48px; height: 48px; animation: spin 0.8s linear infinite;
   }
   @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-   
+
   [data-testid="stBottom"] > div > div > div { display: flex !important; flex-direction: row !important; align-items: flex-end !important; justify-content: center !important; padding-bottom: 24px !important; }
   [data-testid="stBottom"] > div > div > div > div:has([data-testid="stChatInput"]) { order: 1 !important; flex: 1 1 auto !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
   [data-testid="stChatInput"] { width: 100% !important; margin: 0 !important; padding: 0 !important; border-radius: 12px !important; border: 1px solid rgba(128, 128, 128, 0.25) !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important; background-color: transparent !important; }
-  [data-testid="stChatInput"] > div, [data-testid="stChatInput"] div[data-baseweb="base-input"], [data-testid="stChatInput"] div[data-baseweb="input"], [data-testid="stChatInput"] div[data-baseweb="textarea"] { border-radius: 12px !important; background: transparent !important; border: none !important; box-shadow: none !important; margin: 0 !important; }
+  [data-testid="stChatInput"] > div, [data-testid="stChatInput"] div[data-baseweb="base-input"], [data-testid="stChatInput"] div[data-baseweb="input"], [data-testid="stChatInput"] div[data-baseweb="textarea"] { border-radius: 12px !important; background: transparent !important; border: none !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
   [data-testid="stChatInputSubmitButton"] { position: absolute !important; right: 0.6rem !important; bottom: 0.6rem !important; }
   [data-testid="stBottom"] > div > div > div > div:has(.st-key-chat_controls) { order: 2 !important; flex: 0 0 auto !important; width: auto !important; padding: 0 !important; margin: 0 0 4px 12px !important; }
   .st-key-chat_controls { display: flex !important; align-items: flex-end !important; margin: 0 !important; padding: 0 !important; background: transparent !important; }
@@ -158,7 +158,7 @@ if not st.session_state.authenticated:
   st.markdown(f'<div style="text-align: center; position: relative; z-index: 1;"><img src="{logo_url}" alt="Logo" style="max-width: 220px; height: auto;"></div>', unsafe_allow_html=True)
   st.markdown("<h2 style='text-align: center; color: #1E293B; margin-top: 10px; position: relative; z-index: 1;'> </h2>", unsafe_allow_html=True)
   st.markdown("<p style='text-align: center; color: #64748b; position: relative; z-index: 1;'>Sign in to your intelligent bioinformatics workspace</p><br>", unsafe_allow_html=True)
-   
+
   col1, col2, col3 = st.columns([1, 1.2, 1])
   with col2:
     with st.container():
@@ -166,12 +166,12 @@ if not st.session_state.authenticated:
       password = st.text_input("Password", type="password", placeholder="Enter your password")
       with st.expander("⚙️ Advanced Settings"):
         usrname_id_login = st.text_input("Project ID (optional)", value="", help="Bind to a specific BioWorker project session")
-       
+
       st.markdown("<br>", unsafe_allow_html=True)
       if st.button("Sign In", type="primary", width="stretch"):
         app_user = os.environ.get('APP_USER')
         salt = os.environ.get('PASSWORD_SALT')
-         
+
         def get_hashed(pwd, s): return hashlib.sha256((pwd + s).encode('utf-8')).hexdigest()
 
         is_valid_login = False
@@ -237,11 +237,11 @@ with col_s1:
     st.session_state.authenticated = False
     cookies['authenticated'] = 'False'
     cookies.save()
-     
+
     if 'api_process' in st.session_state and hasattr(st.session_state.api_process, 'kill'):
       try: st.session_state.api_process.kill()
       except Exception: pass
-       
+
     keys = list(st.session_state.keys())
     for key in keys:
       if key != 'cookier_password':
@@ -265,43 +265,43 @@ def check_team_pid_running(pid_file):
 
 def run_unattended_resume(ctx, _logger):
   """
-  Unattended background auto-resume: 
+  Unattended background auto-resume:
   Generates summary and restarts process_task natively in the background.
   """
   storage = ctx['storage']
   username = ctx['username']
-   
+
   try: os.remove(ctx['team_summary_file'])
   except OSError: pass
-   
+
   _logger.info("[Watchdog] Frontend offline. Initiating unattended background auto-summary...")
-   
+
   user_prompt_history = storage.get_user_prompt_history(username, file_path=ctx['user_prompt_json'])
   temp_session = {}
   storage.load_session(username, temp_session)
   session_file = storage.export_session_to_json(username, temp_session)
-   
+
   content_summary = bg_summary.run_summary(session_file, ctx['model'], ctx['max_summary_content'], user_prompt_history)
-   
+
   chat_msg = f"==============User Orginal task============\n{str(user_prompt_history)}\nCurrent Processing Summary:\n{content_summary}\n"
   chat_content = {"role": "system", "content": f"Previous conversation context summarized below: \n```{chat_msg}```\n. Please proceed with current tasks utilizing this summary."}
-   
+
   with open(ctx['log_file'], 'a') as f: storage.json_safedump(chat_content, f)
   if 'messages' not in temp_session: temp_session['messages'] = []
   temp_session['messages'].append(chat_content)
   storage.save_session(username, temp_session)
-   
+
   _logger.info("[Watchdog] Summary generated. Restarting process_task in background...")
   team = create_team(storage, ctx['persist_dir'], file=ctx['agent_status_file'], team_summary=True, logger=_logger)
   user_message = "Please continue tasks\n" + chat_msg + "\nPlease proceed logically."
-   
+
   stop_team, force_stop = multiprocessing.Event(), multiprocessing.Event()
   pid_file = os.path.join(ctx['persist_dir'], f"{ctx['file_prefix']}.process_pid")
-   
+
   for f in [ctx['team_exit_file'], ctx['team_exit_file'] + '_set', ctx['agent_status_file'], pid_file, ctx['team_summary_file'] + '_no_user_confirm']:
     if os.path.exists(f): os.remove(f)
   open(ctx['log_file'], 'w').close()
-   
+
   if platform.system().lower() != 'windows':
     p = Process(target=process_task, args=(user_message, ctx['log_file'], team, stop_team, force_stop, ctx['agent_status_file'], ctx['team_exit_file'], ctx['team_summary_file'], ctx['max_content'], False, ctx['reward'], storage, _logger, os.getpid()), daemon=True)
     p.start()
@@ -310,24 +310,24 @@ def run_unattended_resume(ctx, _logger):
     p = threading.Thread(target=process_task, args=(user_message, ctx['log_file'], team, stop_team, force_stop, ctx['agent_status_file'], ctx['team_exit_file'], ctx['team_summary_file'], ctx['max_content'], False, ctx['reward'], storage, _logger, None), daemon=True)
     p.start()
     with open(pid_file, 'w') as f: f.write(str(os.getpid()))
-     
+
   _logger.info("[Watchdog] Unattended auto-resume successful!")
-   
+
   threading.Thread(target=summary_watchdog, args=(ctx['team_summary_file'], ctx['team_exit_file'], pid_file, stop_team, force_stop, _logger, ctx, 30, 5), daemon=True).start()
 
 
 def summary_watchdog(summary_file, exit_file, pid_file, stop_event, force_stop_event, _logger, ctx=None, summary_timeout=30, exit_timeout=35):
   """Monitor unhandled state files. Triggers auto-resume if frontend disconnects."""
   targets = [(summary_file, summary_timeout), (exit_file, exit_timeout)]
-   
+
   while True:
     if not check_team_pid_running(pid_file):
       break
-       
+
     now = time.time()
     terminated = False
     is_summary_timeout = False
-     
+
     for file_path, timeout in targets:
       if os.path.exists(file_path):
         try:
@@ -336,13 +336,13 @@ def summary_watchdog(summary_file, exit_file, pid_file, stop_event, force_stop_e
             if stop_event: stop_event.set()
             if force_stop_event: force_stop_event.set()
             force_kill_process(pid_file, _logger)
-             
+
             terminated = True
             if file_path == summary_file: is_summary_timeout = True
             break
         except OSError:
-          pass # Safe fallback for race conditions
-           
+          pass
+
     if terminated:
       if is_summary_timeout and ctx:
         try:
@@ -350,7 +350,7 @@ def summary_watchdog(summary_file, exit_file, pid_file, stop_event, force_stop_e
         except Exception as e:
           _logger.error(f"Failed to auto-resume: {e}")
       break
-       
+
     time.sleep(2)
 
 @st.dialog("Reset Session Warning")
@@ -368,28 +368,28 @@ def reset_session_confirm():
       if 'stop_team' in st.session_state and hasattr(st.session_state.stop_team, 'set'):
         try: st.session_state.stop_team.set()
         except Exception: pass
-         
+
       if 'team_exit_file' in st.session_state:
         try:
           with open(st.session_state.team_exit_file + '_set', 'w') as f: f.write('')
         except Exception: pass
-         
-      if 'force_stop' in st.session_state and hasattr(st.session_state.force_stop, 'set'): 
+
+      if 'force_stop' in st.session_state and hasattr(st.session_state.force_stop, 'set'):
         try: st.session_state.force_stop.set()
         except Exception: pass
-       
+
       time.sleep(0.5)
       force_kill_process(pid_file, logger)
-       
+
       if 'team_exit_file' in st.session_state and os.path.exists(st.session_state.team_exit_file):
         try: os.remove(st.session_state.team_exit_file)
         except Exception: pass
-         
+
       if 'team' in st.session_state: del st.session_state.team
-       
+
       st.session_state.processing = False
       st.session_state.show_refresh_button = True
-       
+
       if 'project_id' in st.session_state:
         try:
           project_status = get_project_status(st.session_state.project_id, API_URL=os.environ.get('API_URL'), API_KEY=os.environ.get('API_KEY'))
@@ -397,19 +397,19 @@ def reset_session_confirm():
             task_id = project_status.get('current_task_id')
             if task_id: requests.post(f"{os.environ.get('API_URL')}/tasks/{task_id}/kill", headers={"x-api-key": os.environ.get('API_KEY')})
         except Exception: pass
-       
+
       st.session_state.messages = []
       st.session_state.prompt_history = ""
       storage.delete_session(st.session_state.username, st.session_state)
-       
+
       st.session_state.log_file = os.path.join(persist_dir, f"{get_file_prefix()}_log.ndjson")
       st.session_state.input_file = os.path.join(persist_dir, f"{get_file_prefix()}_input.txt")
       open(st.session_state.log_file, 'w').close()
       open(st.session_state.input_file, 'w').close()
-       
+
       for k in ['pending_prompt', 'pending_prompt_type', 'input_prompt']:
         if k in st.session_state: del st.session_state[k]
-         
+
       storage.save_session(st.session_state.username, st.session_state)
       st.rerun()
 
@@ -445,7 +445,7 @@ st.sidebar.download_button(
 def import_workspace_dialog():
   st.warning("⚠️ **Experimental Feature**\nImporting data from unknown sources poses significant security risks.")
   uploaded_zip = st.file_uploader("Upload Workspace ZIP", type=["zip"])
-   
+
   col1, col2 = st.columns(2)
   with col1:
     if st.button("Cancel", key="cancel_import_btn", width="stretch"):
@@ -464,10 +464,10 @@ def import_workspace_dialog():
         for key in list(st.session_state.keys()):
           if key != 'cookier_password': del st.session_state[key]
         st.rerun()
-      except Exception as e: 
+      except Exception as e:
         st.error(f"Import failed: {str(e)}")
 
-if st.sidebar.button("📥 Import Workspace", width="stretch"): 
+if st.sidebar.button("📥 Import Workspace", width="stretch"):
   st.session_state.show_import_dialog = True
 
 if st.session_state.get("show_import_dialog", False):
@@ -507,88 +507,121 @@ if not st.session_state.get('api_setup_done', False):
 
   with tab2:
     st.warning("Experimental feature.")
-    server_ip = st.text_input("Server IP")
-    username = st.text_input("User Name")
-    port = st.text_input("Port", value="22")
-    ssh_password = st.text_input("SSH Password", type="password")
-    read_directory = st.text_input("Directory allowed to read")
-    read_write_directory = st.text_input("Directory allowed to read & write")
-    work_dir = st.text_input("Working Directory")
-    temp_dir = st.text_input("Temporary Directory")
+    st.info(
+      "Enter paths on the **remote SSH server**, not on the computer running this browser. "
+      "Use absolute paths, such as `/home/alice/data`. "
+      "The SSH user must have the appropriate permissions."
+    )
+    server_ip = st.text_input(
+      "Server IP",
+      placeholder="192.0.2.10",
+      help="IP address or hostname of the server where bioWorker will run.",
+    )
+    username = st.text_input(
+      "User Name",
+      placeholder="alice",
+      help="Account used to sign in to the remote server over SSH.",
+    )
+    port = st.text_input(
+      "Port",
+      value="22",
+      help="SSH service port on the remote server; usually 22.",
+    )
+    ssh_password = st.text_input(
+      "SSH Password",
+      type="password",
+      help="Password for the remote SSH account.",
+    )
+    read_directory = st.text_input(
+      "Directory allowed to read",
+      placeholder="/home/alice/reference",
+      help="Remote directory containing input files that bioWorker may read. Use semicolons to separate path. Leave blank if not needed.",
+    )
+    read_write_directory = st.text_input(
+      "Directory allowed to read & write",
+      placeholder="/home/alice/results",
+      help="Remote directory where bioWorker may read files and save results. Use semicolons to separate path. Leave blank if not needed.",
+    )
+    work_dir = st.text_input(
+      "Working Directory",
+      placeholder="/home/alice/bioworker",
+      help="Remote directory used as bioWorker's working location. Leave blank to use the setup default.",
+    )
+    temp_dir = st.text_input(
+      "Temporary Directory",
+      placeholder="/home/alice/tmp",
+      help="Remote directory for temporary files. Ensure the SSH user can write to it; leave blank to use the setup default.",
+    )
     if "ssh_api_key" not in st.session_state: st.session_state.ssh_api_key = ""
-    api_key = st.text_input("bioWorker API Key", value=st.session_state.ssh_api_key, type="password")
+    api_key = st.text_input(
+      "bioWorker API Key",
+      value=st.session_state.ssh_api_key,
+      type="password",
+      help="Secret used to authenticate requests to bioWorker. Generate one below or enter your own.",
+    )
     if st.button("Generate API Key"):
       st.session_state.ssh_api_key = secrets.token_hex(64)
       st.rerun()
     with st.expander("Advanced Settings"):
       use_sandbox = st.selectbox('Sandbox Mode', ['Disabled', 'bubblewrap', 'landlock'], index=0)
-      bioworker_port = st.text_input("Bioworker Port", value="38000")
-      max_task = st.number_input("Maximum tasks", min_value=1, max_value=100, value=1, step=1)
+      bioworker_port = st.text_input("Bioworker Port", value="38000", help="Port on which the remote bioWorker API will listen.")
+      max_task = st.number_input("Maximum tasks", min_value=1, max_value=100, value=10, step=1)
       web_admin_panel = st.checkbox("Enable web admin panel", value=False)
-     
+
     if st.button("Initialize via SSH", type="primary"):
-      if server_ip and username and port and ssh_password and api_key:
-        use_sandbox_type = None if use_sandbox == 'Disabled' else use_sandbox
-        
-        log_placeholder = st.empty()
-        
-        class RealtimeLogCapture:
-          def __init__(self, placeholder):
-            self.placeholder = placeholder
-            self.output = []
-            self.orig_stdout = sys.stdout
-            self.orig_stderr = sys.stderr
-            
-            class StreamlitLogHandler(logging.Handler):
-              def __init__(self, parent):
-                super().__init__()
-                self.parent = parent
-              def emit(self, record):
-                msg = self.format(record)
-                self.parent.write(msg + "\n")
-                
-            self.log_handler = StreamlitLogHandler(self)
-            self.root_logger = logging.getLogger()
-            
-          def write(self, text):
-            if text:
-              self.output.append(text)
-              display_text = "".join(self.output)[-5000:]
-              self.placeholder.code(display_text, language="bash")
-              self.orig_stdout.write(text)
-              
-          def flush(self):
-            self.orig_stdout.flush()
-            self.orig_stderr.flush()
-            
-          def __enter__(self):
-            sys.stdout = self
-            sys.stderr = self
-            self.root_logger.addHandler(self.log_handler)
-            return self
-            
-          def __exit__(self, exc_type, exc_value, traceback):
-            sys.stdout = self.orig_stdout
-            sys.stderr = self.orig_stderr
-            self.root_logger.removeHandler(self.log_handler)
-            
-        with RealtimeLogCapture(log_placeholder) as logger_cap:
-          success, output, error_output = api_set2(server_ip, username, port, ssh_password, api_key, read_directory or '', read_write_directory or '', work_dir or '', bioworker_port=bioworker_port, use_sandbox_type=use_sandbox_type, temp_dir=temp_dir or '', max_task=max_task, web_admin=web_admin_panel)
-          if output: logger_cap.write("\n" + str(output))
-          if error_output: logger_cap.write("\n" + str(error_output))
-          
-        if not success:
-          st.error("Setup failed.")
-          if 'api_process' in st.session_state: st.session_state.api_process.kill()
-          st.stop()
-        os.environ['API_URL'] = f"http://{server_ip}:{bioworker_port}"
-        os.environ['API_KEY'] = api_key
-        if check_api(st.session_state, remote_tool_loaded, logger):
-          st.success("API setup successful!")
-          st.session_state.api_setup_done = True
-          check_model()
-          st.rerun()
-        else: st.error("API validation failed.")
+      missing_fields = [
+        label for label, value in (
+          ("Server IP", server_ip),
+          ("User Name", username),
+          ("Port", port),
+          ("SSH Password", ssh_password),
+          ("bioWorker API Key", api_key),
+        )
+        if not value or not str(value).strip()
+      ]
+      if missing_fields:
+        st.error("Required fields: " + ", ".join(missing_fields))
+      else:
+        try:
+          ssh_port = int(port)
+          worker_port = int(bioworker_port)
+          if not 1 <= ssh_port <= 65535 or not 1 <= worker_port <= 65535:
+            raise ValueError("Port out of range")
+        except ValueError:
+          st.error("SSH Port and Bioworker Port must be valid ports between 1 and 65535.")
+        else:
+          use_sandbox_type = None if use_sandbox == "Disabled" else use_sandbox
+          success, output, error_output = api_set2(
+            server_ip,
+            username,
+            ssh_port,
+            ssh_password,
+            api_key,
+            read_directory or "",
+            read_write_directory or "",
+            work_dir or "",
+            bioworker_port=worker_port,
+            use_sandbox_type=use_sandbox_type,
+            temp_dir=temp_dir or "",
+            max_task=max_task,
+            web_admin=web_admin_panel,
+          )
+          if success:
+            os.environ["API_URL"] = f"http://{server_ip}:{worker_port}"
+            os.environ["API_KEY"] = api_key
+            try:
+              validated = check_api(st.session_state, remote_tool_loaded, logger)
+            except Exception:
+              validated = False
+            if validated:
+              st.success("API setup successful!")
+              st.session_state.api_setup_done = True
+              check_model()
+              st.rerun()
+            else:
+              st.error("API validation failed. Check the setup log and server connectivity.")
+          elif not error_output:
+            st.error("Setup failed. Check the setup log above.")
 
   with tab3:
     st.error("Disabled for security reasons.")
@@ -596,7 +629,7 @@ if not st.session_state.get('api_setup_done', False):
 
 if "setup_done" not in st.session_state:
   st.session_state.setup_done = True
-  if 'input_counter' not in st.session_state: st.session_state.input_counter = 0 
+  if 'input_counter' not in st.session_state: st.session_state.input_counter = 0
   if 'processing' not in st.session_state: st.session_state.processing = False
   if 'project_id' not in st.session_state:
     try:
@@ -606,7 +639,7 @@ if "setup_done" not in st.session_state:
     if remote_tool_loaded:
       try: _ = set_remote_tools(tools_dict=remote_tool_detail, project_id=os.environ.get('PROJECT_ID', ''), api_base_url=os.environ.get('API_URL', ''), api_key=os.environ.get('API_KEY', ''))
       except Exception: pass
-   
+
   st.session_state.log_file = os.path.join(persist_dir, f"{get_file_prefix()}_log.ndjson")
   st.session_state.input_file = os.path.join(persist_dir, f"{get_file_prefix()}_input.txt")
   if not os.path.exists(st.session_state.log_file): open(st.session_state.log_file, 'w').close()
@@ -621,7 +654,7 @@ def kill_task_confirm(task_id):
   message = st.text_input("Optional termination reason:")
   col1, col2 = st.columns(2)
   with col1:
-    if st.button("Cancel", key="cancel_kill_btn", width="stretch"): 
+    if st.button("Cancel", key="cancel_kill_btn", width="stretch"):
       st.session_state.show_kill_dialog = False
       st.rerun()
   with col2:
@@ -640,7 +673,7 @@ st.sidebar.subheader("💻 BioWorker Dashboard")
 if os.environ.get('API_URL', '') != '' and os.environ.get('API_KEY', '') != '':
   short_pid = st.session_state.get('project_id', '')[:8] + "..." if len(st.session_state.get('project_id', '')) > 8 else st.session_state.get('project_id', '')
   st.sidebar.caption(f"**Project ID:** `{short_pid}`")
-   
+
   def render_dashboard_content():
     try:
       stats_resp = requests.get(f"{os.environ.get('API_URL')}/stats", headers={"x-api-key": os.environ.get('API_KEY')}, params={"project_id": st.session_state.get('project_id', '')}, timeout=2)
@@ -651,7 +684,7 @@ if os.environ.get('API_URL', '') != '' and os.environ.get('API_KEY', '') != '':
         met1, met2 = st.columns(2)
         met1.metric(label="Server RAM", value=f"{sys_mem}%")
         met2.metric(label="Task CPU", value=f"{proj_cpu}%")
-    except Exception: pass 
+    except Exception: pass
 
     project_status = get_project_status(st.session_state.get('project_id', ''), API_URL=os.environ.get('API_URL'), API_KEY=os.environ.get('API_KEY'))
     if isinstance(project_status, dict):
@@ -673,7 +706,7 @@ if os.environ.get('API_URL', '') != '' and os.environ.get('API_KEY', '') != '':
     with st.sidebar: dashboard_fragment()
   else:
     with st.sidebar: render_dashboard_content()
-       
+
   st.sidebar.divider()
   st.sidebar.subheader("API Server Manager")
   if st.sidebar.button("Stop API Server", width="stretch"):
@@ -685,7 +718,7 @@ if os.environ.get('API_URL', '') != '' and os.environ.get('API_KEY', '') != '':
     os.environ['API_URL'], os.environ['API_KEY'] = '', ''
     st.session_state.api_setup_done = False
     st.rerun()
-     
+
   st.sidebar.markdown(f"[🔗 Open bioWorker Control Panel]({os.environ.get('API_URL')})")
 
 if st.session_state.get('show_kill_dialog', False):
@@ -731,7 +764,7 @@ for message in st.session_state.messages:
         content = message["content"]
         message["file_blocks"] = re.findall(r'<uploaded_file name="(.*?)" ext="(.*?)"\>(.*?)</uploaded_file>', content, re.DOTALL)
         message["cleaned_content"] = re.sub(r'<uploaded_file name=".*?" ext=".*?"\>(.*?)</uploaded_file>', '', content, flags=re.DOTALL)
-       
+
       st.markdown(message["cleaned_content"].strip())
       for name, ext, file_content in message["file_blocks"]:
         with st.expander(f"📄 Attached Document: {name}"): st.code(file_content.strip(), language=ext.lower() if ext.lower() in ['python', 'json', 'html', 'md', 'txt'] else None)
@@ -786,24 +819,24 @@ with st.bottom:
               st.session_state.prompt_history = "\n\n".join([f"{m['role']}: {m['content']}" for m in st.session_state.messages])
               storage.save_session(st.session_state.username, st.session_state)
               team_exit_file = os.path.join(persist_dir, f"{get_file_prefix()}.team")
-              st.session_state.team_exit_file = team_exit_file 
+              st.session_state.team_exit_file = team_exit_file
               try: st.session_state.stop_team.set()
               except AttributeError:
                 st.session_state.team_exit_file_set = team_exit_file + '_set'
                 try:
                   with open(st.session_state.team_exit_file_set, 'w') as f: f.write('')
                 except Exception: pass
-               
+
               wait_cycles = 0
               while not os.path.exists(st.session_state.team_exit_file) and wait_cycles < 3:
                 time.sleep(1)
                 wait_cycles += 1
-                 
+
               if not os.path.exists(st.session_state.team_exit_file): force_kill_process(os.path.join(persist_dir, f"{get_file_prefix()}.process_pid"), logger)
               else:
                 try: os.remove(st.session_state.team_exit_file)
                 except Exception: pass
-                 
+
               if 'team' in st.session_state: del st.session_state.team
               st.session_state.processing = False
               st.session_state.show_refresh_button = True
@@ -833,7 +866,6 @@ with st.bottom:
         if show_refresh_button:
           if st.button("🔃", key="refresh_button", help="Refresh session"):
             logger.info("User initiated session refresh.")
-            ## if team is runing, ask user to stop the team first
             if st.session_state.get('processing', False):
               st.toast("Please stop the active session before refreshing. You can click 🛑 to stop session.", icon="⚠️", duration=30)
               st.rerun()
@@ -844,19 +876,19 @@ with st.bottom:
             st.session_state.team_exit_file = os.path.join(persist_dir, f"{get_file_prefix()}.team")
             st.session_state.show_refresh_dialog = True
             logger.info("Session refresh dialog triggered.")
-         
+
         if st.session_state.get("show_refresh_dialog", False):
           _refresh_session_confirm()
 
         if st.session_state.get('run_summary', False):
           st.toast("Session refresh executing...", icon="🔄")
-          with open(st.session_state.team_exit_file + '_set', 'w') as f: f.write('') 
+          with open(st.session_state.team_exit_file + '_set', 'w') as f: f.write('')
           with open(st.session_state.team_summary_file, 'w') as f: f.write('')
-           
+
           time.sleep(1)
           if not os.path.exists(st.session_state.team_exit_file) and check_team_pid_running(os.path.join(persist_dir, f"{get_file_prefix()}.process_pid")):
             force_kill_process(os.path.join(persist_dir, f"{get_file_prefix()}.process_pid"), logger)
-           
+
           if 'team' in st.session_state: del st.session_state.team
           st.session_state.run_summary = False
           st.rerun()
@@ -886,7 +918,7 @@ if message is not None:
       del st.session_state.waiting_for_user_input
     else:
       st.session_state.messages.append({"role": "user", "content": full_message, "processed": False})
-      if st.session_state.get('init_processing', False): 
+      if st.session_state.get('init_processing', False):
         st.session_state.processing = False
         st.session_state.init_processing = False
     storage.save_session(st.session_state.username, st.session_state)
@@ -901,32 +933,32 @@ team_summary = os.path.exists(team_summary_file) or st.session_state.get('is_tea
 
 if "messages" in st.session_state and st.session_state.messages:
   last_user_message = next((msg for msg in reversed(st.session_state.messages) if msg["role"] == "user" and not msg.get("processed")), None)
-   
+
   if (last_user_message is not None or team_summary) and (not st.session_state.get('processing', False) or os.path.exists(team_exit_file) or not check_team_pid_running(pid_file)):
     user_message = last_user_message["content"] if last_user_message else "Please continue tasks"
     if last_user_message: last_user_message["processed"] = True
     storage.save_session(st.session_state.username, st.session_state)
-     
+
     st.session_state.processing = True
     st.session_state.processing_start_time = time.time()
     st.session_state.last_save_time = time.time()
-     
+
     st.session_state.stop_team = multiprocessing.Event()
     st.session_state.force_stop = multiprocessing.Event()
     st.session_state.agent_status_file = os.path.join(persist_dir, f"{get_file_prefix()}.agjson")
-    st.session_state.team_exit_file = team_exit_file 
+    st.session_state.team_exit_file = team_exit_file
     st.session_state.pid_file = pid_file
-     
+
     if os.path.exists(team_exit_file) or not check_team_pid_running(pid_file):
-      if not team_summary: 
+      if not team_summary:
         if 'team' in st.session_state: del st.session_state.team
         try: os.remove(team_exit_file)
         except Exception: pass
-       
+
     st.session_state.team_summary_file = team_summary_file
     st.session_state.max_content = sys_config.get('max_content', 1000) if 'sys_config' in locals() or 'sys_config' in globals() else 1000
     st.session_state.max_summary_content = sys_config.get('max_summary_content', 10000) if 'sys_config' in locals() or 'sys_config' in globals() else 10000
-     
+
     if os.path.exists(team_summary_file):
       logger.info(f"============== Detected existing team summary file: {team_summary_file}. Activating team summary mode.===============")
       logger.info(f"       Removing team summary file to trigger re-analysis:       ")
@@ -934,12 +966,10 @@ if "messages" in st.session_state and st.session_state.messages:
       st.session_state.is_team_summary_active = True
       team_summary = True
       if 'team' in st.session_state:
-        ### read pid and check if team is running, if not, delete team from session state
         if not check_team_pid_running(pid_file):
           logger.info(f"[app.py] Detected team summary file but team process not running. Cleaning up session state.")
           del st.session_state.team
-        else: 
-          # kill the team process to ensure a fresh start
+        else:
           logger.info(f"[app.py] Detected team summary file and team process running. Terminating existing team process to ensure a fresh start.")
           force_kill_process(pid_file, logger)
           st.toast("[app.py] Existing team process terminated. Preparing to restart with new summary.", icon="⚠️")
@@ -950,7 +980,7 @@ if "messages" in st.session_state and st.session_state.messages:
           del st.session_state.team
     elif st.session_state.get('is_team_summary_active', False):
       team_summary = True
-    else: 
+    else:
       team_summary = False
 
     if os.path.exists(team_summary_file + '_no_user_confirm'): os.remove(team_summary_file + '_no_user_confirm')
@@ -959,20 +989,20 @@ if "messages" in st.session_state and st.session_state.messages:
       st.session_state.team = create_team(storage, persist_dir, file=st.session_state.agent_status_file, team_summary=team_summary, logger=logger)
       st.session_state.load_history = not team_summary and not st.session_state.get('finish_summary', False)
       if st.session_state.load_history: st.session_state.finish_summary = False
-       
+
       if team_summary:
         logger.info("[app.py] Team summary mode activated. Preparing to analyze context and generate strategic summary.")
         ag_file = os.path.join(persist_dir, f"{get_file_prefix()}.agjson")
         if os.path.exists(ag_file): os.remove(ag_file)
-         
+
         with st.spinner("Analyzing context and generating strategic summary..."):
           user_prompt_history = storage.get_user_prompt_history(st.session_state.username, file_path=user_prompt_json)
           session_file_for_summary = storage.export_session_to_json(st.session_state.username, st.session_state)
           logger.info(f"[app.py] Session file for summary: {session_file_for_summary}")
-           
+
           _model = content_summary_model if 'content_summary_model' in globals() else None
           content_summary = bg_summary.run_summary(session_file_for_summary, _model, st.session_state.max_summary_content, user_prompt_history)
-           
+
           st.session_state.chat_summary_message = f"==============User Orginal task============\n{str(user_prompt_history)}\nCurrent Processing Summary:\n{content_summary}\n"
           st.session_state.content_summary_raw = content_summary
           st.session_state.user_prompt_history_raw = str(user_prompt_history)
@@ -982,42 +1012,41 @@ if "messages" in st.session_state and st.session_state.messages:
     if team_summary and not st.session_state.get('finish_summary', False):
       logger.info("[app.py] Team summary mode active. Awaiting proceed with tasks.")
       if not st.session_state.get("user_confirmed_summary", False) and st.session_state.get("user_required_summary", False):
-        st.session_state.processing = False 
+        st.session_state.processing = False
         review_strategy_summary_dialog()
-        st.stop() 
-       
+        st.stop()
+
       if st.session_state.get("user_confirmed_summary", False) or not st.session_state.get("user_required_summary", False):
         if st.session_state.get("user_confirmed_summary", False):
           st.toast("🚀 Strategy confirmed! Resuming tasks...", icon="🚀")
-           
+
         if "user_required_summary" in st.session_state: del st.session_state.user_required_summary
         chat_content = {"role": "system", "content": f"Previous conversation context summarized below: \n```{st.session_state.get('chat_summary_message')}```\n. Please proceed with current tasks utilizing this summary."}
         with open(st.session_state.log_file, 'a') as f: storage.json_safedump(chat_content, f)
         st.session_state.messages.append(chat_content)
         st.session_state.finish_summary = True
-        st.session_state.processing = True 
-         
+        st.session_state.processing = True
+
         user_message = user_message + f"==============User Orginal task============\n{st.session_state.get('user_prompt_history_raw', '')}\nCurrent Processing Summary:\n{st.session_state.get('content_summary_raw', '')}\n\nPlease proceed logically."
         st.session_state.user_confirmed_summary = False
-       
+
       if not st.session_state.get('finish_summary', False):
-        ## bug log
         logger.error("[app.py] Team summary mode active but finish_summary not set? Its a bug.")
 
     if not team_summary or st.session_state.get('finish_summary', False):
       should_start_task = st.session_state.get('automatic_start', True)
-       
-      st.session_state.is_team_summary_active = False 
+
+      st.session_state.is_team_summary_active = False
       st.session_state.finish_summary = False
       if 'automatic_start' in st.session_state: del st.session_state.automatic_start
-       
+
       st.session_state.stop_team = multiprocessing.Event()
       st.session_state.force_stop = multiprocessing.Event()
-       
+
       for file in [team_exit_file, team_exit_file + '_set', st.session_state.agent_status_file, pid_file, st.session_state.team_summary_file, team_summary_file + '_no_user_confirm']:
         if os.path.exists(file): os.remove(file)
       if os.path.exists(st.session_state.log_file): open(st.session_state.log_file, 'w').close()
-       
+
       if st.session_state.get('clear_session_content', False):
         storage.backup_session(st.session_state.username, st.session_state)
         st.session_state.clear_session_content = False
@@ -1025,10 +1054,10 @@ if "messages" in st.session_state and st.session_state.messages:
         if st.session_state.get("chat_summary_message", ""):
           st.session_state.messages.append({"role": "system", "content": f"Context summarization marker: \n```{st.session_state.get('chat_summary_message', '')}```\n. Continue."})
         st.session_state.trigger_browser_reload = True
-         
+
       storage.save_session(st.session_state.username, st.session_state)
-       
-      if should_start_task: 
+
+      if should_start_task:
         sucessfulExecutate_reward = sys_config.get('sucessfulExecutate_reward', 10) if 'sys_config' in locals() or 'sys_config' in globals() else 10
         if platform.system().lower() != 'windows':
           process_p = Process(target=process_task, args=(user_message, st.session_state.log_file, st.session_state.team, st.session_state.stop_team, st.session_state.force_stop, st.session_state.agent_status_file, st.session_state.team_exit_file, st.session_state.team_summary_file, st.session_state.max_content, st.session_state.get('load_history', True), sucessfulExecutate_reward, storage, logger, os.getpid()), daemon=True)
@@ -1038,8 +1067,7 @@ if "messages" in st.session_state and st.session_state.messages:
           process_p = threading.Thread(target=process_task, args=(user_message, st.session_state.log_file, st.session_state.team, st.session_state.stop_team, st.session_state.force_stop, st.session_state.agent_status_file, st.session_state.team_exit_file, st.session_state.team_summary_file, st.session_state.max_content, st.session_state.get('load_history', True), sucessfulExecutate_reward, storage, logger, None), daemon=True)
           process_p.start()
           with open(pid_file, 'w') as f: f.write(str(os.getpid()))
-         
-        # whatch dog thread to monitor summary file and exit file
+
         wd_ctx = {
           'storage': storage,
           'persist_dir': persist_dir,
@@ -1054,31 +1082,31 @@ if "messages" in st.session_state and st.session_state.messages:
           'max_content': st.session_state.max_content,
           'reward': sucessfulExecutate_reward,
           'model': content_summary_model if 'content_summary_model' in globals() else None
-        }     
+        }
         threading.Thread(
           target=summary_watchdog,
           args=(
-            st.session_state.team_summary_file, 
-            st.session_state.team_exit_file, 
-            pid_file, 
-            st.session_state.stop_team, 
-            st.session_state.force_stop, 
+            st.session_state.team_summary_file,
+            st.session_state.team_exit_file,
+            pid_file,
+            st.session_state.stop_team,
+            st.session_state.force_stop,
             logger,
-            wd_ctx, # Inject the context
-            30, # Summary timeout 30s (gives frontend enough time if online)
-            5  # Exit file timeout 5s
+            wd_ctx,
+            30,
+            5
           ),
           daemon=True
         ).start()
         logger.info("[app.py] Task processing initiated in background.")
         if 'init_processing' in st.session_state: st.session_state.init_processing = False
-         
+
       st.rerun()
 
 if st.session_state.get('processing', False):
   waiting_placeholder = st.empty()
   elapsed = int(time.time() - st.session_state.get('processing_start_time', time.time()))
-   
+
   if st.session_state.get('waiting_for_user_input', False):
     spinner_html = f"""
     <div style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #fffbeb, #fef3c7); padding: 14px 20px; border-radius: 10px; border: 1px solid #fcd34d; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1); margin: 8px 0; transition: all 0.3s ease;">
@@ -1104,9 +1132,9 @@ if st.session_state.get('processing', False):
       <style>@keyframes bio-spin {{ to {{ transform: rotate(360deg); }} }}</style>
     </div>
     """
-     
+
   waiting_placeholder.markdown(spinner_html, unsafe_allow_html=True)
-   
+
   updated = False
   if 'message_processed_uuid' not in st.session_state.keys(): st.session_state.message_processed_uuid = []
 
@@ -1119,7 +1147,7 @@ if st.session_state.get('processing', False):
           message_uuid = item.get('message_uuid', None)
           if message_uuid and message_uuid in st.session_state.message_processed_uuid: continue
           else: st.session_state.message_processed_uuid.append(message_uuid)
-           
+
           if item.get('type') == 'prompt' and item['prompt_type'] == 'input':
             content = item['content'].replace("@user_proxy:", "").strip()
             if not st.session_state.messages or st.session_state.messages[-1].get('content') != content:

@@ -1,3 +1,5 @@
+"""Launch BioGAIP locally and save runtime logs in the current directory."""
+
 import os
 import sys
 import time
@@ -8,10 +10,12 @@ import shutil
 import string
 import random
 import copy
+import re
 import yaml
 import atexit
 import logging
 import signal
+import traceback
 import streamlit as st
 
 logging.basicConfig(
@@ -23,6 +27,15 @@ logger = logging.getLogger("BioGAIP-Launcher")
 
 _ACTIVE_PROCESSES = set()
 _TEMP_PATHS = set()
+_STARTUP_TIMEOUT = 30
+
+_URL_PATTERN = re.compile(r"(?<!\S)https?://[^\s<>\"']+")
+_ERROR_PATTERN = re.compile(
+    r"(?:^|\s)(?:error|critical|fatal)\s*(?::|-|$)"
+    r"|\b[A-Za-z_]\w*(?:Error|Exception):"
+    r"|^Traceback \(most recent call last\):",
+    re.IGNORECASE
+)
 
 def kill_process_tree(p):
     try:
@@ -59,7 +72,13 @@ def stop_current_session():
         if p in _ACTIVE_PROCESSES:
             _ACTIVE_PROCESSES.remove(p)
         st.session_state.bypass_process = None
+        st.session_state.biogaip_url = None
+        st.session_state.biogaip_startup_error = None
         logger.info("Process terminated successfully.")
+
+def request_launch():
+    """Disable Run before the launch begins."""
+    st.session_state.launch_pending = True
 
 def get_biogaip_exe():
     exe_dir = os.path.dirname(sys.executable)
@@ -82,7 +101,8 @@ def is_port_occupied(port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('127.0.0.1', port)) == 0
 
-def stream_process_logs(pipe, log_file_path):
+def stream_process_logs(pipe, log_file_path, status):
+    """Record process output and report startup URLs or errors."""
     try:
         with open(log_file_path, "a", encoding="utf-8") as f:
             for line in iter(pipe.readline, ''):
@@ -91,11 +111,50 @@ def stream_process_logs(pipe, log_file_path):
                     logger.info(f"[BioGAIP] {stripped_line}")
                     f.write(line)
                     f.flush()
+
+                    if _ERROR_PATTERN.search(stripped_line):
+                        status["error"] = stripped_line
+                        status["changed"].set()
+                    elif status["url"] is None:
+                        match = _URL_PATTERN.search(stripped_line)
+                        if match:
+                            status["url"] = match.group().rstrip(".,;)")
+                            status["changed"].set()
     except Exception as e:
-        logger.error(f"Error reading process logs: {e}")
+        status["error"] = f"Error reading process logs: {e}"
+        status["changed"].set()
+        logger.error(status["error"])
     finally:
         if pipe:
             pipe.close()
+        status["changed"].set()
+
+def wait_for_startup(process, status, timeout):
+    """Require a URL in process output and no startup error."""
+    deadline = time.monotonic() + timeout
+    url_seen_at = None
+
+    while time.monotonic() < deadline:
+        if status["error"]:
+            return status["error"]
+
+        if process.poll() is not None:
+            return f"Process exited with code {process.returncode} before startup completed."
+
+        if status["url"] and url_seen_at is None:
+            url_seen_at = time.monotonic()
+
+        if url_seen_at is not None and time.monotonic() - url_seen_at >= 2:
+            if status["error"]:
+                return status["error"]
+            if process.poll() is None:
+                return None
+            return f"Process exited with code {process.returncode} before startup completed."
+
+        status["changed"].wait(timeout=min(0.2, max(0, deadline - time.monotonic())))
+        status["changed"].clear()
+
+    return f"No startup URL was detected within {timeout} seconds."
 
 def main():
     st.set_page_config(page_title="BioGAIP Easy Launcher", page_icon="🚀", layout="wide")
@@ -118,15 +177,23 @@ def main():
     if not st.session_state.license_accepted:
         st.warning("📜 AGPL-3 License Agreement")
         st.markdown("""
-        **AGPL-3.0 License**
-        BioGAIP, bioAG, and bioWorker are licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
-        
+        **GNU Affero General Public License, version 3**
+
         Copyright (C) 2025 BioGAIP Team.
 
-        This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU Affero General Public License as
-        published by the Free Software Foundation, either version 3 of the
-        License, or (at your option) any later version.
+        BioGAIP, bioAG, and bioWorker are free software: you can redistribute
+        them and/or modify them under the terms of the GNU Affero General Public
+        License as published by the Free Software Foundation, either version 3
+        of the License, or (at your option) any later version.
+
+        BioGAIP, bioAG, and bioWorker are distributed in the hope that they will
+        be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+        Affero General Public License for more details.
+
+        You should have received a copy of the GNU Affero General Public License
+        along with these programs. If not, see
+        [the full AGPL-3.0 license](https://www.gnu.org/licenses/agpl-3.0.html) (https://www.gnu.org/licenses/agpl-3.0.html).
 
         **THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
         IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -358,21 +425,27 @@ def main():
         with st.expander("Parameters Summary", expanded=False):
             st.json(params)
 
-        is_running = ('bypass_process' in st.session_state and 
-                      st.session_state.bypass_process is not None and 
-                      st.session_state.bypass_process.poll() is None)
-        
-        has_failed = ('bypass_process' in st.session_state and 
-                      st.session_state.bypass_process is not None and 
-                      st.session_state.bypass_process.poll() is not None)
+        process = st.session_state.get('bypass_process')
+        is_running = (
+            process is not None
+            and process.poll() is None
+            and bool(st.session_state.get('biogaip_url'))
+        )
+        has_failed = (
+            st.session_state.get('biogaip_startup_error') is not None
+            or (process is not None and process.poll() is not None)
+        )
+        launch_pending = st.session_state.get('launch_pending', False)
 
         if is_running:
             st.success(f"✅ The environment is currently running on port {port}!")
-            host = "0.0.0.0" if st.session_state.allow_network_visit else "127.0.0.1"
-            st.markdown(f"**Application URL:** [http://{host}:{port}](http://{host}:{port})")
-        elif has_failed:
-            exit_code = st.session_state.bypass_process.returncode
-            st.error(f"❌ Process failed to start or terminated unexpectedly (Exit code: {exit_code}). Please check the runtime logs below.")
+            st.markdown(f"**Application URL:** {st.session_state.biogaip_url}")
+        elif has_failed and not launch_pending:
+            reason = st.session_state.get('biogaip_startup_error')
+            if not reason and process is not None:
+                reason = f"Process terminated unexpectedly (Exit code: {process.returncode})."
+            log_path = st.session_state.get('biogaip_log_file')
+            st.error(f"❌ BioGAIP startup failed: {reason} Log file: `{log_path}`")
 
         log_file = st.session_state.get('biogaip_log_file')
         if log_file and os.path.exists(log_file):
@@ -395,129 +468,158 @@ def main():
 
         st.markdown("---")
         cols = st.columns(3)
-        if cols[0].button("⬅️ Back"):
+        if cols[0].button("⬅️ Back", disabled=launch_pending):
             st.session_state.step = 2
             st.rerun()
             
-        if cols[1].button("🛑 Stop / Clear Status", disabled=(st.session_state.get('bypass_process') is None)):
+        if cols[1].button(
+            "🛑 Stop / Clear Status",
+            disabled=(process is None or launch_pending)
+        ):
             stop_current_session()
             st.success("Environment stopped and status cleared.")
             st.rerun()
 
-        if cols[2].button("▶️ Run", disabled=is_running):
-            logger.info(f"Preparing to run BioGAIP on port {port}...")
-            if is_port_occupied(port):
-                if st.session_state.get('force_mode', False):
-                    st.warning(f"Port {port} is occupied, but Force Mode is enabled. Execution will proceed.")
-                    logger.warning(f"Port {port} occupied, proceeding due to Force Mode.")
-                else:
-                    st.error(f"Port {port} is already occupied. Stop the existing process or enable Force Mode in Step 1.")
-                    logger.error(f"Execution aborted: Port {port} is occupied.")
-                    st.stop()
+        cols[2].button(
+            "▶️ Run",
+            disabled=(is_running or launch_pending),
+            on_click=request_launch
+        )
 
-            env = copy.deepcopy(os.environ)
-            
-            exe_dir = os.path.dirname(biogaip_exe)
-            current_path = env.get("PATH", "")
-            if exe_dir not in current_path:
-                env["PATH"] = exe_dir + os.pathsep + current_path
-
-            sid = params.get("session_id", "").strip()
-            if not sid:
-                sid = random.randbytes(3).hex()
-            persist_dir = os.path.join(params["cache"], f"user_sessions_{sid}")
-
-            env["PERSIST_DIR"] = persist_dir
-            env["SYSTEM_CONFIG_YAML_PATH"] = params["conf_file"]
-            env["BIOAG_PORT"] = str(port)
-            env["BIOGEN_BYPASSMODE"] = "true"
-            env["TQDM_DISABLE"] = "1"
-            env["COOKIE_PASSWORD"] = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
-
-            if params["proxy"]:
-                env["http_proxy"] = params["proxy"]
-                env["https_proxy"] = params["proxy"]
-            if params["user_name"] and params["user_password"]:
-                env["APP_USER"] = f"{params['user_name']}:{params['user_password']}"
-                
-            if params["conda_meta"]: env["CONDA_META_DATABASE"] = params["conda_meta"]
-            if params["workflow"]: env["WORKFLOW_DATABASE"] = params["workflow"]
-            if params["user_ext"]: env["USER_EXT_DATABASE"] = params["user_ext"]
-            if params["cache"]: env["WORK_DIR"] = params["cache"]
-            
-            if st.session_state.allow_network_visit:
-                env["STREAMLIT_SERVER_ADDRESS"] = "0.0.0.0"
-            else:
-                env["STREAMLIT_SERVER_ADDRESS"] = "127.0.0.1"
-
-            log_dir = os.path.join(params["cache"], "logs")
-            os.makedirs(log_dir, exist_ok=True)
-            log_file_path = os.path.join(log_dir, f"run_{st.session_state.random_key}.log")
-            st.session_state.biogaip_log_file = log_file_path
-
+        if launch_pending:
             try:
-                with open(log_file_path, "w", encoding="utf-8") as lf:
-                    lf.write("="*60 + "\n")
-                    lf.write("🚀 BioGAIP Process Starting...\n")
-                    lf.write("="*60 + "\n")
-                    lf.write(f"▶ COMMAND:\n  {biogaip_exe}\n\n")
-                    lf.write("▶ INJECTED ENVIRONMENT VARIABLES:\n")
+                with st.spinner("Starting BioGAIP. Waiting for its startup result..."):
+                    logger.info(f"Preparing to run BioGAIP on port {port}...")
+                    if is_port_occupied(port):
+                        if st.session_state.get('force_mode', False):
+                            st.warning(f"Port {port} is occupied, but Force Mode is enabled. Execution will proceed.")
+                            logger.warning(f"Port {port} occupied, proceeding due to Force Mode.")
+                        else:
+                            st.error(f"Port {port} is already occupied. Stop the existing process or enable Force Mode in Step 1.")
+                            logger.error(f"Execution aborted: Port {port} is occupied.")
+                            st.stop()
+
+                    env = copy.deepcopy(os.environ)
                     
-                    env_keys_to_print = [
-                        "http_proxy", "https_proxy", "APP_USER", "CONDA_META_DATABASE", 
-                        "WORKFLOW_DATABASE", "USER_EXT_DATABASE", "WORK_DIR", 
-                        "BIOAG_PORT", "BIOGEN_BYPASSMODE", "SYSTEM_CONFIG_YAML_PATH", 
-                        "PERSIST_DIR", "STREAMLIT_SERVER_ADDRESS"
-                    ]
-                    for k in env_keys_to_print:
-                        if k in env:
-                            val = env[k]
-                            if k == "APP_USER" and ":" in val:
-                                val = val.split(':')[0] + ":******"
-                            lf.write(f"  {k} = {val}\n")
-                    lf.write("="*60 + "\n\n")
-            except Exception as e:
-                logger.error(f"Failed to write initial log headers: {e}")
+                    exe_dir = os.path.dirname(biogaip_exe)
+                    current_path = env.get("PATH", "")
+                    if exe_dir not in current_path:
+                        env["PATH"] = exe_dir + os.pathsep + current_path
 
-            try:
-                logger.info(f"Launching subprocess: {biogaip_exe}")
-                
-                popen_kwargs = {
-                    "env": env,
-                    "stdout": subprocess.PIPE,
-                    "stderr": subprocess.STDOUT,
-                    "text": True,
-                    "bufsize": 1
-                }
-                
-                if sys.platform == "win32":
-                    popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
-                else:
-                    popen_kwargs["start_new_session"] = True
+                    sid = params.get("session_id", "").strip()
+                    if not sid:
+                        sid = random.randbytes(3).hex()
+                    persist_dir = os.path.join(params["cache"], f"user_sessions_{sid}")
 
-                process = subprocess.Popen(
-                    [biogaip_exe] + ["--port", str(port)], 
-                    **popen_kwargs
-                )
-                
-                st.session_state.bypass_process = process
-                _ACTIVE_PROCESSES.add(process)
-                
-                log_thread = threading.Thread(target=stream_process_logs, args=(process.stdout, log_file_path), daemon=True)
-                log_thread.start()
+                    env["PERSIST_DIR"] = persist_dir
+                    env["SYSTEM_CONFIG_YAML_PATH"] = params["conf_file"]
+                    env["BIOAG_PORT"] = str(port)
+                    env["BIOGEN_BYPASSMODE"] = "true"
+                    env["TQDM_DISABLE"] = "1"
+                    env["COOKIE_PASSWORD"] = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
 
-                time.sleep(2)
-                
-                if process.poll() is None:
-                    logger.info(f"BioGAIP instance successfully launched with PID {process.pid}")
-                else:
-                    logger.error(f"Process terminated unexpectedly with exit code {process.returncode}")
-                
-                st.rerun()
+                    if params["proxy"]:
+                        env["http_proxy"] = params["proxy"]
+                        env["https_proxy"] = params["proxy"]
+                    if params["user_name"] and params["user_password"]:
+                        env["APP_USER"] = f"{params['user_name']}:{params['user_password']}"
+                        
+                    if params["conda_meta"]: env["CONDA_META_DATABASE"] = params["conda_meta"]
+                    if params["workflow"]: env["WORKFLOW_DATABASE"] = params["workflow"]
+                    if params["user_ext"]: env["USER_EXT_DATABASE"] = params["user_ext"]
+                    if params["cache"]: env["WORK_DIR"] = params["cache"]
+                    
+                    if st.session_state.allow_network_visit:
+                        env["STREAMLIT_SERVER_ADDRESS"] = "0.0.0.0"
+                    else:
+                        env["STREAMLIT_SERVER_ADDRESS"] = "127.0.0.1"
 
-            except Exception as e:
-                st.error(f"Error launching BioGAIP executable: {e}")
-                logger.exception("Exception occurred during process launch")
+                    log_file_path = os.path.join(os.getcwd(), f"biogaip_run_{st.session_state.random_key}.log")
+                    st.session_state.biogaip_log_file = log_file_path
+                    st.session_state.biogaip_url = None
+                    st.session_state.biogaip_startup_error = None
+
+                    try:
+                        with open(log_file_path, "w", encoding="utf-8") as lf:
+                            lf.write("="*60 + "\n")
+                            lf.write("🚀 BioGAIP Process Starting...\n")
+                            lf.write("="*60 + "\n")
+                            lf.write(f"▶ COMMAND:\n  {biogaip_exe}\n\n")
+                            lf.write("▶ INJECTED ENVIRONMENT VARIABLES:\n")
+                            
+                            env_keys_to_print = [
+                                "http_proxy", "https_proxy", "APP_USER", "CONDA_META_DATABASE", 
+                                "WORKFLOW_DATABASE", "USER_EXT_DATABASE", "WORK_DIR", 
+                                "BIOAG_PORT", "BIOGEN_BYPASSMODE", "SYSTEM_CONFIG_YAML_PATH", 
+                                "PERSIST_DIR", "STREAMLIT_SERVER_ADDRESS"
+                            ]
+                            for k in env_keys_to_print:
+                                if k in env:
+                                    val = env[k]
+                                    if k == "APP_USER" and ":" in val:
+                                        val = val.split(':')[0] + ":******"
+                                    lf.write(f"  {k} = {val}\n")
+                            lf.write("="*60 + "\n\n")
+                    except Exception as e:
+                        logger.error(f"Failed to write initial log headers: {e}")
+
+                    try:
+                        logger.info(f"Launching subprocess: {biogaip_exe}")
+                        
+                        popen_kwargs = {
+                            "env": env,
+                            "stdout": subprocess.PIPE,
+                            "stderr": subprocess.STDOUT,
+                            "text": True,
+                            "bufsize": 1
+                        }
+                        
+                        if sys.platform == "win32":
+                            popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+                        else:
+                            popen_kwargs["start_new_session"] = True
+
+                        process = subprocess.Popen(
+                            [biogaip_exe] + ["--port", str(port)], 
+                            **popen_kwargs
+                        )
+                        
+                        st.session_state.bypass_process = process
+                        _ACTIVE_PROCESSES.add(process)
+
+                        status = {"url": None, "error": None, "changed": threading.Event()}
+                        log_thread = threading.Thread(
+                            target=stream_process_logs,
+                            args=(process.stdout, log_file_path, status),
+                            daemon=True
+                        )
+                        log_thread.start()
+
+                        startup_error = wait_for_startup(process, status, _STARTUP_TIMEOUT)
+                        if startup_error:
+                            st.session_state.biogaip_startup_error = startup_error
+                            if process.poll() is None:
+                                kill_process_tree(process)
+                            log_thread.join(timeout=2)
+                            logger.error(f"BioGAIP startup failed: {startup_error}; log file: {log_file_path}")
+                        else:
+                            st.session_state.biogaip_url = status["url"]
+                            logger.info(f"BioGAIP launched with PID {process.pid} at {status['url']}")
+
+                    except Exception as e:
+                        logger.exception("Exception occurred during process launch")
+                        st.session_state.biogaip_startup_error = str(e)
+                        try:
+                            with open(log_file_path, "a", encoding="utf-8") as lf:
+                                lf.write("\nBioGAIP launch failed:\n")
+                                lf.write(traceback.format_exc())
+                        except OSError as log_error:
+                            logger.error(f"Failed to write launch error log: {log_error}")
+                        st.error(f"Error launching BioGAIP executable: {e}. Log file: `{log_file_path}`")
+            finally:
+                st.session_state.launch_pending = False
+
+            st.rerun()
 
         if need_refresh:
             time.sleep(1.5)
