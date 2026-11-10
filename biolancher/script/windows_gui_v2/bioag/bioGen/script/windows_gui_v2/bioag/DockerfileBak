@@ -1,0 +1,57 @@
+# 使用官方 Python 镜像
+FROM mambaorg/micromamba:2.3.2
+
+# 设置工作目录
+WORKDIR /app
+
+RUN micromamba install -y -n base python=3.11.5 && micromamba run -n base python -m pip config set global.extra-index-url "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+COPY --chown=$MAMBA_USER:$MAMBA_USER env.yaml /tmp/env.yaml
+RUN micromamba install -y -n base -f /tmp/env.yaml && \
+    micromamba clean --all --yes
+
+COPY --chown=$MAMBA_USER:$MAMBA_USER bioGen /app/bioGen
+COPY --chown=$MAMBA_USER:$MAMBA_USER .chainlit /app/.chainlit
+#COPY --chown=$MAMBA_USER:$MAMBA_USER .streamlit /app/.streamlit
+
+ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
+RUN python -c 'import uuid; print(uuid.uuid4())' > /tmp/my_uuid
+
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=biogendata
+ENV POSTGRES_DB=chainlit_db
+
+USER root
+RUN apt-get update && apt-get install -y postgresql postgresql-contrib
+RUN mkdir -p /var/lib/postgresql/data
+
+#COPY db_init.sh /docker-entrypoint-initdb.d/db_init.sh
+COPY init.sql /docker-entrypoint-initdb.d/init.sql
+
+#CMD ["bash", "/docker-entrypoint-initdb.d/db_init.sh"]
+
+EXPOSE 5432
+
+CMD service postgresql start && tail -f /var/log/postgresql/postgresql-*-main.log
+
+RUN service postgresql start && \
+    until pg_isready -h localhost -U postgres; do sleep 1; done && \
+    su - postgres -c "psql -c \"ALTER USER postgres PASSWORD '$POSTGRES_PASSWORD';\"" && \
+    su - postgres -c "createdb -O $POSTGRES_USER $POSTGRES_DB" && \
+    micromamba run -n base python /app/bioGen/web/psql_demo.py
+
+RUN echo "" > /app/__init__.py
+
+RUN apt-get update && apt-get install -y gosu
+
+#RUN chmod -R a+rwx /var/lib/postgresql
+
+#USER $MAMBA_USER
+
+COPY --chown=$MAMBA_USER:$MAMBA_USER start.sh /app/start.sh
+COPY --chown=$MAMBA_USER:$MAMBA_USER start_script.sh /app/start_script.sh
+
+#RUN cd /app/ && micromamba run -n base python -m pip install -e .
+
+ENV PYTHONPATH=$PYTHONPATH:/app/
+
+ENTRYPOINT ["/usr/local/bin/_entrypoint.sh", "/app/start_script.sh"]

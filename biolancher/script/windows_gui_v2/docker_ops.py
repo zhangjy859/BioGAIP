@@ -78,6 +78,7 @@ def start_docker(params, docker_prefix, output_queue, container_name):
     
     path_map = {
         params.get('configure'): "/config/system_config.yaml:ro",
+        #params.get('configure'): "/app/bioGen/config/system_config.yaml:ro"
         params.get('conda_meta'): f"{MOUNT_BASE}/conda_meta:rw",
         params.get('workflow'): f"{MOUNT_BASE}/pipelines_meta:rw",
         params.get('user_ext'): f"{MOUNT_BASE}/user_ext:rw"

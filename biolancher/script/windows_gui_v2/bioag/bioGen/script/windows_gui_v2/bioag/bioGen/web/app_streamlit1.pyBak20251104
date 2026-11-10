@@ -1,0 +1,1246 @@
+import sys, os
+import time
+import threading
+import queue
+import datetime
+from datetime import timedelta
+import json
+import secrets
+import subprocess
+import threading
+from queue import Queue, Empty
+
+import openai
+from autogen_agentchat.base import TaskResult
+from autogen_agentchat.messages import TextMessage, ModelClientStreamingChunkEvent, ToolCallExecutionEvent, \
+    ToolCallRequestEvent, UserInputRequestedEvent, ThoughtEvent, ToolCallSummaryMessage
+from autogen_agentchat.teams._group_chat._events import GroupChatMessage
+
+#sys.path.append('/mnt/e/software/bioGen')
+#sys.path.append('/mnt/e/software/bioGen/bioGen')
+
+import sys, os
+import streamlit as st
+import random
+from bioGen.biogen import *
+import asyncio
+from typing import cast
+from streamlit_cookies_manager import EncryptedCookieManager
+
+import logging
+from autogen_core.logging import LLMCallEvent
+from autogen_core import EVENT_LOGGER_NAME
+
+class LLMUsageTracker(logging.Handler):
+    def __init__(self) -> None:
+        """Logging handler that tracks the number of tokens used in the prompt and completion."""
+        super().__init__()
+        self._prompt_tokens = 0
+        self._completion_tokens = 0
+
+    @property
+    def tokens(self) -> int:
+        return self._prompt_tokens + self._completion_tokens
+
+    @property
+    def prompt_tokens(self) -> int:
+        return self._prompt_tokens
+
+    @property
+    def completion_tokens(self) -> int:
+        return self._completion_tokens
+
+    def reset(self) -> None:
+        self._prompt_tokens = 0
+        self._completion_tokens = 0
+
+    def emit(self, record: logging.LogRecord) -> None:
+        """Emit the log record. To be used by the logging module."""
+        try:
+            # Use the StructuredMessage if the message is an instance of it
+            if isinstance(record.msg, LLMCallEvent):
+                event = record.msg
+                self._prompt_tokens += event.prompt_tokens
+                self._completion_tokens += event.completion_tokens
+        except Exception:
+            self.handleError(record)
+
+# Set up the logging configuration to use the custom handler
+logger = logging.getLogger(EVENT_LOGGER_NAME)
+logger.setLevel(logging.INFO)
+llm_usage = LLMUsageTracker()
+logger.handlers = [llm_usage]
+
+
+# Define starters similar to Chainlit's set_starters
+starters = [
+    {
+        "label": "RNA-seq",
+        "message": """Objective: Perform RNA-Seq analysis, including transcript abundance quantification and differential expression analysis (DEA), using STAR for alignment and featureCounts for quantification. Store results in /RNA-seq.
+Expected Outputs:
+
+Aligned BAM files with corresponding indices.
+Transcript abundance counts.
+Differential Expression Analysis (DEA) using DESeq2, performed if grouping information is provided or can be inferred from FASTQ file names.
+
+User Input Requirements:Please provide the following details to proceed with the analysis:
+
+FASTQ File Location:
+
+Specify the directory path containing your RNA-Seq FASTQ files.
+
+Reference Genome and Annotation:
+
+Reference Genome (FASTA format): Provide the full path to the reference genome FASTA file.
+Annotation File (GTF/GFF3 format): Provide the full path to the gene annotation file.
+Optional: If needed, download resources from Ensembl or UCSC Genome Browser. For example, use wget to retrieve files like Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz or Homo_sapiens.GRCh38.108.gtf.gz from Ensembl.
+
+Grouping Information for DEA:
+
+Provide Grouping Information: Submit experimental group details (e.g., 'control', 'treatment') in a comma-separated list or table linking each FASTQ file to a group.
+Infer from FASTQ File Names: If group information can be derived from FASTQ file names (e.g., sample1_control_R1.fastq.gz, sample2_treatment_R1.fastq.gz), describe the naming convention.
+
+Optional Parameters:
+
+Number of Threads: Specify the number of CPU threads available to optimize processing speed.
+
+Instructions:
+
+Provide the requested information to initiate the analysis.
+After receiving the inputs, the system will summarize the provided details, perform the analysis, and store results in /RNA-seq.
+Upon completion, confirm with the user if additional tasks are needed.
+""",
+        "icon": "http://nondisk.136138189.xyz:2086/f/aOi6/ngs.png",
+    },
+    {
+        "label": "WGS analysis",
+        "message": "Explain superconductors like I'm five years old.",
+        "icon": "http://nondisk.136138189.xyz:2086/f/4Vcj/wgs.png",
+    },
+    {
+        "label": "ATAC-seq",
+        "message": "Write a script to automate sending daily email reports in Python, and walk me through how I would set it up.",
+        "icon": "http://nondisk.136138189.xyz:2086/f/8whM/Transposase_ATAC.svg",
+    },
+]
+
+
+def create_user_input_func(input_file, log_file):
+    def user_input_func(prompt: str) -> str:
+        with open(log_file, 'a') as f:
+            json.dump({'type': 'prompt', 'prompt_type': 'input', 'content': prompt}, f)
+            f.write('\n')
+        while True:
+            try:
+                with open(input_file, 'r') as f:
+                    response = f.read().strip()
+                if response:
+                    with open(input_file, 'w') as f:
+                        pass
+                    return response
+            except:
+                pass
+            time.sleep(0.5)
+    return user_input_func
+
+
+def create_user_action_func(input_file, log_file):
+    def user_action_func(prompt: str) -> str:
+        with open(log_file, 'a') as f:
+            json.dump({'type': 'prompt', 'prompt_type': 'action', 'content': prompt}, f)
+            f.write('\n')
+        while True:
+            with open(input_file, 'r') as f:
+                response = f.read().strip()
+            if response:
+                with open(input_file, 'w') as f:
+                    pass
+                return response
+            time.sleep(0.5)
+    return user_action_func
+
+
+def shutdown_server(host=None, api_key=None):
+    if not api_key or not host:
+        raise ValueError("API key is required")
+    response = requests.post(f"{host}/shutdown", headers={"x-api-key": api_key})
+    response.raise_for_status()  # 如果响应状态码不是200，会抛出异常
+    return response.json()
+
+# Tasks string
+tasks = """You are a knowledgeable bioinformatics assistant. You run in a Linux environment.
+Assume workdir is {work_dir_env},
+You need to understand the user's requirements about specific Bioinformatics tasks,
+first call @user_proxy to get user input,
+check the legitimacy of the requirements, and implement them through appropriate and secure Linux commands.
+If necessary, before fulfilling the user's requirements, you can decide to ask @system_check_agent to generate command to check the system or confirm some information (eg: software version). These commands must also undergo security checks.
+@bio_micromamba_env_agent could help prepare micromamba env, all new envs should store at [work_dir]/envs
+@file_agent could help you list file in specific path and subdir as json format,
+When a certain method fails, you need to try different methods and share the information with team members you will asked.
+If multiple attempts fail, require user's help or terminate the process. You also can search web by @web_surfer_agent,
+please note that you cannot assume or perform any operations as superusers.
+You need to be aware that you may have a limited context length. To maintain focus on the task during long conversation, update necessary memory via @manager_mem_agent.
+Only one agent called each time
+""".format(work_dir_env=os.environ.get('WORK_DIR', ''))
+
+# Define agent avatars
+agent_avatars = {
+    "user": "🧑",
+    "user_proxy": "👤",
+    "system_check_agent": "🔍",
+    "bio_micromamba_env_agent": "🧪",
+    "file_agent": "📁",
+    "web_surfer_agent": "🌐",
+    "manager_mem_agent": "🧠",
+    "system": "⚙️",
+    "planning_agent": "🗂️",
+    "query_agent": "❓",
+    "command_generator_agent": "💻",
+    "code_generator_agent": "📝",
+    "safety_checker_agent": "🛡️",
+    "executor_agent": "🚀",
+    "assistant": "🤖",
+}
+
+
+def get_avatar(name):
+    return agent_avatars.get(name, "🤖")
+
+
+work_dir_env = os.getcwd()
+persist_dir = os.path.join(work_dir_env, 'user_sessions')
+os.makedirs(persist_dir, exist_ok=True)
+
+cookiers_password = os.environ.get("COOKIE_PASSWORD", None)
+if not cookiers_password:
+    # ramdo,
+    cookiers_password = random.randbytes(16).hex()
+
+cookies = EncryptedCookieManager(
+    prefix="biogen_",
+    password=os.environ.get("COOKIE_PASSWORD", cookiers_password)
+    # Set a secure password, preferably from env
+)
+
+if not cookies.ready():
+    st.stop()
+
+# Simple password auth
+if "authenticated" not in st.session_state:
+    if 'authenticated' in cookies and cookies['authenticated'] == 'True':
+        try:
+            st.session_state.authenticated = True
+            st.session_state.login_time = datetime.datetime.fromisoformat(cookies['login_time'])
+            st.session_state.username = cookies['username']
+        except ValueError:
+            # Invalid login_time format, clear cookies
+            del cookies['authenticated']
+            if 'login_time' in cookies:
+                del cookies['login_time']
+            if 'username' in cookies:
+                del cookies['username']
+            cookies.save()
+            st.session_state.authenticated = False
+        except KeyError:
+            # Missing keys, clear cookies
+            del cookies['authenticated']
+            if 'login_time' in cookies:
+                del cookies['login_time']
+            if 'username' in cookies:
+                del cookies['username']
+            cookies.save()
+            st.session_state.authenticated = False
+    else:
+        st.session_state.authenticated = False
+
+
+def load_session():
+    session_file = os.path.join(persist_dir, f"{st.session_state.username}.json")
+    if os.path.exists(session_file):
+        with open(session_file, 'r') as f:
+            data = json.load(f)
+            st.session_state.messages = data.get('messages', [])
+            st.session_state.prompt_history = data.get('prompt_history', "")
+            if 'project_id' in data:
+                st.session_state.project_id = data['project_id']
+            st.session_state.processing = data.get('processing', False)
+            if 'pending_prompt' in data:
+                st.session_state.pending_prompt = data['pending_prompt']
+            if 'pending_prompt_type' in data:
+                st.session_state.pending_prompt_type = data['pending_prompt_type']
+
+
+def save_session():
+    if 'username' in st.session_state:
+        session_file = os.path.join(persist_dir, f"{st.session_state.username}.json")
+        data = {
+            'messages': st.session_state.get('messages', []),
+            'prompt_history': st.session_state.get('prompt_history', ""),
+            'project_id': st.session_state.get('project_id', None),
+            'processing': st.session_state.get('processing', False),
+            'pending_prompt': st.session_state.get('pending_prompt', None),
+            'pending_prompt_type': st.session_state.get('pending_prompt_type', None)
+        }
+        with open(session_file, 'w') as f:
+            json.dump(data, f)
+
+
+if not st.session_state.authenticated:
+    # Display logo on login page
+    logo_url = "http://nondisk.136138189.xyz:2086/f/0vtL/biogen-high-resolution-logo-transparent.png"  # Replace with your specified logo URL
+    #left_co, cent_co, last_co = st.columns(3)
+    ## add some space
+    st.markdown(
+        '''
+        <div style="text-align: center;">
+            <img src="{logo_url}" alt="Example Image" style="max-width: 25%; height: auto;">
+        </div>
+        '''.format(logo_url=logo_url), unsafe_allow_html=True
+    )
+    st.markdown('####')
+    col1, col2, col3 = st.columns(3)
+    #with cent_co:
+    #    st.image(logo_url, width=300)
+    with col2:
+        #st.image(logo_url, width=150)  # Set width to make it slightly smaller
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        if st.button("Login"):
+            app_user = os.environ.get('APP_USER')
+            if app_user:
+                parts = app_user.split(':', 1)
+                expected_username = parts[0]
+                expected_password = parts[1] if len(parts) > 1 else ''
+            else:
+                expected_username = "admin"
+                expected_password = "admin"
+            if username == expected_username and password == expected_password:
+                st.session_state.authenticated = True
+                st.session_state.login_time = datetime.datetime.now()
+                st.session_state.username = username
+                cookies['authenticated'] = 'True'
+                cookies['login_time'] = st.session_state.login_time.isoformat()
+                cookies['username'] = username
+                cookies.save()
+                load_session()
+                st.rerun()
+            else:
+                st.error("Invalid credentials")
+    st.stop()
+else:
+    # Check if session has expired
+    if (datetime.datetime.now() - st.session_state.login_time) > timedelta(days=3):
+        st.session_state.authenticated = False
+        if 'authenticated' in cookies:
+            del cookies['authenticated']
+        if 'login_time' in cookies:
+            del cookies['login_time']
+        if 'username' in cookies:
+            del cookies['username']
+        cookies.save()
+        st.rerun()
+    else:
+        # Load session if not already loaded
+        if 'session_loaded' not in st.session_state:
+            load_session()
+            st.session_state.session_loaded = True
+            # Check for reconnection during processing and show warning if needed
+            if st.session_state.get('processing', False) and 'reconnect_warning_shown' not in st.session_state:
+                st.warning(
+                    "You seem to have reconnected while a task was processing. Some recent chat records might have been lost. "
+                    "To avoid this in the future, please keep your browser tab open and active, disable tab sleep in your browser settings, "
+                    "and avoid refreshing the page during long tasks."
+                )
+                st.session_state.reconnect_warning_shown = True
+                save_session()
+
+# Top navigation bar
+# st.markdown("""
+# <style>
+# nav {
+#  background-color: #f0f0f0;
+#  padding: 10px;
+#  text-align: center;
+# }
+# nav a {
+#  margin: 0 10px;
+#  text-decoration: none;
+#  color: black;
+# }
+# </style>
+# <nav>
+# <a href="https://example.com/readme">Readme</a> |
+# <a href="https://github.com/example/repo">GitHub</a>
+# </nav>
+# """, unsafe_allow_html=True)
+
+# Display project logo in sidebar
+st.sidebar.image(
+    "http://nondisk.136138189.xyz:2086/f/0vtL/biogen-high-resolution-logo-transparent.png")
+
+# Add logout and reset buttons in sidebar
+st.sidebar.title("Options")
+if st.sidebar.button("Logout"):
+    session_file = os.path.join(persist_dir, f"{st.session_state.username}.json")
+    if os.path.exists(session_file):
+        os.remove(session_file)
+    st.session_state.authenticated = False
+    if 'authenticated' in cookies:
+        del cookies['authenticated']
+    if 'login_time' in cookies:
+        del cookies['login_time']
+    if 'username' in cookies:
+        del cookies['username']
+    cookies.save()
+    st.session_state.clear()
+    st.session_state.api_process.kill()
+    del st.session_state.api_process
+    os.environ['API_URL'] = ''
+    os.environ['API_KEY'] = ''
+    st.session_state.api_setup_done = False
+    st.rerun()
+
+if st.sidebar.button("Reset Session"):
+    session_file = os.path.join(persist_dir, f"{st.session_state.username}.json")
+    if os.path.exists(session_file):
+        os.remove(session_file)
+    st.session_state.messages = []
+    st.session_state.prompt_history = ""
+    st.session_state.project_id = asyncio.run(execute_shell_command_via_api(command=''))
+    save_session()  # Optional, since file removed
+    st.rerun()
+
+
+# Check for API_URL and API_KEY
+def check_api(reset_project_id=False):
+    ## print work dir
+    print('work dir:', os.environ.get('WORK_DIR', ''))
+    print('api url:', os.environ.get('API_URL', ''))
+    print('api key:', os.environ.get('API_KEY', ''))
+    try:
+        # Assuming execute_shell_command_via_api uses API_URL and API_KEY
+        # result = asyncio.run(execute_shell_command_via_api(command=''))
+        if ('project_id' not in st.session_state and os.getenv('PROJECT_ID') is None) or reset_project_id:
+            result = asyncio.run(execute_shell_command_via_api(command=''))
+            st.session_state['project_id'] = os.environ["PROJECT_ID"]
+            print('after check api', st.session_state['project_id'])
+        else:
+            result = asyncio.run(execute_shell_command_via_api(command='echo ok'))
+        if result:
+            return True
+        else:
+            return False
+    except Exception as e:
+        st.error(f"API check failed: {str(e)}")
+        raise e
+    return False
+
+
+def api_set2(server_ip, username, port, ssh_password, api_key, read_only_dir='', read_write_dir='', work_dir='', allow_raw=''):
+    cmd = ['bash', './bioGen/ulits/api_call_debug.sh', server_ip, username, port, ssh_password, api_key, read_only_dir, read_write_dir, work_dir, str(allow_raw)]
+    print("Running command:", ' '.join(cmd))
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1,
+                               universal_newlines=True)
+    output = ""
+    while True:
+        line = process.stdout.readline()
+        if line:
+            output += line
+            print(line)
+            if "Successfully started bioGen API server" in line:
+                os.environ['API_URL'] = f"http://{server_ip}:38000"
+                os.environ['API_KEY'] = api_key
+                st.session_state.api_process = process  # Keep the process reference to prevent it from being garbage collected
+                st.info(f"API setup completed. View progression at {os.environ.get('API_URL')} with your API key")
+                return True
+        err_line = process.stderr.readline()
+        if err_line:
+            print(err_line)
+            st.error(f"Error outout: {err_line}")
+        #    process.kill()
+        #    return False
+        if process.poll() is not None:
+            # Process exited without success
+            return False
+
+    return False
+
+
+import re
+import pty
+import select
+import fcntl
+
+def api_set(server_ip, username, port, ssh_password, api_key, read_only_dir='', read_write_dir='', work_dir='', allow_raw=''):
+    cmd = ['bash', './bioGen/ulits/api_set_warp.sh', server_ip, username, port, ssh_password, api_key, read_only_dir, read_write_dir, work_dir, str(allow_raw)]
+    #print("Running command:", ' '.join(cmd))
+
+    stdout_master, stdout_slave = pty.openpty()
+    stderr_master, stderr_slave = pty.openpty()
+
+    process = subprocess.Popen(cmd, stdout=stdout_slave, stderr=stderr_slave, close_fds=True)
+
+    os.close(stdout_slave)
+    os.close(stderr_slave)
+
+    # Set non-blocking
+    for fd in (stdout_master, stderr_master):
+        flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+        fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
+
+    output = ""
+    err_output = ""
+    stdout_queue = Queue()
+    stderr_queue = Queue()
+
+    def read_fd(fd, queue):
+        buffer = ''
+        while True:
+            try:
+                data = os.read(fd, 4096).decode('utf-8', errors='replace')
+            except OSError as e:
+                if e.errno != 11:  # EAGAIN
+                    break
+                data = ''
+            if not data:
+                if process.poll() is not None:
+                    break
+                time.sleep(0.01)
+                continue
+            buffer += data
+            while '\n' in buffer:
+                line, buffer = buffer.split('\n', 1)
+                queue.put(line + '\n')
+        if buffer:
+            queue.put(buffer)
+
+    threading.Thread(target=read_fd, args=(stdout_master, stdout_queue), daemon=True).start()
+    threading.Thread(target=read_fd, args=(stderr_master, stderr_queue), daemon=True).start()
+
+    success = False
+    progress_bar = st.progress(0, text="Starting API setup...")
+
+    while True:
+        # Process all available stdout lines
+        try:
+            while True:
+                line = stdout_queue.get_nowait()
+                if line:
+                    output += line
+                    print(line, end='')
+                    match = re.match(r'^%(\d+)%\s*(.*)$', line.strip())
+                    if match:
+                        print('progress match:', match.group(1), match.group(2))
+                        percent = int(match.group(1))
+                        message = match.group(2)
+                        progress_bar.progress(percent / 100.0, text=message)
+                        time.sleep(0.1)  # Allow Streamlit UI to refresh
+                    if "Successfully started bioGen API server" in line:
+                        os.environ['API_URL'] = f"http://{server_ip}:38000"
+                        os.environ['API_KEY'] = api_key
+                        st.session_state.api_process = process
+                        st.info(f"API setup completed. View progression at {os.environ.get('API_URL')} with your API key")
+                        success = True
+        except Empty:
+            pass
+
+        # Process all available stderr lines
+        try:
+            while True:
+                err_line = stderr_queue.get_nowait()
+                if err_line:
+                    err_output += err_line
+                    print(err_line, end='')
+                    st.error(f"Error output: {err_line.rstrip()}")
+        except Empty:
+            pass
+
+        if success:
+            progress_bar.progress(1.0, text="API setup completed")
+            time.sleep(0.1)  # Allow UI refresh
+            # Drain any remaining lines after success
+            try:
+                while True:
+                    line = stdout_queue.get_nowait()
+                    if line:
+                        output += line
+                        print(line, end='')
+            except Empty:
+                pass
+
+            try:
+                while True:
+                    err_line = stderr_queue.get_nowait()
+                    if err_line:
+                        err_output += err_line
+                        print(err_line, end='')
+                        st.error(f"Error output: {err_line.rstrip()}")
+            except Empty:
+                pass
+            os.close(stdout_master)
+            os.close(stderr_master)
+            return success, output, err_output
+
+        if process.poll() is not None:
+            if not success:
+                # Drain any remaining lines after process exit
+                try:
+                    while True:
+                        line = stdout_queue.get_nowait()
+                        if line:
+                            output += line
+                            print(line, end='')
+                except Empty:
+                    pass
+
+                try:
+                    while True:
+                        err_line = stderr_queue.get_nowait()
+                        if err_line:
+                            err_output += err_line
+                            print(err_line, end='')
+                            st.error(f"Error output: {err_line.rstrip()}")
+                except Empty:
+                    pass
+
+                progress_bar.progress(0, text="API setup failed")
+                os.close(stdout_master)
+                os.close(stderr_master)
+                return False, output, err_output
+
+        time.sleep(0.01)  # Smaller sleep for more responsive loop
+
+    return False, "", ""  # Fallback, though unreachable
+
+@st.dialog("Embedding Model Check")
+def check_model():
+    model_dir = os.path.expanduser("~/.cache/chroma/onnx_models/all-MiniLM-L6-v2/")
+    tar_file_path = os.path.join(model_dir, "onnx.tar.gz")
+    url = "https://chroma-onnx-models.s3.amazonaws.com/all-MiniLM-L6-v2/onnx.tar.gz"
+
+    if os.path.exists(model_dir) and os.path.exists(tar_file_path):
+        #st.success("The model file already exists.")
+        # close the dialog
+        return True
+
+    st.markdown("The Embedding model file (required by RAG) is missing. It needs to be downloaded and extracted.")
+
+    if st.button("Download and Extract"):
+        try:
+            # Create directory if it doesn't exist
+            os.makedirs(model_dir, exist_ok=True)
+
+            # Download with progress
+            response = requests.get(url, stream=True)
+            response.raise_for_status()
+            total_size = int(response.headers.get("content-length", 0))
+            block_size = 1024
+            progress_bar = st.progress(0)
+            downloaded = 0
+
+            with open(tar_file_path, "wb") as f:
+                for data in response.iter_content(block_size):
+                    downloaded += len(data)
+                    f.write(data)
+                    if total_size > 0:
+                        progress_bar.progress(downloaded / total_size)
+
+            st.success("Download complete!")
+
+            # Extract
+            with tarfile.open(tar_file_path) as tar:
+                tar.extractall(path=model_dir)
+
+            st.success("Extraction complete!")
+            # Optionally remove the tar file after extraction
+            # os.remove(tar_file_path)
+
+        except Exception as e:
+            st.markdown(f"An error occurred: {str(e)}")
+            return False
+
+    return True
+
+def pair_api_set(pair_code):
+    pass  # Leave empty as per instructions
+
+
+# get project status
+# "/status/project/{project_id}"
+#{
+#            "status": "running",
+#            "current_command": project["current_command"],
+#            "current_task_id": project["current_task_id"],
+#            "working_dir": project["working_dir"]
+#        }
+def get_project_status(project_id, API_URL=None, API_KEY=None):
+    if not project_id:
+        return "No Project ID"
+    try:
+        response = requests.get(f"{API_URL}/status/project/{project_id}",
+                                headers={"x-api-key": API_KEY})
+        if response.status_code == 200:
+            data = response.json()
+            ## to dict
+            if isinstance(data, str):
+                data = json.loads(data)
+            return data
+        else:
+            return f"Error: {response.status_code}"
+    except Exception as e:
+        return f"Exception: {str(e)}"
+
+if "api_setup_done" not in st.session_state:
+    api_url = os.environ.get('API_URL')
+    api_key = os.environ.get('API_KEY')
+    if not api_url or not api_key:
+        st.session_state.api_setup_done = False
+    else:
+        if check_api():
+            st.session_state.api_setup_done = True
+        else:
+            st.session_state.api_setup_done = False
+else:
+    if st.session_state.api_setup_done:
+        pass
+    else:
+        api_url = os.environ.get('API_URL')
+        api_key = os.environ.get('API_KEY')
+
+# API Setup Wizard
+if not st.session_state.get('api_setup_done', False):
+    st.header("BioWorker API Setup Wizard")
+    st.info("Improper configuration may enable the AI to damage your data or device. Always back up your data and read bioGen's documentation before start.")
+    tab1, tab2, tab3 = st.tabs(["Manual Setup", "SSH Setup", "Pair Code Setup"])
+
+    with tab1:
+        api_url_input = st.text_input("Enter bioWorker API URL", value=os.environ.get('API_URL', ''))
+        api_key_input = st.text_input("Enter bioWorker API Key", value=os.environ.get('API_KEY', ''), type="password")
+        if st.button("Set API Credentials"):
+            if api_url_input and api_key_input:
+                os.environ['API_URL'] = api_url_input
+                os.environ['API_KEY'] = api_key_input
+                print(os.environ['API_URL'], os.environ['API_KEY'])
+                if check_api(reset_project_id=True):
+                    st.success("API credentials set successfully!")
+                    st.session_state.api_setup_done = True
+                    #check_model()
+                    #if check_model():
+                    #    st.success("Model check successful!")
+                    #    st.rerun()
+                    #else:
+                    #    pass
+                    st.rerun()
+                else:
+                    st.error("Invalid API credentials. Please try again.")
+            else:
+                st.error("Please provide both API URL and API Key.")
+
+    with tab2:
+        st.warning("This is an experimental feature and may be unstable and unsafe.")
+        server_ip = st.text_input("Server IP")
+        username = st.text_input("User Name")
+        port = st.text_input("Port", value="22")
+        ssh_password = st.text_input("SSH Password", type="password")
+        st.info("Follow path is absolute path on the **remote** server side.")
+        read_directory = st.text_input("Directory allowed to read, eg: /path/to/dir1;/path/to/dir2")
+        read_write_directory = st.text_input("Directory allowed to read and write, eg: /path/to/dir3;/path/to/dir4")
+        work_dir = st.text_input("Working Directory (Optional), bioWorker will store envs and temp files here")
+        if "ssh_api_key" not in st.session_state:
+            st.session_state.ssh_api_key = ""
+        st.info('Please note down the generated API key, as it will not be shown again. You will need it to access the API at other place.')
+        api_key = st.text_input("bioWorker API Key", value=st.session_state.ssh_api_key, type="password")
+        if st.button("Generate API Key"):
+            st.session_state.ssh_api_key = secrets.token_hex(64)
+            st.rerun()
+        print('rw dir:', read_write_directory)
+        if not read_directory:
+            read_directory = ''
+        if not read_write_directory:
+            read_write_directory = ''
+        if not work_dir:
+            work_dir = ''
+        #if work_dir != '' and not os.path.exists(os.path.join(work_dir, 'cmd_history')):
+        #    try:
+        #        os.makedirs(os.path.join(work_dir, 'cmd_history'), exist_ok=True)
+        #    except Exception as e:
+        #        st.error(f"Failed to create working directory: {str(e)}")
+        #        st.stop()
+        if st.button("Initialize via SSH"):
+            #sys.stderr.write('Initializing via SSH...')
+            if server_ip and username and port and ssh_password and api_key:
+                print('rw dir:', read_write_directory)
+                success, output, error_output = api_set(server_ip, username, port, ssh_password, api_key, read_directory, read_write_directory, work_dir)
+                print('API set result:', success)
+                if not success:
+                    st.error("Setup failed. Please check the error messages.")
+                    if error_output:
+                        st.text_area("Error Output", error_output, height=200)
+                    if output:
+                        st.text_area("Output", output, height=200)
+                    if 'api_process' in st.session_state:
+                        st.session_state.api_process.kill()
+                        del st.session_state.api_process
+                    st.stop()
+                os.environ['API_URL'] = f"http://{server_ip}:38000"
+                os.environ['API_KEY'] = api_key
+                print(os.environ['API_URL'], os.environ['API_KEY'])
+                if success:
+                    if check_api():
+                        st.success("API setup successful!")
+                        st.session_state.api_setup_done = True
+                        check_model()
+                        st.rerun()
+                    else:
+                        st.error("API check failed.")
+                        if 'api_process' in st.session_state:
+                            st.session_state.api_process.kill()
+                            del st.session_state.api_process
+                else:
+                    st.error("Setup failed.")
+            else:
+                st.error("Please fill all fields.")
+
+    with tab3:
+        st.warning("This is an experimental feature and may be unstable and unsafe.")
+        st.warning("The options in this tab are for professional users only. Please read our documentation carefully.")
+        # not implemented error
+        st.error("This model is not open for user current now because of safety concerns.")
+        pair_code = st.text_input("Pair Code")
+        if st.button("Initialize via Pair Code"):
+            pair_api_set(pair_code)
+            if check_api():
+                st.success("API setup successful!")
+                st.session_state.api_setup_done = True
+                st.rerun()
+            else:
+                st.error("Setup failed.")
+    st.stop()
+
+# Setup on "chat start" - run once
+if "setup_done" not in st.session_state:
+    st.session_state.setup_done = True
+    if 'input_counter' not in st.session_state:
+        st.session_state.input_counter = 0  # Initialize input counter
+    if 'processing' not in st.session_state:
+        st.session_state.processing = False
+    st.session_state.log_file = os.path.join(persist_dir, f"{st.session_state.username}_log.ndjson")
+    st.session_state.input_file = os.path.join(persist_dir, f"{st.session_state.username}_input.txt")
+    if not os.path.exists(st.session_state.log_file):
+        open(st.session_state.log_file, 'w').close()
+    if not os.path.exists(st.session_state.input_file):
+        open(st.session_state.input_file, 'w').close()
+    user_input = create_user_input_func(st.session_state.input_file, st.session_state.log_file)
+    user_action = create_user_action_func(st.session_state.input_file, st.session_state.log_file)
+    user_proxy = UserProxyAgent('user_proxy', input_func=user_input)
+    agents_non_proxy = [agent for agent in agents if agent.name != 'user_proxy']
+    agents_non_proxy.append(user_proxy)
+    selector_team2 = SelectorGroupChat(
+        agents_non_proxy,
+        model_client=default_model,
+        termination_condition=termination,
+        selector_prompt=selector_prompt,
+        allow_repeated_speaker=False,
+    )
+    st.session_state.team = selector_team2
+    st.session_state.prompt_history = st.session_state.get('prompt_history', "")
+    if 'project_id' not in st.session_state:
+        project_id = asyncio.run(execute_shell_command_via_api(command=''))
+        st.session_state.project_id = project_id
+
+# Display starters in sidebar
+st.sidebar.title("Starters")
+for starter in starters:
+    if st.sidebar.button(starter["label"]):
+        st.session_state.messages.append({"role": "user", "content": starter["message"]})
+        save_session()
+        st.rerun()
+
+## biowork ctrl
+st.sidebar.title("bioWorker status")
+if os.environ.get('API_URL', '') != '' and os.environ.get('API_KEY', '') != '':
+    st.sidebar.markdown(f"**Project ID:** {st.session_state['project_id']}")
+    project_status = {}
+    project_status = get_project_status(st.session_state['project_id'], API_URL=os.environ.get('API_URL'), API_KEY=os.environ.get('API_KEY'))
+    ## add a placeholder for bioworker status
+    bioworker_placeholder_status = st.sidebar.empty()
+    if isinstance(project_status, dict):
+        status = project_status.get('status', 'unknown')
+        current_command = project_status.get('current_command', 'N/A')
+        message_status = f"**Status:** {status.capitalize()}\n\n"
+        bioworker_placeholder_status.info(message_status + f"**Current Command:**\n\n ```\n\n{current_command} \n\n```")
+    else:
+        pass
+    if st.sidebar.button("Stop bioWorker API Server"):
+        try:
+            shutdown_server(host=os.environ.get('API_URL'), api_key=os.environ.get('API_KEY'))
+        except Exception as e:
+            st.error(f"Failed to shutdown server: {str(e)}")
+        st.session_state.api_process.kill()
+        del st.session_state.api_process
+        os.environ['API_URL'] = ''
+        os.environ['API_KEY'] = ''
+        st.session_state.api_setup_done = False
+        st.sidebar.success("bioWorker API server stopped.")
+        st.rerun()
+    ## add a link to api url
+    st.sidebar.markdown(f"[Go to bioWorker Control Panel]({os.environ.get('API_URL')})")
+    ## a placeholder for llm_usage.prompt_tokens and llm_usage.completion_tokens
+
+    llm_usage_placeholder = st.sidebar.empty()
+    #if 'llm_usage' in st.session_state:
+    #    llm_usage = st.session_state['llm_usage']
+    #    llm_usage_placeholder.markdown(f"**LLM Usage:**\n\nPrompt Tokens: {llm_usage.get('prompt_tokens', 0)}\n\nCompletion Tokens: {llm_usage.get('completion_tokens', 0)}\n\nTotal Tokens: {llm_usage.get('total_tokens', 0)}")
+    ## if bioworker api not running, show a form to add new api url and key and reset session
+    #else:
+    #    st.sidebar.warning("bioWorker API setting.")
+    #    ## add a form to input api url and key
+    #    with st.sidebar.form("api_form"):
+    #        api_url_input = st.text_input("bioWorker API URL", value=os.environ.get('API_URL', ''))
+    #        api_key_input = st.text_input("bioWorker API Key", value=os.environ.get('API_KEY', ''), type="password")
+    #        submitted = st.form_submit_button("Set and Reset Session")
+    #        if submitted:
+    #            if api_url_input and api_key_input:
+    #                os.environ['API_URL'] = api_url_input
+    #                os.environ['API_KEY'] = api_key_input
+    #                print(os.environ['API_URL'], os.environ['API_KEY'])
+    #                if check_api(reset_project_id=True):
+    #                    st.success("API credentials set successfully!")
+    #                    st.session_state.api_setup_done = True
+    #                    st.session_state.messages = []
+    #                    st.session_state.prompt_history = ""
+    #                    st.session_state.project_id = None
+    #                    os.environ['PROJECT_ID'] = ''
+    #                    save_session()
+    #                    check_model()
+    #                    st.rerun()
+    #                else:
+    #                    st.error("Invalid API credentials. Please try again.")
+    #            else:
+    #                st.error("Please provide both API URL and API Key.")
+
+# Initialize messages if not present
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display chat messages
+for message in st.session_state.messages:
+    logger.debug(f"Displaying message: {message}")
+    if message["role"] == "thought":
+        with st.expander(f"Thought from {get_avatar(message['source'])} {message['source']}"):
+            st.markdown(message["content"])
+    else:
+        with st.chat_message(message["role"], avatar=get_avatar(message["role"])):
+            st.markdown(message["content"])
+
+# Conditional chat input
+st.session_state.init_messaged = False
+if not st.session_state.get('processing', False) and "pending_prompt" not in st.session_state:
+    bioworker_placeholder_bar_st = st.empty()
+    message = st.chat_input("Type your message here")
+    if message:
+        st.session_state.messages.append({"role": "user", "content": message, "processed": False})
+        save_session()
+        if not st.session_state.init_messaged:
+            st.info("Initialize the session. If you have loaded memory, this may take up to five minutes.")
+            st.session_state.init_messaged = True
+        st.rerun()
+
+
+# Function to process the task in background thread
+st.session_state['llm_usage'] = {}
+def process_task(user_message, log_file, team):
+    if 'project_id' not in st.session_state:
+        ## init project id
+        project_id = asyncio.run(execute_shell_command_via_api(command=''))
+        st.session_state['project_id'] = project_id
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        async_gen = team.run_stream(
+            task=[TextMessage(content=user_message, source="user")],
+            cancellation_token=CancellationToken(),
+        )
+        current_source = None
+        current_content = ""
+        while True:
+            msg = loop.run_until_complete(anext(async_gen))
+            ## print msg type
+            logger.info(f"====> Received message of type: {type(msg)} from source: {getattr(msg, 'source', 'N/A')}")
+            if msg is None:
+                break
+            ## update llm_usage
+            try:
+                llm_usage_current = msg.usage
+                ## llm_usage.prompt_tokens llm_usage.completion_tokens
+                completion_token = llm_usage_current.get('completion_tokens', None)
+                prompt_token = llm_usage_current.get('prompt_tokens', None)
+                #llm_usage_all = llm_usage_current.get('total_tokens', None)
+                ### update placeholder
+                #llm_usage_placeholder.markdown(f"**LLM Usage:**\n\nPrompt Tokens: {prompt_token}\n\nCompletion Tokens: {completion_token}\n\nTotal Tokens: {llm_usage_all}")
+                logger.info(f"LLM usage: prompt_tokens: {prompt_token}, completion_tokens: {completion_token}, total_tokens: {llm_usage_current.get('total_tokens', None)}")
+            except Exception as e:
+                logger.error(f"Failed to process message: {str(e)}")
+                logger.error(str(msg))
+            try:
+                if msg.source == "user":
+                    logger.info(f"<==== User message received")
+                    with open(log_file, 'a') as f:
+                        json.dump({'type': 'toast',
+                                          'time': 300,
+                                          'message': f"Initialize the session. If you have loaded memory, this may take up to five minutes",
+                                          'icon': "ℹ️"}, f)
+                        f.write('\n')
+                    continue
+                msg_content = msg.content
+                if "user_proxy:" in msg_content:
+                    continue
+                #bioworker_placeholder.empty()
+                if msg.source == "safety_checker_agent":
+                    logger.info(f"<==== Safety checker message received")
+                    with open(log_file, 'a') as f:
+                        json.dump({'type': 'toast',
+                                          'message': f"Start executing command\nView progression at {os.environ.get('API_URL')} with your API key",
+                                          'icon': "ℹ️", "time": 999}, f)
+                        f.write('\n')
+                    with open(log_file, 'a') as f:
+                        json.dump({'type': 'toast', 'message': "This page will auto update after command execution is complete.",
+                                 'icon': "ℹ️", "time": 999}, f)
+                        f.write('\n')
+            except:
+                logger.error(f"Failed to process message: {str(e)}")
+                pass
+            if isinstance(msg, TaskResult):
+                termination_msg = "Task terminated. "
+                logger.info(f"<==== TaskResult message received")
+                if msg.stop_reason:
+                    termination_msg += msg.stop_reason
+                with open(log_file, 'a') as f:
+                    json.dump({'type': 'message', 'role': "system", "content": termination_msg}, f)
+                    f.write('\n')
+                break
+            elif isinstance(msg, ThoughtEvent):
+                logger.info(f"<==== ThoughtEvent message received")
+                if current_content:
+                    with open(log_file, 'a') as f:
+                        json.dump({'type': 'message', 'role': current_source, "content": current_content}, f)
+                        f.write('\n')
+                thought_content = msg.content
+                with open(log_file, 'a') as f:
+                    json.dump({'type': 'message', 'role': "thought", "content": thought_content, "source": msg.source}, f)
+                    f.write('\n')
+                current_source = None
+                current_content = ""
+            elif isinstance(msg, ModelClientStreamingChunkEvent) or isinstance(msg, TextMessage) or isinstance(msg,
+                                                                                                               GroupChatMessage):
+                logger.info(f"<==== Text/Streaming message received from {msg.source}")
+                if msg.source != current_source:
+                    if current_content:
+                        with open(log_file, 'a') as f:
+                            json.dump({'type': 'message', 'role': current_source, "content": current_content}, f)
+                            f.write('\n')
+                    current_source = msg.source
+                    current_content = ""
+                if isinstance(msg, ModelClientStreamingChunkEvent):
+                    current_content += msg.content
+                    with open(log_file, 'a') as f:
+                        json.dump({'type': 'stream_update', 'source': current_source, 'content': current_content}, f)
+                        f.write('\n')
+                elif isinstance(msg, TextMessage) or isinstance(msg, GroupChatMessage):
+                    current_content += msg.content + "\n"
+                    with open(log_file, 'a') as f:
+                        json.dump({'type': 'message', 'role': current_source, "content": current_content}, f)
+                        f.write('\n')
+            elif isinstance(msg, ToolCallRequestEvent):
+                logger.info(f"<==== ToolCallRequestEvent message received")
+                with open(log_file, 'a') as f:
+                    json.dump({'type': 'toast',
+                                      'message': f"Start executing command\nView progression at {os.environ.get('API_URL')} with your API key",
+                                      'icon': "ℹ️", "time": 999}, f)
+                    f.write('\n')
+                with open(log_file, 'a') as f:
+                    json.dump({'type': 'toast', 'message': "This page will auto update after command execution is complete.",
+                             'icon': "ℹ️", "time": 999}, f)
+                    f.write('\n')
+            elif isinstance(msg, ToolCallExecutionEvent) or isinstance(msg, ToolCallSummaryMessage):
+                logger.info(f"<==== ToolCallExecutionEvent message received")
+                try:
+                    output = msg.content[0].content
+                except:
+                    output = str(msg.content)
+                output = f"Execution result:\n```\n{output}\n```"
+                with open(log_file, 'a') as f:
+                    json.dump({'type': 'message', 'role': "system", "content": output}, f)
+                    f.write('\n')
+            elif isinstance(msg, UserInputRequestedEvent):
+                logger.info(f"<==== UserInputRequestedEvent message received")
+                if current_content:
+                    with open(log_file, 'a') as f:
+                        json.dump({'type': 'message', 'role': current_source, "content": current_content}, f)
+                        f.write('\n')
+                    current_content = ""
+                # st.info(f"User input required: ")  # Can't use st in thread
+
+            elif isinstance(msg, openai.RateLimitError) or isinstance(msg, openai.BadRequestError):
+                logger.info(f"<==== RateLimitError or BadRequestError message received")
+                error_message = f"Rate limit exceeded or API key error: {msg}"
+                with open(log_file, 'a') as f:
+                    json.dump({'type': 'message', 'role': "system", "content": error_message}, f)
+                    f.write('\n')
+
+            ## update bioworker status
+            # Removed invalid st call from thread
+
+    except StopAsyncIteration:
+        pass
+    except Exception as e:
+        with open(log_file, 'a') as f:
+            json.dump({'type': 'message', 'role': "system", "content": f"Error: {str(e)}"}, f)
+            f.write('\n')
+        with open(log_file, 'a') as f:
+            json.dump({'type': 'done'}, f)
+            f.write('\n')
+    if current_content:
+        with open(log_file, 'a') as f:
+            json.dump({'type': 'message', 'role': current_source, "content": current_content}, f)
+            f.write('\n')
+    with open(log_file, 'a') as f:
+        json.dump({'type': 'done'}, f)
+        f.write('\n')
+
+
+# Process pending user messages
+if "messages" in st.session_state and st.session_state.messages:
+    last_user_message = next(
+        (msg for msg in reversed(st.session_state.messages) if msg["role"] == "user" and not msg.get("processed")),
+        None)
+    logger.debug(f"Processing status: {st.session_state.get('processing', False)}")
+    if last_user_message and not st.session_state.get('processing', False):
+        user_message = last_user_message["content"]
+        last_user_message["processed"] = True
+        save_session()
+        st.session_state.processing = True
+        st.session_state.processing_start_time = time.time()  # Record start time for elapsed counter
+        st.session_state.last_save_time = time.time()  # Initialize last save time
+        # Inject JS to keep browser tab awake and refresh every 10 minutes during long waits
+        st.components.v1.html("""
+            <script>
+                setInterval(() => {
+                    console.log('Keeping connection alive');
+                }, 5000);
+                setInterval(() => {
+                    location.reload();
+                }, 600000); // 10 minutes
+            </script>
+        """, height=0)
+        threading.Thread(target=process_task, args=(user_message, st.session_state.log_file, st.session_state.team),
+                         daemon=True).start()
+        st.rerun()
+
+# Polling logic during processing or pending input
+if st.session_state.get('processing', False) or "pending_prompt" in st.session_state:
+    waiting_placeholder = st.empty()  # Placeholder for dynamic waiting message
+    if "pending_prompt" not in st.session_state:
+        with waiting_placeholder.container():
+            st.info("The agent is processing your request. Please wait until further input is required.")
+    updated = False
+
+    # Process log file
+    if os.path.exists(st.session_state.log_file):
+        with open(st.session_state.log_file, 'r') as f:
+            lines = f.readlines()
+        if lines:
+            for line in lines:
+                try:
+                    item = json.loads(line)
+                    if item.get('type') == 'prompt':
+                        st.session_state.pending_prompt_type = item['prompt_type']
+                        st.session_state.pending_prompt = item['content']
+                        updated = True
+                    elif item.get('type') == 'toast':
+                        duration_time = 10
+                        if 'time' in item and item['time']:
+                            duration_time = max(30, item['time'])
+                        st.toast(item["message"], icon=item.get('icon'), duration=duration_time)
+                        updated = True
+                    elif item.get('type') == 'stream_update':
+                        if st.session_state.messages and st.session_state.messages[-1].get('role') == item['source']:
+                            st.session_state.messages[-1]['content'] = item['content']
+                        else:
+                            st.session_state.messages.append({"role": item['source'], "content": item['content'], "source": item['source']})
+                        updated = True
+                    elif item.get('type') == 'done':
+                        st.session_state.processing = False
+                        updated = True
+                    elif item.get('type') == 'message':
+                        content = item['content']
+                        if not st.session_state.messages or st.session_state.messages[-1].get('content') != content:
+                            st.session_state.messages.append({"role": item['role'], "content": content, "source": item.get('source')})
+                        updated = True
+                except json.JSONDecodeError:
+                    pass
+            open(st.session_state.log_file, 'w').close()
+
+    # Update bioworker status
+    try:
+        project_status = get_project_status(st.session_state['project_id'], API_URL=os.environ.get('API_URL'), API_KEY=os.environ.get('API_KEY'))
+        if isinstance(project_status, dict):
+            status = project_status.get('status', 'unknown')
+            current_command = project_status.get('current_command', 'N/A')
+            message_status = f"**Status:** {status.capitalize()}\n\n"
+            bioworker_placeholder_status.info(message_status + f"**Current Command:**\n\n ```\n\n{current_command} \n\n ```")
+        else:
+            pass
+    except Exception as e:
+        pass
+
+    if updated:
+        save_session()
+        st.session_state.last_save_time = time.time()
+
+    # Handle pending prompt
+    if "pending_prompt" in st.session_state:
+        st.info(st.session_state.pending_prompt)
+        if st.session_state.pending_prompt_type == "input":
+            key = f"input_{st.session_state.input_counter}"
+            response = st.chat_input("", key=key)
+            if response:
+                with open(st.session_state.input_file, 'w') as f:
+                    f.write(response)
+                st.session_state.input_counter += 1
+                del st.session_state.pending_prompt
+                del st.session_state.pending_prompt_type
+                updated = True
+        elif st.session_state.pending_prompt_type == "action":
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("Approve"):
+                    with open(st.session_state.input_file, 'w') as f:
+                        f.write("APPROVE.")
+                    del st.session_state.pending_prompt
+                    del st.session_state.pending_prompt_type
+                    updated = True
+            with col2:
+                if st.button("Reject"):
+                    with open(st.session_state.input_file, 'w') as f:
+                        f.write("REJECT.")
+                    del st.session_state.pending_prompt
+                    del st.session_state.pending_prompt_type
+                    updated = True
+
+    if updated:
+        st.rerun()
+    else:
+        # Dynamic waiting indicator to keep WebSocket active
+        elapsed = time.time() - st.session_state.get('processing_start_time', time.time())
+        with waiting_placeholder.container():
+            if elapsed - st.session_state.get('last_st_time', 0) > 5:
+                st.session_state.last_st_time = elapsed
+                #st.info(f"The agent is processing your request (elapsed: {int(elapsed)} seconds). Please wait until further input is required.")
+                st.info(f"Execution time elapsed: {int(elapsed)} seconds")
+        # Periodic save every 10 minutes even if no update
+        if time.time() - st.session_state.get('last_save_time', 0) > 600:  # 600 seconds = 10 minutes
+            save_session()
+            st.session_state.last_save_time = time.time()
+        time.sleep(0.5)
+        st.rerun()

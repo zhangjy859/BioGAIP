@@ -181,6 +181,7 @@ def start_docker(front_ui, configure, conda_meta, workflow, user_ext, cache, pro
     if configure:
         host = convert_to_docker_host_path(configure, docker_prefix)
         mounts.extend(["-v", f"{host}:/config/system_config.yaml:ro"])
+        mounts.extend(["-v", f"{host}:/app/bioGen/config/system_config.yaml:rw"])
     if conda_meta: mounts.extend(["-v", f"{convert_to_docker_host_path(conda_meta, docker_prefix)}:{MOUNT_BASE}/conda_meta:rw"])
     if workflow: mounts.extend(["-v", f"{convert_to_docker_host_path(workflow, docker_prefix)}:{MOUNT_BASE}/pipelines_meta:rw"])
     if user_ext: mounts.extend(["-v", f"{convert_to_docker_host_path(user_ext, docker_prefix)}:{MOUNT_BASE}/user_ext:rw"])
